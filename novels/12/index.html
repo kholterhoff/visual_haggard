@@ -1,0 +1,2289 @@
+<!DOCTYPE html><html lang="en"><head>
+    <title>Cleopatra - Visual Haggard</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="fXPgws9FMA_RIR00W71NhWbIcGgkxhXVw5a-9UpSPuZeoDP3p6RDpOarz79vohhQX3BW8ifX6w3TS6X80veOCA">
+    <meta name="csp-nonce" content="l300GWAUQt4T7YA18flMgg==">
+
+    <link rel="stylesheet" href="/assets/application-d267c61bc77dc7bacf464148ed5428f1f7ef2afe276e29722c97f47f75e87655.css" data-turbo-track="reload">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css" data-turbo-track="reload">
+    
+    <script type="importmap" data-turbo-track="reload" nonce="l300GWAUQt4T7YA18flMgg==">{
+  "imports": {
+    "application": "/assets/application-37f365cbecf1fa2810a8303f4b6571676fa1f9c56c248528bc14ddb857531b95.js",
+    "@hotwired/turbo-rails": "/assets/turbo.min-3e48f1801baf343469811ff2c47889596fb8b7eb6d8fa63c4d81d0b94dc8c16d.js",
+    "@hotwired/stimulus": "/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js",
+    "@hotwired/stimulus-loading": "/assets/stimulus-loading-3576ce92b149ad5d6959438c6f291e2426c86df3b874c525b30faad51b0d96b3.js",
+    "photoswipe": "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.js",
+    "photoswipe-lightbox": "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.js",
+    "controllers/application": "/assets/controllers/application-368d98631bccbf2349e0d4f8269afb3fe9625118341966de054759d96ea86c7e.js",
+    "controllers/hello_controller": "/assets/controllers/hello_controller-549135e8e7c683a538c3d6d517339ba470fcfb79d62f738a0a089ba41851a554.js",
+    "controllers": "/assets/controllers/index-31a9bee606cbc5cdb1593881f388bbf4c345bf693ea24e124f84b6d5c98ab648.js",
+    "controllers/mobile_nav_controller": "/assets/controllers/mobile_nav_controller-6283204ad4067b92e81189423ed69d66bc90e26374e7e699d7c20c3ba8ebf531.js",
+    "controllers/motion_toggle_controller": "/assets/controllers/motion_toggle_controller-dcdea2f165e09b308896d8c887319fd0347b0356d437c681bffb7040809199a8.js",
+    "controllers/pagefind_search_controller": "/assets/controllers/pagefind_search_controller-adffc2920f9185c26bdef9416d1fc80a365a1874ad296c646d76352b4d88f704.js",
+    "controllers/photoswipe_controller": "/assets/controllers/photoswipe_controller-771eb75a1bc1429c9f4662e8890165aa518d98430bdd3bdf49b59834842bfd93.js",
+    "controllers/reels_controller": "/assets/controllers/reels_controller-bf39e655106ecd0fc0f51e0dd63e8d4b9f0b1433afacdff3e9a770fe771e3b15.js",
+    "controllers/rotator_controller": "/assets/controllers/rotator_controller-7da4e4dfd3e338f8c56b42167d90300923a84156ffe52b531c7cbf379116c7d1.js",
+    "controllers/timeline_scroller_controller": "/assets/controllers/timeline_scroller_controller-4421edcffc1f2bc024aa5adfd9b8936825663d098fec0e13f2199d007abfd6c9.js"
+  }
+}</script>
+<link rel="modulepreload" href="/assets/application-37f365cbecf1fa2810a8303f4b6571676fa1f9c56c248528bc14ddb857531b95.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/turbo.min-3e48f1801baf343469811ff2c47889596fb8b7eb6d8fa63c4d81d0b94dc8c16d.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/stimulus-loading-3576ce92b149ad5d6959438c6f291e2426c86df3b874c525b30faad51b0d96b3.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/controllers/application-368d98631bccbf2349e0d4f8269afb3fe9625118341966de054759d96ea86c7e.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/controllers/hello_controller-549135e8e7c683a538c3d6d517339ba470fcfb79d62f738a0a089ba41851a554.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/controllers/index-31a9bee606cbc5cdb1593881f388bbf4c345bf693ea24e124f84b6d5c98ab648.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/controllers/mobile_nav_controller-6283204ad4067b92e81189423ed69d66bc90e26374e7e699d7c20c3ba8ebf531.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/controllers/motion_toggle_controller-dcdea2f165e09b308896d8c887319fd0347b0356d437c681bffb7040809199a8.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/controllers/pagefind_search_controller-adffc2920f9185c26bdef9416d1fc80a365a1874ad296c646d76352b4d88f704.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/controllers/photoswipe_controller-771eb75a1bc1429c9f4662e8890165aa518d98430bdd3bdf49b59834842bfd93.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/controllers/reels_controller-bf39e655106ecd0fc0f51e0dd63e8d4b9f0b1433afacdff3e9a770fe771e3b15.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/controllers/rotator_controller-7da4e4dfd3e338f8c56b42167d90300923a84156ffe52b531c7cbf379116c7d1.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<link rel="modulepreload" href="/assets/controllers/timeline_scroller_controller-4421edcffc1f2bc024aa5adfd9b8936825663d098fec0e13f2199d007abfd6c9.js" nonce="l300GWAUQt4T7YA18flMgg==">
+<script type="module" nonce="l300GWAUQt4T7YA18flMgg==">import "application"</script>
+  </head>
+
+  <body class="novels-show">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header">
+      <div class="site-header-shell">
+        <div class="site-header-panel" data-controller="mobile-nav" data-action="click@window->mobile-nav#closeOnOutside keydown.esc@window->mobile-nav#close resize@window->mobile-nav#syncForViewport">
+          <a class="site-brand" aria-label="Visual Haggard home" href="/">
+            <span class="site-brand-name">Visual Haggard</span>
+</a>
+          <button type="button" class="site-menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-header-controls" data-mobile-nav-target="button" data-action="mobile-nav#toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="site-menu-toggle-lines" aria-hidden="true">
+              <span class="site-menu-toggle-line"></span>
+              <span class="site-menu-toggle-line"></span>
+              <span class="site-menu-toggle-line"></span>
+            </span>
+          </button>
+
+          <div class="site-header-controls" id="site-header-controls" data-mobile-nav-target="panel">
+            <nav class="site-nav" aria-label="Primary">
+              <ul>
+                <li><a href="/novels">Novels</a></li>
+                <li><a href="/illustrators">Illustrators</a></li>
+                <li><a href="/biography">Biography</a></li>
+                <li><a href="/editors_statement">Editor's Statement</a></li>
+              </ul>
+            </nav>
+
+            <form class="site-search" action="/search" accept-charset="UTF-8" method="get">
+              <label class="sr-only" for="search">Search the archive</label>
+              <input class="site-search-field" id="search" placeholder="Search the archive" aria-label="Search the archive" type="search" name="search">
+              <input type="submit" name="commit" value="Search" class="site-search-submit" data-disable-with="Search">
+</form>          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="site-main" id="main-content" tabindex="-1">
+      
+<div class="novel-page" data-pagefind-body="">
+  <div class="pagefind-record-data sr-only"><span class="sr-only" data-pagefind-filter="record_type">novel</span><span class="sr-only" data-pagefind-meta="record_type">novel</span><span class="sr-only" data-pagefind-meta="title">Cleopatra</span><span class="sr-only" data-pagefind-meta="novel_name">Cleopatra</span><span class="sr-only" data-pagefind-meta="image">https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/79/original/cleopatra1889Cover.jpeg?1485098222</span><span class="sr-only" data-pagefind-meta="summary">Cleopatra, Being an Account of the Fall &amp;amp;amp; Vengeance of Harmachis is a historical romance set in Egypt during the Ptolemaic period. This fictional retelling of events in the lives of Cleopatra and Antony is told fr...</span><span class="sr-only">&lt;span style="font-style:italic;"&gt;Cleopatra, Being an Account of the Fall &amp; Vengeance of Harmachis&lt;/span&gt; is a historical romance set in Egypt during the Ptolemaic period. This fictional retelling of events in the lives of Cleopatra and Antony is told from the perspective of Prince Harmachis, a young man groomed by a cabal of the priests of Isis to usurp Cleopatra's throne. Tragically, Harmachis falls in love with the supernaturally beautiful Cleopatra and fails to execute the plot against her. &lt;span style="font-style:italic;"&gt;Cleopatra&lt;/span&gt; was serialized by &lt;span style="font-style:italic;"&gt;The Illustrated London News&lt;/span&gt; from January to June 1889. The serial included 29 illustrations by &lt;a href="http://www.visualhaggard.org/illustrators/29"&gt;R. Caton Woodville&lt;/a&gt; and 33 decorative initials by &lt;a href="http://www.visualhaggard.org/illustrators/15"&gt;Edward Whymper (signed E.W.)&lt;/a&gt;. Longmans, Green, and Co., London, published the first edition on 24 June 1889. This edition featured 29 full-page illustrations: 18 by &lt;a href="http://www.visualhaggard.org/illustrators/4"&gt;Maurice Greiffenhagen&lt;/a&gt;, and 11 by R. Caton Woodville. 25,000 copies issued, including 57 copies printed in large format on fine art paper with mounted illustrations. The “List of Illustrations” from the 1894 and 1927 Longmans, London, as well as the 1889 William Bryce, Toronto, editions provide an exceptional amount of detail about &lt;span style="font-style:italic;"&gt;Cleopatra’s&lt;/span&gt; illustrations, explaining that Edward Whymper, J. D. Cooper, and B. Lloyd executed the wood engravings and Walker &amp; Boutall created the process blocks. Whatmore claims George Munro, New York, published the first US edition of &lt;span style="font-style:italic;"&gt;Cleopatra&lt;/span&gt;, although there is some contention that the 1889 Harper, New York, authorized edition, was first. However, the Munro and Harper editions were likely preceded by pirated editions. Tauchnitz of Leipzig published a copyright edition in 1889. Bryce of Toronto, Canada, published the first Canadian edition in 1890. In 1946 the Spanish publishing company Bruguera, Barcelona, published a translated edition titled &lt;span style="font-style:italic;"&gt;Confesion&lt;/span&gt;. Macdonald &amp; Co., London, published an edition of &lt;span style="font-style:italic;"&gt;Cleopatra&lt;/span&gt; illustrated by &lt;a href="http://www.visualhaggard.org/illustrators/51"&gt;Hookway Cowles&lt;/a&gt; in 1958. &lt;h4&gt;Further Reading&lt;/h4&gt; &lt;p style="margin-left:.5in;text-indent:-.5in"&gt;Haggard, H. Rider. &lt;span style="font-style:italic;"&gt;The Days of My Life, An Autobiography&lt;/span&gt;. 2 Vols. London: Longmans, Green and Co., 1926.&lt;/p&gt; &lt;p style="margin-left:.5in;text-indent:-.5in"&gt;Pocock, Tom. &lt;span style="font-style:italic;"&gt;Rider Haggard and the Lost Empire&lt;/span&gt;. London: Weidenfeld and Nicolson, 1993. 75-76, 80.&lt;/p&gt; &lt;p style="margin-left:.5in;text-indent:-.5in"&gt;Whatmore, D.E.. &lt;span style="font-style:italic;"&gt;H Rider Haggard: A Bibliography&lt;/span&gt;. Westport, CT: Meckler Publishing Co., 1987. F10, 18-19.&lt;/p&gt;</span></div>
+
+  <div class="page-shell">
+    <section class="novel-hero surface-panel">
+      <div class="hero-image">
+          <img alt="Cleopatra cover" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/79/original/cleopatra1889Cover.jpeg?1485098222">
+      </div>
+
+      <div class="hero-content">
+        <p class="page-eyebrow">Novel record</p>
+        <h1 class="page-title novel-title">Cleopatra</h1>
+
+        <div class="meta-chip-row novel-meta-row">
+          <a class="meta-chip meta-chip-link" href="#edition-archive">31 editions</a>
+          <a class="meta-chip meta-chip-link" href="#illustration-archive">146 illustrations</a>
+        </div>
+
+          <div class="novel-description">
+            <p><span>Cleopatra, Being an Account of the Fall &amp; Vengeance of Harmachis</span> is a historical romance set in Egypt during the Ptolemaic period. This fictional retelling of events in the lives of Cleopatra and Antony is told from the perspective of Prince Harmachis, a young man groomed by a cabal of the priests of Isis to usurp Cleopatra's throne. Tragically, Harmachis falls in love with the supernaturally beautiful Cleopatra and fails to execute the plot against her. </p>
+
+<p><span>Cleopatra</span> was serialized by <span>The Illustrated London News</span> from January to June 1889. The serial included 29 illustrations by <a href="/illustrators/29">R. Caton Woodville</a> and 33 decorative initials by <a href="/illustrators/15">Edward Whymper (signed E.W.)</a>. Longmans, Green, and Co., London, published the first edition on 24 June 1889. This edition featured 29 full-page illustrations: 18 by <a href="/illustrators/4">Maurice Greiffenhagen</a>, and 11 by R. Caton Woodville. 25,000 copies issued, including 57 copies printed in large format on fine art paper with mounted illustrations.</p>
+
+<p>The “List of Illustrations” from the 1894 and 1927 Longmans, London, as well as the 1889 William Bryce, Toronto, editions provide an exceptional amount of detail about <span>Cleopatra’s</span> illustrations, explaining that Edward Whymper, J. D. Cooper, and B. Lloyd executed the wood engravings and Walker &amp; Boutall created the process blocks. </p>
+
+<p>Whatmore claims George Munro, New York, published the first US edition of <span>Cleopatra</span>, although there is some contention that the 1889 Harper, New York, authorized edition, was first. However, the Munro and Harper editions were likely preceded by pirated editions. Tauchnitz of Leipzig published a copyright edition in 1889. Bryce of Toronto, Canada, published the first Canadian edition in 1890. In 1946 the Spanish publishing company Bruguera, Barcelona, published a translated edition titled <span>Confesion</span>. Macdonald &amp; Co., London, published an edition of <span>Cleopatra</span> illustrated by <a href="/illustrators/51">Hookway Cowles</a> in 1958.</p>
+
+<p></p><h4>Further Reading</h4>
+<br><p>Haggard, H. Rider. <span>The Days of My Life, An Autobiography</span>. 2 Vols. London: Longmans, Green and Co., 1926.</p>
+<br><p>Pocock, Tom. <span>Rider Haggard and the Lost Empire</span>. London: Weidenfeld and Nicolson, 1993. 75-76, 80.</p>
+<br><p>Whatmore, D.E.. <span>H Rider Haggard: A Bibliography</span>. Westport, CT: Meckler Publishing Co., 1987. F10, 18-19.</p>
+          </div>
+
+
+      </div>
+    </section>
+
+      <section class="surface-panel novel-section" id="edition-archive">
+        <div class="section-heading">
+          <div>
+            <p class="page-eyebrow">Edition archive</p>
+            <h2>Editions of Cleopatra</h2>
+          </div>
+        </div>
+
+        <div class="editions-grid">
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/151">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2615" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/151/original/cleopatraILN688.jpg?1484259012">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2615</h3>
+                    <p class="edition-details">London: Ingram Brothers, 1 June 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/170">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2612" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/170/original/cleopatraILN592.jpg?1484973761">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2612</h3>
+                    <p class="edition-details">London: Ingram Brothers, 11 May 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/146">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2595" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/146/original/cleopatraILN43.jpg?1484254917">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2595</h3>
+                    <p class="edition-details">London: Ingram Brothers, 12 January 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/166">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2608" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/166/original/cleopatraILN464.jpg?1484875011">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2608</h3>
+                    <p class="edition-details">London: Ingram Brothers, 13 April 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/147">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2617" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/147/original/cleopartaILN756.jpg?1484255742">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2617</h3>
+                    <p class="edition-details">London: Ingram Brothers, 15 June 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/159">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2600" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/159/original/cleopatraILN200.jpg?1484766827">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2600</h3>
+                    <p class="edition-details">London: Ingram Brothers, 16 February 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/162">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2604" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/162/original/cleopatraILN332.jpg?1484768460">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2604</h3>
+                    <p class="edition-details">London: Ingram Brothers, 16 March 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/171">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2613" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/171/original/cleopatraILN624.jpg?1485039512">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2613</h3>
+                    <p class="edition-details">London: Ingram Brothers, 18 May 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/79">
+                <div class="edition-thumbnail">
+                    <img alt="1st UK edition" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/79/original/cleopatra1889Cover.jpeg?1485098222">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>1st UK edition</h3>
+                    <p class="edition-details">London: Longmans, Green, and Co., 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/156">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2596" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/156/original/cleopatraILN76.jpg?1484765206">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2596</h3>
+                    <p class="edition-details">London: Ingram Brothers, 19 January 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/9">
+                <div class="edition-thumbnail">
+                    <img alt="New Impression" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/cleopatraCover.jpg">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>New Impression</h3>
+                    <p class="edition-details">London: Longmans, Green and Co., 1927.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/280">
+                <div class="edition-thumbnail">
+                    <img alt="Confesion" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/280/original/confesionBrugueraDustJacket.jpg?1508292198">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Confesion</h3>
+                    <p class="edition-details">Barcelona: Bruguera, 1946.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/243">
+                <div class="edition-thumbnail">
+                    <img alt="Macdonald Illustrated Edition" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/243/original/cleopatraMacdonaldCover.jpg?1507074970">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Macdonald Illustrated Edition</h3>
+                    <p class="edition-details">London: Macdonald &amp; Co, 1958.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/158">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2598" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/158/original/cleopatraILN140.jpg?1484766127">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2598</h3>
+                    <p class="edition-details">London: Ingram Brothers, 2 February 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/160">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2602" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/160/original/cleopatraILN268.jpg?1484767434">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2602</h3>
+                    <p class="edition-details">London: Ingram Brothers, 2 March 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/167">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2609" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/167/original/cleopatraILN496.jpg?1484930448">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2609</h3>
+                    <p class="edition-details">London: Ingram Brothers, 20 April 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/149">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2618" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/149/original/cleopatraILN788.jpg?1484257921">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2618</h3>
+                    <p class="edition-details">London: Ingram Brothers, 22 June 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/153">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2601" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/153/original/cleopatraILN236.jpg?1484263444">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2601</h3>
+                    <p class="edition-details">London: Ingram Brothers, 23 February 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/163">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2605" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/163/original/cleopatraILN364.jpg?1484777616">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2605</h3>
+                    <p class="edition-details">London: Ingram Brothers, 23 March 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/172">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2614" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/172/original/cleopatraILN656.jpg?1485046568">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2614</h3>
+                    <p class="edition-details">London: Ingram Brothers, 25 May 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/157">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2597" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/157/original/cleopatraILN108.jpg?1484765665">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2597</h3>
+                    <p class="edition-details">London: Ingram Brothers, 26 January 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/168">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2610" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/168/original/cleopatraILN528.jpg?1484941003">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2610</h3>
+                    <p class="edition-details">London: Ingram Brothers, 27 April 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/148">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2619" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/148/original/cleopatraILN816.jpg?1484257463">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2619</h3>
+                    <p class="edition-details">London: Ingram Brothers, 29 June 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/164">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2606" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/164/original/cleopatraILN392.jpg?1484778066">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2606</h3>
+                    <p class="edition-details">London: Ingram Brothers, 30 March 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/169">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2611" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/169/original/cleopatraILN560.jpg?1484953665">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2611</h3>
+                    <p class="edition-details">London: Ingram Brothers, 4 May 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/145">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2594" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/145/original/cleopatraILN11.jpg?1484253844">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2594</h3>
+                    <p class="edition-details">London: Ingram Brothers, 5 January 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/165">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2607" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/165/original/cleopatraILN430.jpg?1484866658">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2607</h3>
+                    <p class="edition-details">London: Ingram Brothers, 6 April 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/150">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2616" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/150/original/cleopatraILN720.jpg?1484258291">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2616</h3>
+                    <p class="edition-details">London: Ingram Brothers, 8 June 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/152">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2599" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/152/original/cleopatraILN171.jpg?1484260176">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2599</h3>
+                    <p class="edition-details">London: Ingram Brothers, 9 February 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/161">
+                <div class="edition-thumbnail">
+                    <img alt="Illustrated London News, vol. XCIV no. 2603" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/161/original/cleopatraILN300.jpg?1484767926">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Illustrated London News, vol. XCIV no. 2603</h3>
+                    <p class="edition-details">London: Ingram Brothers, 9 March 1889.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/437">
+                <div class="edition-thumbnail">
+                    <img alt="Arrow Library No. 124" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/437/original/cleopatraArrowLibraryNo124DustJacket.jpg?1518749323">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Arrow Library No. 124</h3>
+                    <p class="edition-details">New York: Street &amp; Smith, c. 1900.</p>
+                </div>
+</a>            </article>
+        </div>
+      </section>
+
+      <section class="surface-panel novel-section" id="illustration-archive">
+        <div class="section-heading">
+          <div>
+            <p class="page-eyebrow">Illustration archive</p>
+            <h2>Illustrations from Cleopatra</h2>
+          </div>
+        </div>
+
+        <div class="illustrations-grid" data-controller="photoswipe">
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/andWe56.jpg">
+                    <img alt="And we went forth." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/andWe56.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/180">And we went forth.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/andThus88.jpg">
+                    <img alt="And thus I for the first time saw Cleopatra face to face." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/andThus88.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/178">And thus I for the first time saw Cleopatra face to face.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/anOmen120.jpg">
+                    <img alt="An omen, royal Harmachis." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/anOmen120.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/182">An omen, royal Harmachis.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/asShe297.jpg">
+                    <img alt="As she spoke, the man with a great cry, gave up the spirit." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/asShe297.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/183">As she spoke, the man with a great cry, gave up the spirit.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/cleopatraFrontispiece.jpg">
+                    <img alt="Cleopatra" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/cleopatraFrontispiece.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/185">Cleopatra</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/beforeMe280.jpg">
+                    <img alt="Before me was Cleopatra, but oh! how changed" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/beforeMe280.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/184">Before me was Cleopatra, but oh! how changed</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/ohThose201.jpg">
+                    <img alt="Oh those nights upon the Nile!" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/ohThose201.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/190">Oh those nights upon the Nile!</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/stillShe41.jpg">
+                    <img alt="Still she sits like yonder Sphinx, and smiles" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/stillShe41.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/192">Still she sits like yonder Sphinx, and smiles</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/twiceHe24.jpg">
+                    <img alt="Twice he leapt thus, horrible to see" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/twiceHe24.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/193">Twice he leapt thus, horrible to see</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/iveWon152.jpg">
+                    <img alt="'I've won,' she cried" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/iveWon152.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/189">'I've won,' she cried</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/sheHeld184.jpg">
+                    <img alt="She held it to the light and gave a little cry" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/sheHeld184.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/191">She held it to the light and gave a little cry</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/andWhile137.jpg">
+                    <img alt="And while I spoke, watching the stars, she sat and watched my face." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/andWhile137.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/181">And while I spoke, watching the stars, she sat and watched my face.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/andThus244.jpg">
+                    <img alt="And thus I left her." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/andThus244.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/179">And thus I left her.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/iSeized105.jpg">
+                    <img alt="I seized him with my will and stare and drew him after me." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/iSeized105.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/188">I seized him with my will and stare and drew him after me.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/heFixed169.jpg">
+                    <img alt="He fixed his gaze on Cleopatra... as a man who is amazed" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/heFixed169.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/186">He fixed his gaze on Cleopatra... as a man who is amazed</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/iCrown73.jpg">
+                    <img alt="I crown thee Pharaoh" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/iCrown73.jpg">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/187">I crown thee Pharaoh</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/744/original/greetingHarmachis1889155.jpeg?1383615413">
+                    <img alt="Greeting, Harmachis. So my messenger has found thee!" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/744/original/greetingHarmachis1889155.jpeg?1383615413">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/744">Greeting, Harmachis. So my messenger has found thee!</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/745/original/by188913.jpeg?1383624446">
+                    <img alt="By" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/745/original/by188913.jpeg?1383624446">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/745">By</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/783/original/sheLooked1889323.jpeg?1385072218">
+                    <img alt="She looked; she saw the awful shapes." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/783/original/sheLooked1889323.jpeg?1385072218">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/783">She looked; she saw the awful shapes.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/743/original/andWhile1889126.jpeg?1383613994">
+                    <img alt="And while I spoke watching the stars, she sat and watched my face" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/743/original/andWhile1889126.jpeg?1383613994">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/743">And while I spoke watching the stars, she sat and watched my face</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/593/original/anOmen1889119.jpeg?1380658856">
+                    <img alt="An omen, royal Harmachis." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/593/original/anOmen1889119.jpeg?1380658856">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/593">An omen, royal Harmachis.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/623/original/andThus1889244.jpeg?1381081782">
+                    <img alt="And thus I left her" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/623/original/andThus1889244.jpeg?1381081782">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/623">And thus I left her</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/628/original/iDashed1889208.jpeg?1381163419">
+                    <img alt="I dashed him down" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/628/original/iDashed1889208.jpeg?1381163419">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/628">I dashed him down</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/635/original/iSaw1889250.jpeg?1381196226">
+                    <img alt="I saw a spar of wood to which I swam." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/635/original/iSaw1889250.jpeg?1381196226">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/635">I saw a spar of wood to which I swam.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/629/original/nobleAntony1889222.jpeg?1381165328">
+                    <img alt="Noble Antony, thou hast called me and I am come" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/629/original/nobleAntony1889222.jpeg?1381165328">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/629">Noble Antony, thou hast called me and I am come</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/631/original/sheHeld1889188.jpeg?1381172325">
+                    <img alt="She held it to the light and gave a little cry." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/631/original/sheHeld1889188.jpeg?1381172325">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/631">She held it to the light and gave a little cry.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/597/original/andNow1889151.jpeg?1380668751">
+                    <img alt="And now her lips met mine." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/597/original/andNow1889151.jpeg?1380668751">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/597">And now her lips met mine.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/579/original/cleopatra1889Frontispiece.jpeg?1380468169">
+                    <img alt="Cleopatra" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/579/original/cleopatra1889Frontispiece.jpeg?1380468169">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/579">Cleopatra</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/602/original/twiceHe188925.jpeg?1380761131">
+                    <img alt="Twice he leapt thus, horrible to see" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/602/original/twiceHe188925.jpeg?1380761131">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/602">Twice he leapt thus, horrible to see</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/606/original/andThus188990.jpeg?1380839015">
+                    <img alt="And thus... I for the first time saw Cleopatra face to face." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/606/original/andThus188990.jpeg?1380839015">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/606">And thus... I for the first time saw Cleopatra face to face.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/609/original/iveWon1889152.jpeg?1380843331">
+                    <img alt="'I've won,' she cried" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/609/original/iveWon1889152.jpeg?1380843331">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/609">'I've won,' she cried</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/618/original/whoIs1889284.jpeg?1381017277">
+                    <img alt="Who is this man who comes to gaze on fallen Antony?" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/618/original/whoIs1889284.jpeg?1381017277">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/618">Who is this man who comes to gaze on fallen Antony?</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/746/original/heFixed1889167.jpeg?1383657107">
+                    <img alt="He fixed his gaze on Cleopatra... as a man who is amazed." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/746/original/heFixed1889167.jpeg?1383657107">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/746">He fixed his gaze on Cleopatra... as a man who is amazed.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/616/original/beforeMe1889280.jpeg?1381014470">
+                    <img alt="Before me was Cleopatra, but oh! how changed" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/616/original/beforeMe1889280.jpeg?1381014470">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/616">Before me was Cleopatra, but oh! how changed</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/624/original/that1889171.jpeg?1381082920">
+                    <img alt="That" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/624/original/that1889171.jpeg?1381082920">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/624">That</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/627/original/OhThose1889196.jpeg?1381095311">
+                    <img alt="Oh those nights upon the Nile!" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/627/original/OhThose1889196.jpeg?1381095311">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/627">Oh those nights upon the Nile!</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/633/original/these1889265.jpeg?1381188709">
+                    <img alt="These" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/633/original/these1889265.jpeg?1381188709">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/633">These</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/634/original/i1889257.jpeg?1381189829">
+                    <img alt="I" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/634/original/i1889257.jpeg?1381189829">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/634">I</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/630/original/on1889223.jpeg?1381169506">
+                    <img alt="On" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/630/original/on1889223.jpeg?1381169506">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/630">On</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/591/original/iSeized1889103.jpeg?1380657683">
+                    <img alt="I seized him with my will and stare and drew him after me." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/591/original/iSeized1889103.jpeg?1380657683">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/591">I seized him with my will and stare and drew him after me.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/582/original/aCloud188937.jpeg?1380497182">
+                    <img alt="A cloud grew upon the face of the moon" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/582/original/aCloud188937.jpeg?1380497182">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/582">A cloud grew upon the face of the moon</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/583/original/stillShe188945.jpeg?1380501129">
+                    <img alt="Still she sits like yonder Sphinx, and smiles" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/583/original/stillShe188945.jpeg?1380501129">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/583">Still she sits like yonder Sphinx, and smiles</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/586/original/iSaw188958.jpeg?1380510491">
+                    <img alt="I saw the world as it had been before man was" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/586/original/iSaw188958.jpeg?1380510491">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/586">I saw the world as it had been before man was</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/587/original/once188970.jpeg?1380591847">
+                    <img alt="Once" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/587/original/once188970.jpeg?1380591847">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/587">Once</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/581/original/For188930.jpg?1380485720">
+                    <img alt="For" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/581/original/For188930.jpg?1380485720">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/581">For</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/584/original/At188938.jpeg?1380502920">
+                    <img alt="At" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/584/original/At188938.jpeg?1380502920">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/584">At</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/585/original/On188948.jpeg?1380504970">
+                    <img alt="On" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/585/original/On188948.jpeg?1380504970">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/585">On</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/594/original/iStood1889131.jpeg?1380661617">
+                    <img alt="I" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/594/original/iStood1889131.jpeg?1380661617">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/594">I</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/595/original/itWas1889142.jpeg?1380664994">
+                    <img alt="It" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/595/original/itWas1889142.jpeg?1380664994">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/595">It</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/596/original/farAway1889145.jpeg?1380666019">
+                    <img alt="Far away stood Charmion... her white arms outstretched as though to clasp." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/596/original/farAway1889145.jpeg?1380666019">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/596">Far away stood Charmion... her white arms outstretched as though to clasp.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/580/original/theyWavered188919.jpeg?1380468344">
+                    <img alt="They wavered, thinking to slay me also" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/580/original/theyWavered188919.jpeg?1380468344">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/580">They wavered, thinking to slay me also</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/603/original/andWe188956.jpeg?1380835329">
+                    <img alt="And we went forth." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/603/original/andWe188956.jpeg?1380835329">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/603">And we went forth.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/588/original/that188994.jpeg?1380593914">
+                    <img alt="That" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/588/original/that188994.jpeg?1380593914">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/588">That</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/599/original/iWas18894.jpeg?1380753759">
+                    <img alt="I was lowered bodily into those sacred depths" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/599/original/iWas18894.jpeg?1380753759">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/599">I was lowered bodily into those sacred depths</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/604/original/iCrown188978.jpeg?1380836618">
+                    <img alt="I crown thee Pharaoh." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/604/original/iCrown188978.jpeg?1380836618">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/604">I crown thee Pharaoh.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/600/original/in188957.jpeg?1380758318">
+                    <img alt="In" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/600/original/in188957.jpeg?1380758318">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/600">In</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/601/original/and188921.jpeg?1380759727">
+                    <img alt="And" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/601/original/and188921.jpeg?1380759727">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/601">And</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/589/original/ayWe188999.jpeg?1380595459">
+                    <img alt="Ay, we will work like the worm at the heart of a fruit." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/589/original/ayWe188999.jpeg?1380595459">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/589">Ay, we will work like the worm at the heart of a fruit.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/605/original/now188981.jpeg?1380837998">
+                    <img alt="Now" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/605/original/now188981.jpeg?1380837998">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/605">Now</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/615/original/glad1889274.jpeg?1381011945">
+                    <img alt="Clad" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/615/original/glad1889274.jpeg?1381011945">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/615">Clad</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/590/original/thus1889101.jpeg?1380596545">
+                    <img alt="Thus" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/590/original/thus1889101.jpeg?1380596545">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/590">Thus</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/610/original/once1889153.jpeg?1380845981">
+                    <img alt="Once" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/610/original/once1889153.jpeg?1380845981">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/610">Once</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/612/original/heFixed1889167.jpeg?1381004707">
+                    <img alt="He fixed his gaze on Cleopatra... as a man who is amazed." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/612/original/heFixed1889167.jpeg?1381004707">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/612">He fixed his gaze on Cleopatra... as a man who is amazed.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/614/original/cleopatra1889214.jpeg?1381009836">
+                    <img alt="Cleopatra" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/614/original/cleopatra1889214.jpeg?1381009836">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/614">Cleopatra</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/617/original/ere1889283.jpeg?1381015798">
+                    <img alt="Ere" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/617/original/ere1889283.jpeg?1381015798">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/617">Ere</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/619/original/now1889292.jpeg?1381018670">
+                    <img alt="Now" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/619/original/now1889292.jpeg?1381018670">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/619">Now</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/621/original/charmion1889325.jpeg?1381065399">
+                    <img alt="Charmion" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/621/original/charmion1889325.jpeg?1381065399">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/621">Charmion</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/608/original/at1889121.jpeg?1380842161">
+                    <img alt="At" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/608/original/at1889121.jpeg?1380842161">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/608">At</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/611/original/for1889161.jpeg?1380981926">
+                    <img alt="For" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/611/original/for1889161.jpeg?1380981926">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/611">For</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/613/original/and1889204.jpeg?1381008355">
+                    <img alt="And" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/613/original/and1889204.jpeg?1381008355">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/613">And</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/622/original/they1889334.jpeg?1381081683">
+                    <img alt="They" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/622/original/they1889334.jpeg?1381081683">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/622">They</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/620/original/asShe1889296.jpeg?1381062715">
+                    <img alt="As she spoke, the man, with a great cry, gave up the spirit." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/620/original/asShe1889296.jpeg?1381062715">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/620">As she spoke, the man, with a great cry, gave up the spirit.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/578/original/inThe1.jpeg?1380467946">
+                    <img alt="In" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/578/original/inThe1.jpeg?1380467946">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/578">In</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/598/original/on1889312.jpeg?1380751978">
+                    <img alt="On" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/598/original/on1889312.jpeg?1380751978">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/598">On</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/607/original/on1889113.jpeg?1380839916">
+                    <img alt="On" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/607/original/on1889113.jpeg?1380839916">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/607">On</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/625/original/we1889181.jpeg?1381083780">
+                    <img alt="We" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/625/original/we1889181.jpeg?1381083780">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/625">We</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/626/original/presently1889193.jpeg?1381084713">
+                    <img alt="Presently" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/626/original/presently1889193.jpeg?1381084713">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/626">Presently</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/632/original/for1889235.jpeg?1381177963">
+                    <img alt="For" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/632/original/for1889235.jpeg?1381177963">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/632">For</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/636/original/i1889247.jpeg?1381197561">
+                    <img alt="I" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/636/original/i1889247.jpeg?1381197561">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/636">I</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/782/original/on1889303.jpeg?1385068948">
+                    <img alt="On" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/782/original/on1889303.jpeg?1385068948">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/782">On</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1166/original/theEndCleopatraILN12.jpg?1484254355">
+                    <img alt="The end of the rope was made fast round my middle, and I was lowered bodily into those sacred depths" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1166/original/theEndCleopatraILN12.jpg?1484254355">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1166">The end of the rope was made fast round my middle, and I was lowered bodily into those sacred depths</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1167/original/forACleopatraILN13.jpg?1484254723">
+                    <img alt="For a moment they wavered, thinking to slay me also, but in the end they passed on, bearing the head of my foster-brother" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1167/original/forACleopatraILN13.jpg?1484254723">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1167">For a moment they wavered, thinking to slay me also, but in the end they passed on, bearing the head of my foster-brother</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1165/original/cleopatraILN11.jpg?1484254078">
+                    <img alt="In" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1165/original/cleopatraILN11.jpg?1484254078">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1165">In</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1169/original/andAsCleopatraILN45.jpg?1484255237">
+                    <img alt="And as I knelt, a cloud grew upon the face of the moon and covered it up " loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1169/original/andAsCleopatraILN45.jpg?1484255237">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1169">And as I knelt, a cloud grew upon the face of the moon and covered it up </a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1190/original/heFellNadaILN44.jpg?1484764987">
+                    <img alt="He fell down dead, and the lion stood and roared across him" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1190/original/heFellNadaILN44.jpg?1484764987">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1190">He fell down dead, and the lion stood and roared across him</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1993/original/forACleopatraILN43.jpg?1519596910">
+                    <img alt="For" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1993/original/forACleopatraILN43.jpg?1519596910">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1993">For</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1191/original/cleopatraILN43.jpg?1484765092">
+                    <img alt="And" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1191/original/cleopatraILN43.jpg?1484765092">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1191">And</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1171/original/thereICleopatraILN757.jpg?1484256427">
+                    <img alt="There I found Antony, laid upon the golden bed of Cleopatra; and she, her face stained with tears, knelt at his side" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1171/original/thereICleopatraILN757.jpg?1484256427">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1171">There I found Antony, laid upon the golden bed of Cleopatra; and she, her face stained with tears, knelt at his side</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1170/original/cleopartaILN756.jpg?1484256013">
+                    <img alt="Now" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1170/original/cleopartaILN756.jpg?1484256013">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1170">Now</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1997/original/onTheCleopatraILN756.jpg?1519600063">
+                    <img alt="On" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1997/original/onTheCleopatraILN756.jpg?1519600063">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1997">On</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1173/original/ohCleopatraCleopatraILN817.jpg?1484257765">
+                    <img alt="'Oh, Cleopatra! Cleopatra, thou Destroyer! If I might but tear thy vision from my heart!'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1173/original/ohCleopatraCleopatraILN817.jpg?1484257765">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1173">'Oh, Cleopatra! Cleopatra, thou Destroyer! If I might but tear thy vision from my heart!'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1172/original/cleopatraILN816.jpg?1484257608">
+                    <img alt="Charmion" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1172/original/cleopatraILN816.jpg?1484257608">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1172">Charmion</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1998/original/theyLedCleopatraILN816.jpg?1519601061">
+                    <img alt="They" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1998/original/theyLedCleopatraILN816.jpg?1519601061">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1998">They</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1175/original/oYeCleopatraILN789.jpg?1484258151">
+                    <img alt="'O ye Gods of Egypt! who have deserted me, to you no longer will I pray, for deaf are your ears unto my crying and blind your eyes until my griefs!'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1175/original/oYeCleopatraILN789.jpg?1484258151">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1175">'O ye Gods of Egypt! who have deserted me, to you no longer will I pray, for deaf are your ears unto my crying and blind your eyes until my griefs!'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1174/original/cleopatraILN788.jpg?1484257993">
+                    <img alt="On" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1174/original/cleopatraILN788.jpg?1484257993">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1174">On</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1176/original/cleopatraILN720.jpg?1484258367">
+                    <img alt="Ere" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1176/original/cleopatraILN720.jpg?1484258367">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1176">Ere</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1177/original/ahSaidCleopatraILN721.jpg?1484258757">
+                    <img alt="'Ah!' said the Queen, with a hard laugh, 'the slave died wondrous hard, and fain would have drawn me with him. See, he hath borrowed my garment for a pall! Take him away and bury him in his livery'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1177/original/ahSaidCleopatraILN721.jpg?1484258757">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1177">'Ah!' said the Queen, with a hard laugh, 'the slave died wondrous hard, and fain would have drawn me with him. See, he hath borrowed my garment for a pall! Take him away and bury him in his livery'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1178/original/cleopatraILN688.jpg?1484259133">
+                    <img alt="Glad" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1178/original/cleopatraILN688.jpg?1484259133">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1178">Glad</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1179/original/aWomanCleopatraILN689.jpg?1484259498">
+                    <img alt="A woman entered, clad in the Grecian robes. It was Charmion." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1179/original/aWomanCleopatraILN689.jpg?1484259498">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1179">A woman entered, clad in the Grecian robes. It was Charmion.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1181/original/thenDidCleopatraILN172.jpg?1484260815">
+                    <img alt="The did Amenemhat once again draw nigh and place upon my brow the pshent, and on my head the Double Crown " loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1181/original/thenDidCleopatraILN172.jpg?1484260815">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1181">The did Amenemhat once again draw nigh and place upon my brow the pshent, and on my head the Double Crown </a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1182/original/iLookedCleopatraILN173.jpg?1484261190">
+                    <img alt="I looked up, and thus torn, panting, my white garments stained with the blood that had rushed from the mouth and nostrils of the might Nubian, I for the first time saw Cleopatra face to face" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1182/original/iLookedCleopatraILN173.jpg?1484261190">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1182">I looked up, and thus torn, panting, my white garments stained with the blood that had rushed from the mouth and nostrils of the might Nubian, I for the first time saw Cleopatra face to face</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1180/original/cleopatraILN171.jpg?1484260294">
+                    <img alt="Once" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1180/original/cleopatraILN171.jpg?1484260294">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1180">Once</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1992/original/nowTheCleopatraILN171.jpg?1519595189">
+                    <img alt="Now" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1992/original/nowTheCleopatraILN171.jpg?1519595189">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1992">Now</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1183/original/cleopatraILN236.jpg?1484263546">
+                    <img alt="Thus" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1183/original/cleopatraILN236.jpg?1484263546">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1183">Thus</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1184/original/bePleasedCleopatraILN237.jpg?1484263737">
+                    <img alt="'Be pleased to fix thy princely gaze upon the point of this wand in my hand.' .... I slowly moved backwards till I had passed the gates, still drawing him after me" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1184/original/bePleasedCleopatraILN237.jpg?1484263737">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1184">'Be pleased to fix thy princely gaze upon the point of this wand in my hand.' .... I slowly moved backwards till I had passed the gates, still drawing him after me</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1193/original/andAllCleopatraILN77.jpg?1484765544">
+                    <img alt="And all the while she sits like yonder Sphinx, and smiles; and no man hath ever read all the riddle of her smile" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1193/original/andAllCleopatraILN77.jpg?1484765544">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1193">And all the while she sits like yonder Sphinx, and smiles; and no man hath ever read all the riddle of her smile</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1192/original/cleopatraILN76.jpg?1484765309">
+                    <img alt="At" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1192/original/cleopatraILN76.jpg?1484765309">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1192">At</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1195/original/inSilenceCleopatraILN109.jpg?1484765922">
+                    <img alt="In silence we passed into the Shrine of Isis" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1195/original/inSilenceCleopatraILN109.jpg?1484765922">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1195">In silence we passed into the Shrine of Isis</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1194/original/cleopatraILN108.jpg?1484765751">
+                    <img alt="On" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1194/original/cleopatraILN108.jpg?1484765751">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1194">On</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1196/original/cleopatraILN140.jpg?1484766202">
+                    <img alt="In" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1196/original/cleopatraILN140.jpg?1484766202">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1196">In</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1198/original/thenOfCleopatraILN141.jpg?1484766585">
+                    <img alt="Then of a sudden the end of the chamber became luminous, and in the wild white light I beheld picture after picture. I saw the primeval Nile rolling through deserts to the sea." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1198/original/thenOfCleopatraILN141.jpg?1484766585">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1198">Then of a sudden the end of the chamber became luminous, and in the wild white light I beheld picture after picture. I saw the primeval Nile rolling through deserts to the sea.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1199/original/cleopatraILN200.jpg?1484766887">
+                    <img alt="That" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1199/original/cleopatraILN200.jpg?1484766887">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1199">That</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1200/original/letPharaohCleopatraILN201.jpg?1484767141">
+                    <img alt="'Let Pharaoh hearken unto his handmaiden'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1200/original/letPharaohCleopatraILN201.jpg?1484767141">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1200">'Let Pharaoh hearken unto his handmaiden'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1201/original/cleopatraILN268.jpg?1484767538">
+                    <img alt="On" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1201/original/cleopatraILN268.jpg?1484767538">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1201">On</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1202/original/charmionLiftedCleopatraILN269.jpg?1484767749">
+                    <img alt="Charmion lifted the chaplet from Cleopatra's brows, and bearing it to where I was, with a smile set it upon my head" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1202/original/charmionLiftedCleopatraILN269.jpg?1484767749">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1202">Charmion lifted the chaplet from Cleopatra's brows, and bearing it to where I was, with a smile set it upon my head</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1204/original/cleopatraSweptCleopatraILN301.jpg?1484768169">
+                    <img alt="Cleopatra swept in, royally arrayed, her dark hair hanging about her and the sacred snake of royalty glistening on her brow" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1204/original/cleopatraSweptCleopatraILN301.jpg?1484768169">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1204">Cleopatra swept in, royally arrayed, her dark hair hanging about her and the sacred snake of royalty glistening on her brow</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1203/original/cleopatraILN300.jpg?1484767991">
+                    <img alt="At" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1203/original/cleopatraILN300.jpg?1484767991">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1203">At</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1206/original/ifThouCleopatraILN333.jpg?1484776572">
+                    <img alt="'If thou canst, forget my folly.... I am now, as ever, thy servant and the servant of our cause. Farewell'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1206/original/ifThouCleopatraILN333.jpg?1484776572">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1206">'If thou canst, forget my folly.... I am now, as ever, thy servant and the servant of our cause. Farewell'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1205/original/cleopatraILN332.jpg?1484768554">
+                    <img alt="I" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1205/original/cleopatraILN332.jpg?1484768554">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1205">I</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1208/original/sheRaisedCleopatraILN365.jpg?1484777851">
+                    <img alt="She raised herself, and, bending the harp toward her, struck some wandering chords thereon" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1208/original/sheRaisedCleopatraILN365.jpg?1484777851">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1208">She raised herself, and, bending the harp toward her, struck some wandering chords thereon</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1207/original/cleopatraILN364.jpg?1484777694">
+                    <img alt="It" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1207/original/cleopatraILN364.jpg?1484777694">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1207">It</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1210/original/amidstTheCleopatraILN393.jpg?1484778298">
+                    <img alt="Amidst the blare of trumpets came the Roman in. And while the heralds called out his name, titles, and offices, he fixed his gaze on Cleopatra " loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1210/original/amidstTheCleopatraILN393.jpg?1484778298">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1210">Amidst the blare of trumpets came the Roman in. And while the heralds called out his name, titles, and offices, he fixed his gaze on Cleopatra </a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1209/original/cleopatraILN392.jpg?1484778132">
+                    <img alt="Once" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1209/original/cleopatraILN392.jpg?1484778132">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1209">Once</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1994/original/forACleopatraILN392.jpg?1519597853">
+                    <img alt="For" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1994/original/forACleopatraILN392.jpg?1519597853">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1994">For</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1211/original/cleopatraILN430.jpg?1484866725">
+                    <img alt="That" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1211/original/cleopatraILN430.jpg?1484866725">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1211">That</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1212/original/aMightyCleopatraILN431.jpg?1484870696">
+                    <img alt="A mighty bat flew forth... Cleopatra uttered a cry of terror, and the eunuch, who was watching, fell down in fear" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1212/original/aMightyCleopatraILN431.jpg?1484870696">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1212">A mighty bat flew forth... Cleopatra uttered a cry of terror, and the eunuch, who was watching, fell down in fear</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1214/original/itIsCleopatraILN465.jpg?1484926025">
+                    <img alt="'It is too late to ponder,' she answered, lifting her white and beauteous face and fixing her blue eyes all big with terror upon mine own." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1214/original/itIsCleopatraILN465.jpg?1484926025">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1214">'It is too late to ponder,' she answered, lifting her white and beauteous face and fixing her blue eyes all big with terror upon mine own.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1213/original/cleopatraILN464.jpg?1484875696">
+                    <img alt="We" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1213/original/cleopatraILN464.jpg?1484875696">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1213">We</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1217/original/nightAfterCleopatraILN497.jpg?1484934108">
+                    <img alt="Night after night, for these four happy nights, the last happy hours I was ever to know, we sat hand in hand upon the deck and heard the waters lip the vessel's side, and watched the soft footfall of the moon as she trod the depths of Nile" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1217/original/nightAfterCleopatraILN497.jpg?1484934108">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1217">Night after night, for these four happy nights, the last happy hours I was ever to know, we sat hand in hand upon the deck and heard the waters lip the vessel's side, and watched the soft footfall of the moon as she trod the depths of Nile</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1215/original/cleopatraILN496.jpg?1484930518">
+                    <img alt="Presently" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1215/original/cleopatraILN496.jpg?1484930518">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1215">Presently</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1219/original/brennusWithCleopatraILN529.jpg?1484951008">
+                    <img alt="Brennus, with an oath, seized first one and then another and cast them from me" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1219/original/brennusWithCleopatraILN529.jpg?1484951008">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1219">Brennus, with an oath, seized first one and then another and cast them from me</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1218/original/cleopatraILN528.jpg?1484941067">
+                    <img alt="And" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1218/original/cleopatraILN528.jpg?1484941067">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1218">And</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1225/original/thereInCleopatraILN625.jpg?1485042157">
+                    <img alt="There in his carven chair sat my father, Amenemhat, clad in his priestly robes. At first I thought that he was dead, so still he sat; but at length he turned his head, and I saw that his orbs were white and sightless" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1225/original/thereInCleopatraILN625.jpg?1485042157">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1225">There in his carven chair sat my father, Amenemhat, clad in his priestly robes. At first I thought that he was dead, so still he sat; but at length he turned his head, and I saw that his orbs were white and sightless</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1224/original/cleopatraILN624.jpg?1485039619">
+                    <img alt="I" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1224/original/cleopatraILN624.jpg?1485039619">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1224">I</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1221/original/fromHerCleopatraILN561.jpg?1484955468">
+                    <img alt="From her ear she took one of those great pearls, and before any could guess her purpose, she let it fall in the vinegar" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1221/original/fromHerCleopatraILN561.jpg?1484955468">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1221">From her ear she took one of those great pearls, and before any could guess her purpose, she let it fall in the vinegar</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1220/original/cleopatraILN560.jpg?1484953753">
+                    <img alt="Cleopatra" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1220/original/cleopatraILN560.jpg?1484953753">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1220">Cleopatra</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1995/original/onTheCleopatraILN560.jpg?1519598692">
+                    <img alt="On" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1995/original/onTheCleopatraILN560.jpg?1519598692">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1995">On</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1223/original/aGreatCleopatraILN593.jpg?1485037626">
+                    <img alt="A great wave came and swept me, riding, as it were, upon the spar, past bulwarks of the galley where the fierce-faced sailors clung to see me drown" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1223/original/aGreatCleopatraILN593.jpg?1485037626">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1223">A great wave came and swept me, riding, as it were, upon the spar, past bulwarks of the galley where the fierce-faced sailors clung to see me drown</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1996/original/iMadeCleopatraILN592.jpg?1519599441">
+                    <img alt="I" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1996/original/iMadeCleopatraILN592.jpg?1519599441">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1996">I</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1222/original/cleopatraILN592.jpg?1484973848">
+                    <img alt="For" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1222/original/cleopatraILN592.jpg?1484973848">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1222">For</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1226/original/cleopatraILN656.jpg?1485046690">
+                    <img alt="These" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1226/original/cleopatraILN656.jpg?1485046690">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1226">These</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1227/original/inTheCleopatraILN657.jpg?1485047149">
+                    <img alt="In the morning I awoke, wondering, and went to the mouth of the tomb; and there, coming up the valley, I saw the messengers of Cleopatra, and with them a Roman guard. 'What will ye with me now?' I asked sternly" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1227/original/inTheCleopatraILN657.jpg?1485047149">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1227">In the morning I awoke, wondering, and went to the mouth of the tomb; and there, coming up the valley, I saw the messengers of Cleopatra, and with them a Roman guard. 'What will ye with me now?' I asked sternly</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1458/original/cleopatraMacdonaldDustJacket.jpg?1507075005">
+                    <img alt="Cleopatra" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1458/original/cleopatraMacdonaldDustJacket.jpg?1507075005">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1458">Cleopatra</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1516/original/confesionBrugueraDustJacket.jpg?1508292262">
+                    <img alt="Confesion" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1516/original/confesionBrugueraDustJacket.jpg?1508292262">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1516">Confesion</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1954/original/cleopatraArrowLibraryNo124DustJacket.jpg?1518749379">
+                    <img alt="Cleopatra" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1954/original/cleopatraArrowLibraryNo124DustJacket.jpg?1518749379">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1954">Cleopatra</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1955/original/cleopatraArrowLibraryNo124FrontMaterial.jpg?1518750051">
+                    <img alt="Cleopatra" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1955/original/cleopatraArrowLibraryNo124FrontMaterial.jpg?1518750051">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1955">Cleopatra</a></h3>
+                </div>
+              </div>
+            </article>
+        </div>
+      </section>
+
+    <div class="record-back-link">
+      <a class="ui-button ui-button--secondary" href="/novels">Back to novels</a>
+    </div>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-shell">
+        <div class="site-footer-copy">
+          <p>Visual Haggard is a digital archive created by <a target="_blank" rel="noopener noreferrer" href="https://kateholterhoff.com/">Kate Holterhoff</a> and dedicated to the illustrated works of H. Rider Haggard.</p>
+          <div class="site-footer-mark">
+            <img alt="Creative Commons Public Domain" src="https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/publicdomain.svg">
+          </div>
+        </div>
+
+        <div class="site-footer-socials" aria-label="Kate Holterhoff social links">
+          <a class="site-footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Kate Holterhoff on Twitter" href="https://twitter.com/KateHolterhoff">
+            <span class="sr-only">Twitter</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M23.953 4.57a10 10 0 0 1-2.825.775a4.958 4.958 0 0 0 2.163-2.723a10.01 10.01 0 0 1-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 0 0-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 0 1-2.228-.616v.06a4.923 4.923 0 0 0 3.946 4.827a4.996 4.996 0 0 1-2.212.085a4.936 4.936 0 0 0 4.604 3.417a9.867 9.867 0 0 1-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 0 0 7.557 2.209c9.053 0 13.998-7.496 13.998-13.985c0-.21 0-.42-.015-.63A9.935 9.935 0 0 0 24 4.59z"></path>
+            </svg>
+</a>
+          <a class="site-footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Kate Holterhoff on LinkedIn" href="https://linkedin.com/in/kateholterhoff">
+            <span class="sr-only">LinkedIn</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037c-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85c3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065c0-1.138.92-2.063 2.063-2.063c1.14 0 2.064.925 2.064 2.063c0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path>
+            </svg>
+</a>
+          <a class="site-footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Kate Holterhoff on Bluesky" href="https://bsky.app/profile/kateholterhoff.bsky.social">
+            <span class="sr-only">Bluesky</span>
+            <svg viewBox="0 0 512 512" aria-hidden="true">
+              <path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.2 298 412 314.6 353.1 304.5c102.9 17.5 129.1 75.5 72.5 133.5c-107.4 110.2-154.3-27.6-166.3-62.9c-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9c-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1C10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"></path>
+            </svg>
+</a>
+          <a class="site-footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Kate Holterhoff on GitHub" href="https://github.com/kholterhoff">
+            <span class="sr-only">GitHub</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 0c-6.626 0-12 5.373-12 12c0 5.302 3.438 9.8 8.207 11.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416c-.546-1.387-1.333-1.756-1.333-1.756c-1.089-.745.083-.729.083-.729c1.205.084 1.839 1.237 1.839 1.237c1.07 1.834 2.807 1.304 3.492.997c.107-.775.418-1.305.762-1.604c-2.665-.305-5.467-1.334-5.467-5.931c0-1.311.469-2.381 1.236-3.221c-.124-.303-.535-1.524.117-3.176c0 0 1.008-.322 3.301 1.23c.957-.266 1.983-.399 3.003-.404c1.02.005 2.047.138 3.006.404c2.291-1.552 3.297-1.23 3.297-1.23c.653 1.653.242 2.874.118 3.176c.77.84 1.235 1.911 1.235 3.221c0 4.609-2.807 5.624-5.479 5.921c.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576c4.765-1.589 8.199-6.086 8.199-11.386c0-6.627-5.373-12-12-12z"></path>
+            </svg>
+</a>        </div>
+      </div>
+    </footer>
+  
+
+</body></html>

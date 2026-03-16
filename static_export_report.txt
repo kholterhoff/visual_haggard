@@ -1,0 +1,5 @@
+Static export completed at 2026-03-16T23:00:25Z
+Host: www.visualhaggard.org
+Request host: 127.0.0.1
+Exported routes: 2862
+Custom domain: www.visualhaggard.org

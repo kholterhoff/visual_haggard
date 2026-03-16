@@ -1,0 +1,537 @@
+<!DOCTYPE html><html lang="en"><head>
+    <title>Beatrice - Visual Haggard</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="IaNHSmeanV4-Y5DK8EF3x-d-lBmPbkFAxEj4dEeIuY8CcJR_D3vu9QnpQkHEXiIS3sayg4x_v5jUleN93y0JYQ">
+    <meta name="csp-nonce" content="QmGrq9kljbYgwxi8icnu2A==">
+
+    <link rel="stylesheet" href="/assets/application-d267c61bc77dc7bacf464148ed5428f1f7ef2afe276e29722c97f47f75e87655.css" data-turbo-track="reload">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css" data-turbo-track="reload">
+    
+    <script type="importmap" data-turbo-track="reload" nonce="QmGrq9kljbYgwxi8icnu2A==">{
+  "imports": {
+    "application": "/assets/application-37f365cbecf1fa2810a8303f4b6571676fa1f9c56c248528bc14ddb857531b95.js",
+    "@hotwired/turbo-rails": "/assets/turbo.min-3e48f1801baf343469811ff2c47889596fb8b7eb6d8fa63c4d81d0b94dc8c16d.js",
+    "@hotwired/stimulus": "/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js",
+    "@hotwired/stimulus-loading": "/assets/stimulus-loading-3576ce92b149ad5d6959438c6f291e2426c86df3b874c525b30faad51b0d96b3.js",
+    "photoswipe": "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.js",
+    "photoswipe-lightbox": "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.js",
+    "controllers/application": "/assets/controllers/application-368d98631bccbf2349e0d4f8269afb3fe9625118341966de054759d96ea86c7e.js",
+    "controllers/hello_controller": "/assets/controllers/hello_controller-549135e8e7c683a538c3d6d517339ba470fcfb79d62f738a0a089ba41851a554.js",
+    "controllers": "/assets/controllers/index-31a9bee606cbc5cdb1593881f388bbf4c345bf693ea24e124f84b6d5c98ab648.js",
+    "controllers/mobile_nav_controller": "/assets/controllers/mobile_nav_controller-6283204ad4067b92e81189423ed69d66bc90e26374e7e699d7c20c3ba8ebf531.js",
+    "controllers/motion_toggle_controller": "/assets/controllers/motion_toggle_controller-dcdea2f165e09b308896d8c887319fd0347b0356d437c681bffb7040809199a8.js",
+    "controllers/pagefind_search_controller": "/assets/controllers/pagefind_search_controller-adffc2920f9185c26bdef9416d1fc80a365a1874ad296c646d76352b4d88f704.js",
+    "controllers/photoswipe_controller": "/assets/controllers/photoswipe_controller-771eb75a1bc1429c9f4662e8890165aa518d98430bdd3bdf49b59834842bfd93.js",
+    "controllers/reels_controller": "/assets/controllers/reels_controller-bf39e655106ecd0fc0f51e0dd63e8d4b9f0b1433afacdff3e9a770fe771e3b15.js",
+    "controllers/rotator_controller": "/assets/controllers/rotator_controller-7da4e4dfd3e338f8c56b42167d90300923a84156ffe52b531c7cbf379116c7d1.js",
+    "controllers/timeline_scroller_controller": "/assets/controllers/timeline_scroller_controller-4421edcffc1f2bc024aa5adfd9b8936825663d098fec0e13f2199d007abfd6c9.js"
+  }
+}</script>
+<link rel="modulepreload" href="/assets/application-37f365cbecf1fa2810a8303f4b6571676fa1f9c56c248528bc14ddb857531b95.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/turbo.min-3e48f1801baf343469811ff2c47889596fb8b7eb6d8fa63c4d81d0b94dc8c16d.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/stimulus.min-dd364f16ec9504dfb72672295637a1c8838773b01c0b441bd41008124c407894.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/stimulus-loading-3576ce92b149ad5d6959438c6f291e2426c86df3b874c525b30faad51b0d96b3.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/controllers/application-368d98631bccbf2349e0d4f8269afb3fe9625118341966de054759d96ea86c7e.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/controllers/hello_controller-549135e8e7c683a538c3d6d517339ba470fcfb79d62f738a0a089ba41851a554.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/controllers/index-31a9bee606cbc5cdb1593881f388bbf4c345bf693ea24e124f84b6d5c98ab648.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/controllers/mobile_nav_controller-6283204ad4067b92e81189423ed69d66bc90e26374e7e699d7c20c3ba8ebf531.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/controllers/motion_toggle_controller-dcdea2f165e09b308896d8c887319fd0347b0356d437c681bffb7040809199a8.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/controllers/pagefind_search_controller-adffc2920f9185c26bdef9416d1fc80a365a1874ad296c646d76352b4d88f704.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/controllers/photoswipe_controller-771eb75a1bc1429c9f4662e8890165aa518d98430bdd3bdf49b59834842bfd93.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/controllers/reels_controller-bf39e655106ecd0fc0f51e0dd63e8d4b9f0b1433afacdff3e9a770fe771e3b15.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/controllers/rotator_controller-7da4e4dfd3e338f8c56b42167d90300923a84156ffe52b531c7cbf379116c7d1.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<link rel="modulepreload" href="/assets/controllers/timeline_scroller_controller-4421edcffc1f2bc024aa5adfd9b8936825663d098fec0e13f2199d007abfd6c9.js" nonce="QmGrq9kljbYgwxi8icnu2A==">
+<script type="module" nonce="QmGrq9kljbYgwxi8icnu2A==">import "application"</script>
+  </head>
+
+  <body class="novels-show">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header">
+      <div class="site-header-shell">
+        <div class="site-header-panel" data-controller="mobile-nav" data-action="click@window->mobile-nav#closeOnOutside keydown.esc@window->mobile-nav#close resize@window->mobile-nav#syncForViewport">
+          <a class="site-brand" aria-label="Visual Haggard home" href="/">
+            <span class="site-brand-name">Visual Haggard</span>
+</a>
+          <button type="button" class="site-menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-header-controls" data-mobile-nav-target="button" data-action="mobile-nav#toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="site-menu-toggle-lines" aria-hidden="true">
+              <span class="site-menu-toggle-line"></span>
+              <span class="site-menu-toggle-line"></span>
+              <span class="site-menu-toggle-line"></span>
+            </span>
+          </button>
+
+          <div class="site-header-controls" id="site-header-controls" data-mobile-nav-target="panel">
+            <nav class="site-nav" aria-label="Primary">
+              <ul>
+                <li><a href="/novels">Novels</a></li>
+                <li><a href="/illustrators">Illustrators</a></li>
+                <li><a href="/biography">Biography</a></li>
+                <li><a href="/editors_statement">Editor's Statement</a></li>
+              </ul>
+            </nav>
+
+            <form class="site-search" action="/search" accept-charset="UTF-8" method="get">
+              <label class="sr-only" for="search">Search the archive</label>
+              <input class="site-search-field" id="search" placeholder="Search the archive" aria-label="Search the archive" type="search" name="search">
+              <input type="submit" name="commit" value="Search" class="site-search-submit" data-disable-with="Search">
+</form>          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="site-main" id="main-content" tabindex="-1">
+      
+<div class="novel-page" data-pagefind-body="">
+  <div class="pagefind-record-data sr-only"><span class="sr-only" data-pagefind-filter="record_type">novel</span><span class="sr-only" data-pagefind-meta="record_type">novel</span><span class="sr-only" data-pagefind-meta="title">Beatrice</span><span class="sr-only" data-pagefind-meta="novel_name">Beatrice</span><span class="sr-only" data-pagefind-meta="image">https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/101/original/beatriceCollierCover.jpeg?1393618828</span><span class="sr-only" data-pagefind-meta="summary">In Haggard&amp;#39;s English melodrama Beatrice, the eponymous heroine&amp;#39;s adulterous passions result in her suicide. While less popular than his African romances, Haggard&amp;#39;s freethinking and atheistic heroine is noteworthy for ...</span><span class="sr-only">In Haggard's English melodrama &lt;span style="font-style:italic;"&gt;Beatrice&lt;/span&gt;, the eponymous heroine's adulterous passions result in her suicide. While less popular than his African romances, Haggard's freethinking and atheistic heroine is noteworthy for combining many features of the nineteenth century "New Woman." Several periodicals serialized &lt;span style="font-style:italic;"&gt;Beatrice&lt;/span&gt;, such as &lt;span style="font-style:italic;"&gt;The Yorkshire Post&lt;/span&gt;, &lt;span style="font-style:italic;"&gt;Ipswitch Journal&lt;/span&gt;, &lt;span style="font-style:italic;"&gt;Cardiff Times&lt;/span&gt;, &lt;span style="font-style:italic;"&gt;Liverpool Daily Post&lt;/span&gt;, and &lt;span style="font-style:italic;"&gt;Nottingham Guardian&lt;/span&gt;. On 12 May 1890, Longmans, Green, &amp; Co., London, published Haggard's novel in a print run of 10,000 copies. Longman's Fourth Edition of &lt;span style="font-style:italic;"&gt;Beatrice&lt;/span&gt; featured a frontispiece by &lt;a href="http://visualhaggard.org/illustrators/4"&gt;Maurice Greiffenhagen&lt;/a&gt;. P. F. Collier &amp; Son, New York, published an edition that adopts Greiffenhagen's frontispiece. In 1890 Harper &amp; Brothers, New York, published an edition of &lt;span style="font-style:italic;"&gt;Beatrice&lt;/span&gt; that included twelve illustrations. The illustrator's identity is not recorded in the front material of this edition, however because the signature of &lt;a href="http://www.visualhaggard.org/illustrators/27"&gt;Lancelot Speed&lt;/a&gt; appears on several of these illustrations (see &lt;a href="http://www.visualhaggard.org/illustrations/989"&gt;"'He's nothing...'"&lt;/a&gt; and &lt;a href="http://www.visualhaggard.org/illustrations/990"&gt;"Alas!..."&lt;/a&gt;) I have attributed all twelve to Speed. Moreover, the Harper &amp; Brothers illustrations were likely commissioned to accompany an earlier serialized printing of Haggard's novel, rather than this specific edition, owing to their obvious cropping (see the bottom-left corner of &lt;a href="http://www.visualhaggard.org/illustrations/1026"&gt;"'No! never..."&lt;/a&gt;). &lt;h4&gt;Further Reading&lt;/h4&gt; &lt;p style="margin-left:.5in;text-indent:-.5in"&gt;Haggard, H. Rider. &lt;span style="font-style:italic;"&gt;The Days of My Life, An Autobiography&lt;/span&gt;. 2 Vols. London: Longmans, Green and Co., 1926. I: 279; II: 13-15.&lt;/p&gt; &lt;p style="margin-left:.5in;text-indent:-.5in"&gt;Pocock, Tom. &lt;span style="font-style:italic;"&gt;Rider Haggard and the Lost Empire&lt;/span&gt;. London: Weidenfeld and Nicoloson, 1993. 76.&lt;/p&gt; &lt;p style="margin-left:.5in;text-indent:-.5in"&gt;Whatmore, D.E.. &lt;span style="font-style:italic;"&gt;H Rider Haggard: A Bibliography&lt;/span&gt;. Westport, CT: Meckler Publishing Co., 1987. F12, 21-22.&lt;/p&gt;</span></div>
+
+  <div class="page-shell">
+    <section class="novel-hero surface-panel">
+      <div class="hero-image">
+          <img alt="Beatrice cover" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/101/original/beatriceCollierCover.jpeg?1393618828">
+      </div>
+
+      <div class="hero-content">
+        <p class="page-eyebrow">Novel record</p>
+        <h1 class="page-title novel-title">Beatrice</h1>
+
+        <div class="meta-chip-row novel-meta-row">
+          <a class="meta-chip meta-chip-link" href="#edition-archive">5 editions</a>
+          <a class="meta-chip meta-chip-link" href="#illustration-archive">24 illustrations</a>
+        </div>
+
+          <div class="novel-description">
+            <p>In Haggard's English melodrama <span>Beatrice</span>, the eponymous heroine's adulterous passions result in her suicide. While less popular than his African romances, Haggard's freethinking and atheistic heroine is noteworthy for combining many features of the nineteenth century "New Woman." </p>
+
+<p>Several periodicals serialized <span>Beatrice</span>, such as <span>The Yorkshire Post</span>, <span>Ipswitch Journal</span>, <span>Cardiff Times</span>, <span>Liverpool Daily Post</span>, and <span>Nottingham Guardian</span>. On 12 May 1890, Longmans, Green, &amp; Co., London, published Haggard's novel in a print run of 10,000 copies. Longman's Fourth Edition of <span>Beatrice</span> featured a frontispiece by <a href="/illustrators/4">Maurice Greiffenhagen</a>. P. F. Collier &amp; Son, New York, published an edition that adopts Greiffenhagen's frontispiece. </p>
+
+<p>In 1890 Harper &amp; Brothers, New York, published an edition of <span>Beatrice</span> that included twelve illustrations. The illustrator's identity is not recorded in the front material of this edition, however because the signature of <a href="/illustrators/27">Lancelot Speed</a> appears on several of these illustrations (see <a href="/illustrations/989">"'He's nothing...'"</a> and <a href="/illustrations/990">"Alas!..."</a>) I have attributed all twelve to Speed. Moreover, the Harper &amp; Brothers illustrations were likely commissioned to accompany an earlier serialized printing of Haggard's novel, rather than this specific edition, owing to their obvious cropping (see the bottom-left corner of <a href="/illustrations/1026">"'No! never..."</a>). </p>
+
+<p></p><h4>Further Reading</h4>
+<br><p>Haggard, H. Rider. <span>The Days of My Life, An Autobiography</span>. 2 Vols. London: Longmans, Green and Co., 1926. I: 279; II: 13-15.</p>
+<br><p>Pocock, Tom. <span>Rider Haggard and the Lost Empire</span>. London: Weidenfeld and Nicoloson, 1993. 76.</p>
+<br><p>Whatmore, D.E.. <span>H Rider Haggard: A Bibliography</span>. Westport, CT: Meckler Publishing Co., 1987. F12, 21-22.</p>
+          </div>
+
+
+      </div>
+    </section>
+
+      <section class="surface-panel novel-section" id="edition-archive">
+        <div class="section-heading">
+          <div>
+            <p class="page-eyebrow">Edition archive</p>
+            <h2>Editions of Beatrice</h2>
+          </div>
+        </div>
+
+        <div class="editions-grid">
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/115">
+                <div class="edition-thumbnail">
+                    <img alt="1st US illustrated edition" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/115/original/thenOnceBeatriceCover.jpg?1485099741">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>1st US illustrated edition</h3>
+                    <p class="edition-details">New York: Harper &amp; Brothers, 1890.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/118">
+                <div class="edition-thumbnail">
+                    <img alt="4th Edition" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/118/original/beatrice4thEdCover.jpeg?1479314357">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>4th Edition</h3>
+                    <p class="edition-details">London: Longmans, Green, and Co., 1892.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/216">
+                <div class="edition-thumbnail">
+                    <img alt="The Reader's Library" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/216/original/beatriceReadersLibraryCover.jpg?1491185148">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>The Reader's Library</h3>
+                    <p class="edition-details">London: The Reader's Library, 1927.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/101">
+                <div class="edition-thumbnail">
+                    <img alt="Authorized Edition" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/101/original/beatriceCollierCover.jpeg?1393618828">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>Authorized Edition</h3>
+                    <p class="edition-details">New York: P. F. Collier &amp; Son, None.</p>
+                </div>
+</a>            </article>
+            <article class="edition-card">
+              <a class="edition-link" href="/editions/272">
+                <div class="edition-thumbnail">
+                    <img alt="1st Edition Thus" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/272/original/beatriceNewnesCover.jpg?1507603325">
+                </div>
+                <div class="edition-info">
+                  <p class="edition-label">Edition</p>
+                  <h3>1st Edition Thus</h3>
+                    <p class="edition-details">London: George Newnes, c. 1906.</p>
+                </div>
+</a>            </article>
+        </div>
+      </section>
+
+      <section class="surface-panel novel-section" id="illustration-archive">
+        <div class="section-heading">
+          <div>
+            <p class="page-eyebrow">Illustration archive</p>
+            <h2>Illustrations from Beatrice</h2>
+          </div>
+        </div>
+
+        <div class="illustrations-grid" data-controller="photoswipe">
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/933/original/beatriceAndCollierFrontispiece.jpeg?1393618984">
+                    <img alt="Beatrice and Geoffrey at the gate" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/933/original/beatriceAndCollierFrontispiece.jpeg?1393618984">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/933">Beatrice and Geoffrey at the gate</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1046/original/beatrice4thEdFrontispiece.jpeg?1479314569">
+                    <img alt="Beatrice" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1046/original/beatrice4thEdFrontispiece.jpeg?1479314569">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1046">Beatrice</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1047/original/beatrice4thEdFrontMaterial.jpeg?1479334624">
+                    <img alt="Beatrice: A Novel" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1047/original/beatrice4thEdFrontMaterial.jpeg?1479334624">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1047">Beatrice: A Novel</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/990/original/alasShe104.jpeg?1478040115">
+                    <img alt="Alas! She could not hear a single word." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/990/original/alasShe104.jpeg?1478040115">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/990">Alas! She could not hear a single word.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1030/original/murderBeatrice140.jpeg?1478094523">
+                    <img alt="Murder!" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1030/original/murderBeatrice140.jpeg?1478094523">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1030">Murder!</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/988/original/sheStruggled22.jpeg?1476362866">
+                    <img alt="She struggled to her knees, gasping." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/988/original/sheStruggled22.jpeg?1476362866">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/988">She struggled to her knees, gasping.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/989/original/hesNothing82.jpeg?1476970085">
+                    <img alt="'He's nothing but an old beer-tub of a heathen'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/989/original/hesNothing82.jpeg?1476970085">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/989">'He's nothing but an old beer-tub of a heathen'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1023/original/denouncedThe162.jpeg?1478044198">
+                    <img alt="Denounced the woman." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1023/original/denouncedThe162.jpeg?1478044198">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1023">Denounced the woman.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1028/original/whyIt52.jpeg?1478053570">
+                    <img alt="'Why, it must be Effie, my daughter. Please let her in.'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1028/original/whyIt52.jpeg?1478053570">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1028">'Why, it must be Effie, my daughter. Please let her in.'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1027/original/theWay96.jpg?1478051359">
+                    <img alt="The way to Edward's shed lay through the village, down the cliff." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1027/original/theWay96.jpg?1478051359">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1027">The way to Edward's shed lay through the village, down the cliff.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1024/original/hushFor222.jpeg?1478045404">
+                    <img alt="'Hush, for your life's sake!' He exclaimed. 'Hush, or you are lost!'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1024/original/hushFor222.jpeg?1478045404">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1024">'Hush, for your life's sake!' He exclaimed. 'Hush, or you are lost!'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1026/original/noNever114.jpeg?1478048357">
+                    <img alt="'No, never!' she exclaimed, stamping her foot upon the shingle." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1026/original/noNever114.jpeg?1478048357">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1026">'No, never!' she exclaimed, stamping her foot upon the shingle.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1029/original/beatriceSat144.jpeg?1478054796">
+                    <img alt="Beatrice sat down on the foot of her bed, and, leaning her arm upon the window-sill, looked out upon the quiet night." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1029/original/beatriceSat144.jpeg?1478054796">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1029">Beatrice sat down on the foot of her bed, and, leaning her arm upon the window-sill, looked out upon the quiet night.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/987/original/thenOnceBeatriceFrontispiece.jpg?1476311490">
+                    <img alt="Then once more hope rent her starry robes, and the angels drew down a veil over the eyes of night, and the sea swallowed me, and I sank till I reached the deep foundations of mortal death." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/987/original/thenOnceBeatriceFrontispiece.jpg?1476311490">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/987">Then once more hope rent her starry robes, and the angels drew down a veil over the eyes of night, and the sea swallowed me, and I sank till I reached the deep foundations of mortal death.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1025/original/mrDavies42.jpeg?1478047174">
+                    <img alt="Mr. Davies merely replied that the property could wait; he should go the voyage, and then retire." loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1025/original/mrDavies42.jpeg?1478047174">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1025">Mr. Davies merely replied that the property could wait; he should go the voyage, and then retire.</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1385/original/beatriceReadersLibraryDustJacket.jpg?1491185248">
+                    <img alt="Beatrice" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1385/original/beatriceReadersLibraryDustJacket.jpg?1491185248">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1385">Beatrice</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1494/original/geoffreyStaggeredNewnesFrontispiece.jpg?1507604528">
+                    <img alt="Geoffrey staggered...turned quite white, and halted" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1494/original/geoffreyStaggeredNewnesFrontispiece.jpg?1507604528">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1494">Geoffrey staggered...turned quite white, and halted</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1497/original/herEyesNewnes62.jpg?1507605273">
+                    <img alt="Her eyes would glance continually towards the handsome pair in the window-place" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1497/original/herEyesNewnes62.jpg?1507605273">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1497">Her eyes would glance continually towards the handsome pair in the window-place</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1498/original/notEightNewnes105.jpg?1507605372">
+                    <img alt="Not eight paces from him was McGranger holding a candle in his hand" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1498/original/notEightNewnes105.jpg?1507605372">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1498">Not eight paces from him was McGranger holding a candle in his hand</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1499/original/beatriceIsNewnes120.jpg?1507605470">
+                    <img alt="'Beatrice is a scarlet woman!'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1499/original/beatriceIsNewnes120.jpg?1507605470">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1499">'Beatrice is a scarlet woman!'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1501/original/prayToNewnes157.jpg?1507605639">
+                    <img alt="'Pray to God you may not one day be called her murderers'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1501/original/prayToNewnes157.jpg?1507605639">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1501">'Pray to God you may not one day be called her murderers'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1495/original/ohHeNewnes30.jpg?1507605047">
+                    <img alt="'Oh,' he replied, struggling to get into his waistcoat again" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1495/original/ohHeNewnes30.jpg?1507605047">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1495">'Oh,' he replied, struggling to get into his waistcoat again</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1496/original/iHaveNewnes35.jpg?1507605154">
+                    <img alt="'I have her—lend a hand, lads'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1496/original/iHaveNewnes35.jpg?1507605154">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1496">'I have her—lend a hand, lads'</a></h3>
+                </div>
+              </div>
+            </article>
+            <article class="illustration-tile">
+              <div class="illustration-tile-link">
+                <div class="illustration-thumbnail">
+                  <a target="_blank" rel="noopener noreferrer" class="illustration-zoom-link" data-zoomable-image="true" href="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1500/original/geoffreyHearNewnes132.jpg?1507605543">
+                    <img alt="'Geoffrey! hear me, Geoffrey!'" loading="lazy" decoding="async" src="https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/1500/original/geoffreyHearNewnes132.jpg?1507605543">
+</a>                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label">Illustration</p>
+                  <h3><a href="/illustrations/1500">'Geoffrey! hear me, Geoffrey!'</a></h3>
+                </div>
+              </div>
+            </article>
+        </div>
+      </section>
+
+    <div class="record-back-link">
+      <a class="ui-button ui-button--secondary" href="/novels">Back to novels</a>
+    </div>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer-shell">
+        <div class="site-footer-copy">
+          <p>Visual Haggard is a digital archive created by <a target="_blank" rel="noopener noreferrer" href="https://kateholterhoff.com/">Kate Holterhoff</a> and dedicated to the illustrated works of H. Rider Haggard.</p>
+          <div class="site-footer-mark">
+            <img alt="Creative Commons Public Domain" src="https://mirrors.creativecommons.org/presskit/buttons/88x31/svg/publicdomain.svg">
+          </div>
+        </div>
+
+        <div class="site-footer-socials" aria-label="Kate Holterhoff social links">
+          <a class="site-footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Kate Holterhoff on Twitter" href="https://twitter.com/KateHolterhoff">
+            <span class="sr-only">Twitter</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M23.953 4.57a10 10 0 0 1-2.825.775a4.958 4.958 0 0 0 2.163-2.723a10.01 10.01 0 0 1-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 0 0-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 0 1-2.228-.616v.06a4.923 4.923 0 0 0 3.946 4.827a4.996 4.996 0 0 1-2.212.085a4.936 4.936 0 0 0 4.604 3.417a9.867 9.867 0 0 1-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 0 0 7.557 2.209c9.053 0 13.998-7.496 13.998-13.985c0-.21 0-.42-.015-.63A9.935 9.935 0 0 0 24 4.59z"></path>
+            </svg>
+</a>
+          <a class="site-footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Kate Holterhoff on LinkedIn" href="https://linkedin.com/in/kateholterhoff">
+            <span class="sr-only">LinkedIn</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037c-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85c3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065c0-1.138.92-2.063 2.063-2.063c1.14 0 2.064.925 2.064 2.063c0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path>
+            </svg>
+</a>
+          <a class="site-footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Kate Holterhoff on Bluesky" href="https://bsky.app/profile/kateholterhoff.bsky.social">
+            <span class="sr-only">Bluesky</span>
+            <svg viewBox="0 0 512 512" aria-hidden="true">
+              <path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2c42.1-31.6 110.3-56 110.3 21.8c0 15.5-8.9 130.5-14.1 149.2C478.2 298 412 314.6 353.1 304.5c102.9 17.5 129.1 75.5 72.5 133.5c-107.4 110.2-154.3-27.6-166.3-62.9c-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9c-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1C10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"></path>
+            </svg>
+</a>
+          <a class="site-footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Kate Holterhoff on GitHub" href="https://github.com/kholterhoff">
+            <span class="sr-only">GitHub</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 0c-6.626 0-12 5.373-12 12c0 5.302 3.438 9.8 8.207 11.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416c-.546-1.387-1.333-1.756-1.333-1.756c-1.089-.745.083-.729.083-.729c1.205.084 1.839 1.237 1.839 1.237c1.07 1.834 2.807 1.304 3.492.997c.107-.775.418-1.305.762-1.604c-2.665-.305-5.467-1.334-5.467-5.931c0-1.311.469-2.381 1.236-3.221c-.124-.303-.535-1.524.117-3.176c0 0 1.008-.322 3.301 1.23c.957-.266 1.983-.399 3.003-.404c1.02.005 2.047.138 3.006.404c2.291-1.552 3.297-1.23 3.297-1.23c.653 1.653.242 2.874.118 3.176c.77.84 1.235 1.911 1.235 3.221c0 4.609-2.807 5.624-5.479 5.921c.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576c4.765-1.589 8.199-6.086 8.199-11.386c0-6.627-5.373-12-12-12z"></path>
+            </svg>
+</a>        </div>
+      </div>
+    </footer>
+  
+
+</body></html>
