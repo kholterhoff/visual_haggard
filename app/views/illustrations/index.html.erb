@@ -1,0 +1,54 @@
+<% content_for :title, "Illustrations" %>
+
+<div class="illustrations-page">
+  <div class="page-shell">
+    <section class="page-hero illustrations-hero">
+      <div>
+        <p class="page-eyebrow">Illustration archive</p>
+        <h1 class="page-title">Browse individual artworks across the archive.</h1>
+        <p class="page-lead">Move from an image to its edition, novel, and illustrator without losing the surrounding bibliographic context.</p>
+      </div>
+
+      <div class="meta-chip-row illustrations-hero-meta">
+        <span class="meta-chip"><%= number_with_delimiter(@illustrations.size) %> illustrations loaded</span>
+        <% if params[:edition_id].present? %>
+          <span class="meta-chip">Filtered by edition</span>
+        <% end %>
+      </div>
+    </section>
+
+    <% if @illustrations.any? %>
+      <section class="surface-panel illustrations-grid-panel">
+        <div class="illustrations-grid-page" data-controller="photoswipe">
+          <% @illustrations.each do |illustration| %>
+            <% image_source = illustration.display_image_source(style: :original) %>
+            <article class="illustration-card">
+              <% if image_source.present? %>
+                <%= zoomable_image_link image_source, link_options: { class: "illustration-card-image-link" } do %>
+                  <div class="illustration-card-image-frame">
+                    <%= image_tag image_source, alt: illustration.name, loading: "lazy", decoding: "async" %>
+                  </div>
+                <% end %>
+              <% else %>
+                <div class="illustration-card-image-frame">
+                  <div class="illustration-card-placeholder">No image</div>
+                </div>
+              <% end %>
+
+              <div class="illustration-card-body">
+                <p class="illustration-card-kicker">Illustration</p>
+                <h2><%= link_to illustration.name, illustration_path(illustration), class: "illustration-card-title-link" %></h2>
+                <p class="illustration-card-meta"><%= link_to illustration.edition.name, edition_path(illustration.edition) %></p>
+                <p class="illustration-card-meta"><%= link_to illustration.novel.name, novel_path(illustration.novel) %></p>
+              </div>
+            </article>
+          <% end %>
+        </div>
+      </section>
+    <% else %>
+      <section class="empty-state">
+        <p>No illustrations found.</p>
+      </section>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<% content_for :title, @illustrator.name %>
+<%
+  hero_illustration = @illustrator.representative_illustration(style: :original)
+  hero_image = @illustrator.representative_image_source(style: :original)
+%>
+
+<div class="illustrator-show-page" data-pagefind-body>
+  <%= pagefind_record_data(
+    filters: { record_type: "illustrator" },
+    meta: {
+      record_type: "illustrator",
+      title: @illustrator.name,
+      illustrator_name: @illustrator.name,
+      image: public_asset_url(hero_image),
+      summary: plain_text_excerpt(@illustrator.bio, length: 220)
+    },
+    body: [@illustrator.bio]
+  ) %>
+
+  <div class="page-shell">
+    <section class="illustrator-show-hero surface-panel">
+      <div class="illustrator-show-copy">
+        <p class="page-eyebrow">Illustrator record</p>
+        <h1 class="page-title"><%= @illustrator.name %></h1>
+        <% if @illustrator.bio.present? %>
+          <div class="illustrator-bio">
+            <%= normalized_simple_format(@illustrator.bio) %>
+          </div>
+        <% else %>
+          <p class="illustrator-bio-fallback">No biographical note is currently available for this illustrator.</p>
+        <% end %>
+        <div class="meta-chip-row illustrator-meta-row">
+          <% if @illustrations.any? %>
+            <%= link_to "#{pluralize(@illustrations.size, "illustration")} in the archive", "#illustrator-work-archive", class: "meta-chip meta-chip-link" %>
+          <% else %>
+            <span class="meta-chip">No illustrations in the archive</span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="illustrator-show-image">
+        <% if hero_illustration.present? && hero_image.present? %>
+          <div class="illustrator-show-image-frame" data-controller="photoswipe">
+            <%= zoomable_image_link hero_image, alt: @illustrator.name do %>
+              <%= image_tag hero_image, alt: @illustrator.name, decoding: "async" %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="illustrator-grid-placeholder">No image available</div>
+        <% end %>
+      </div>
+    </section>
+
+    <% if @illustrations.any? %>
+      <section class="surface-panel illustrator-work-section" id="illustrator-work-archive">
+        <div class="section-heading">
+          <div>
+            <p class="page-eyebrow">Illustration archive</p>
+            <h2>Illustrations by <%= @illustrator.name %></h2>
+          </div>
+        </div>
+
+        <div class="illustrator-work-grid" data-controller="photoswipe">
+          <% @illustrations.each do |illustration| %>
+            <% edition = illustration.edition %>
+            <% novel = edition&.novel %>
+            <% next if edition.blank? || novel.blank? %>
+            <article class="illustrator-work-card">
+              <div class="illustrator-work-link">
+                <div class="illustrator-work-image-frame">
+                  <% if (image_source = illustration.display_image_source(style: :original)).present? %>
+                    <%= zoomable_image_link image_source, link_options: { class: "illustrator-zoom-link" } do %>
+                      <%= image_tag image_source,
+                        alt: illustration.name,
+                        class: "illustrator-work-image",
+                        loading: "lazy",
+                        decoding: "async" %>
+                    <% end %>
+                  <% else %>
+                    <div class="illustrator-grid-placeholder">No image available</div>
+                  <% end %>
+                </div>
+                <div class="illustrator-work-copy">
+                  <p class="illustrator-card-kicker">Illustration</p>
+                  <h3><%= link_to illustration.name.presence || "Untitled illustration", illustration_path(illustration) %></h3>
+                  <p><strong><%= novel.name %></strong></p>
+                  <p><%= edition.display_title %></p>
+                </div>
+              </div>
+            </article>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,102 @@
+<% content_for :title, "Novels" %>
+
+<div class="novels-archive-page">
+  <div class="page-shell">
+    <section class="page-hero novels-hero">
+      <div>
+        <p class="page-eyebrow">Novels</p>
+        <h1 class="page-title">Experience Haggard's fiction through illustrated editions.</h1>
+        <p class="page-lead">Each novel record gathers editions, cover art, and related illustrations into a single browseable archive page.</p>
+
+        <div class="meta-chip-row novels-hero-meta">
+          <% if @novel_groups.any? %>
+            <%= link_to "Directory", "#novel-directory", class: "meta-chip meta-chip-link" %>
+          <% end %>
+          <% if @novels.any? %>
+            <%= link_to "Archive browse", "#novel-archive-browse", class: "meta-chip meta-chip-link" %>
+          <% end %>
+        </div>
+      </div>
+    </section>
+
+    <% if @novel_groups.any? %>
+      <section class="surface-panel novels-directory" id="novel-directory">
+        <div class="section-heading">
+          <div>
+            <p class="page-eyebrow">Directory</p>
+            <h2>Browse by title</h2>
+          </div>
+        </div>
+
+        <div class="novel-directory-jump" aria-label="Alphabetical novel navigation">
+          <% @novel_groups.keys.sort.each do |letter| %>
+            <% anchor = letter.match?(/[A-Z]/) ? letter.downcase : "other" %>
+            <%= link_to letter, "#novel-letter-#{anchor}", class: "novel-letter-jump" %>
+          <% end %>
+        </div>
+
+        <div class="novel-directory-groups">
+          <% @novel_groups.keys.sort.each do |letter| %>
+            <% anchor = letter.match?(/[A-Z]/) ? letter.downcase : "other" %>
+            <section class="novel-directory-group" id="novel-letter-<%= anchor %>">
+              <header class="novel-directory-group-header">
+                <h3><%= letter %></h3>
+              </header>
+
+              <div class="novel-directory-links">
+                <% @novel_groups.fetch(letter).each do |novel| %>
+                  <%= link_to novel.name, novel_path(novel), class: "novel-directory-link" %>
+                <% end %>
+              </div>
+            </section>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <% if @novels.any? %>
+      <section class="surface-panel novels-archive-container" id="novel-archive-browse">
+        <div class="section-heading">
+          <div>
+            <p class="page-eyebrow">Archive browse</p>
+            <h2>Representative works</h2>
+          </div>
+        </div>
+
+        <div class="novel-grid">
+          <% @novels.each do |novel| %>
+            <% cover_source = novel.display_cover_source(style: :original) %>
+            <article class="novel-grid-item">
+              <%= link_to novel_path(novel), class: "novel-grid-link" do %>
+                <div class="novel-grid-visual">
+                  <% if cover_source.present? %>
+                    <%= image_tag cover_source,
+                      alt: novel.name,
+                      class: "novel-grid-image",
+                      loading: "lazy",
+                      decoding: "async" %>
+                  <% else %>
+                    <div class="novel-grid-placeholder">No cover available</div>
+                  <% end %>
+                </div>
+
+                <div class="novel-grid-copy">
+                  <p class="novel-grid-label">Novel</p>
+                  <h2><%= novel.name %></h2>
+                </div>
+              <% end %>
+            </article>
+          <% end %>
+        </div>
+
+        <div class="novels-pagination">
+          <%= paginate @novels %>
+        </div>
+      </section>
+    <% else %>
+      <section class="empty-state novels-empty">
+        <p>No novels found.</p>
+      </section>
+    <% end %>
+  </div>
+</div>

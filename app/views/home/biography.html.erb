@@ -1,0 +1,49 @@
+<% content_for :title, "Biography - H. Rider Haggard" %>
+
+<div class="prose-page biography-page">
+  <div class="prose-shell">
+    <article class="prose-article">
+      <header class="prose-header">
+        <p class="page-eyebrow">Biography</p>
+        <h1 class="page-title">H. Rider Haggard</h1>
+        <p class="page-lead">1856-1925</p>
+      </header>
+
+      <div class="prose-content">
+        <% if @biography_portrait&.display_image_source(style: :original).present? %>
+          <figure class="biography-portrait">
+            <%= link_to illustration_path(@biography_portrait), class: "biography-portrait-link" do %>
+              <%= image_tag @biography_portrait.display_image_source(style: :original),
+                alt: "Portrait of H. Rider Haggard",
+                class: "biography-portrait-image",
+                decoding: "async" %>
+            <% end %>
+            <figcaption class="biography-portrait-citation">
+              "H. Rider Haggard." Lithograph. Frontispiece. <cite>Maiwa's Revenge; Or, The War of the Little Hand</cite>, new ed., Longmans, Green and Co., 1923.
+            </figcaption>
+          </figure>
+        <% end %>
+
+        <h2>Early Life</h2>
+        <p>Sir Henry Rider Haggard was born on June 22, 1856, at Bradenham Hall in Norfolk, England, the eighth of ten children. His father, William Haggard, was a barrister and country squire. Young Rider, as he was known, received his early education at Ipswich Grammar School and later attended London day schools, though he was not considered an outstanding student.</p>
+
+        <h2>Africa and Adventure</h2>
+        <p>In 1875, at the age of nineteen, Haggard traveled to South Africa as secretary to Sir Henry Bulwer, Lieutenant-Governor of Natal. This experience would profoundly influence his literary career. He witnessed the annexation of the Transvaal in 1877 and remained in South Africa until 1879, serving in various governmental positions. The landscapes, peoples, and political tensions of southern Africa would later provide the backdrop for many of his most famous novels.</p>
+        <p>After returning to England in 1879, Haggard married Mariana Louisa Margitson in 1880. He briefly returned to Africa with his wife but came back to England in 1881 to study law. He was called to the bar in 1884 but never practiced, having already begun his literary career.</p>
+
+        <h2>Literary Success</h2>
+        <p>Haggard's first novel, <em>Dawn</em>, was published in 1884, but it was <em>King Solomon's Mines</em> (1885) that brought him international fame. Written in just six weeks on a wager that he could produce a book as exciting as Robert Louis Stevenson's <em>Treasure Island</em>, the novel became an immediate bestseller and established Haggard as a master of the adventure romance genre.</p>
+        <p>His next major success, <em>She</em> (1887), told the story of Ayesha, the immortal queen of a lost African civilization. The novel's blend of adventure, romance, and the supernatural captivated readers and has remained in print continuously since its first publication. Haggard followed this with <em>Allan Quatermain</em> (1887), a sequel to <em>King Solomon's Mines</em>, and numerous other adventure tales set in Africa and other exotic locales.</p>
+
+        <h2>Themes and Style</h2>
+        <p>Haggard's novels typically featured British protagonists encountering lost civilizations, ancient mysteries, and supernatural phenomena in remote corners of the world. His work reflected both the adventurous spirit and the imperial attitudes of the Victorian era. While his portrayal of indigenous peoples and colonial relationships has been criticized by modern readers, his novels remain important documents of late Victorian popular culture and imagination.</p>
+        <p>His writing style was characterized by vivid descriptions, fast-paced action, and a talent for creating memorable characters. Allan Quatermain, the hero of several novels, became one of the archetypal adventure heroes of English literature, influencing countless later works in the genre.</p>
+
+        <h2>Later Life and Legacy</h2>
+        <p>Beyond his fiction writing, Haggard was deeply interested in agriculture and social reform. He served on several royal commissions investigating rural England and the Dominions. He was knighted in 1912 for his public service. He was also made a Knight Commander of the Order of the British Empire in 1919.</p>
+        <p>Haggard continued writing prolifically throughout his life, producing over 40 novels as well as numerous short stories, articles, and non-fiction works. His later novels, while still popular, never quite matched the success of his early masterpieces. He died in London on May 14, 1925, at the age of 68.</p>
+        <p>Today, Haggard is remembered as one of the pioneers of the lost world genre of adventure fiction. His influence can be seen in the works of writers such as Edgar Rice Burroughs, H.P. Lovecraft, and countless others. His novels have been adapted numerous times for film, television, and radio, ensuring that his tales of adventure continue to captivate new generations of readers and viewers.</p>
+      </div>
+    </article>
+  </div>
+</div>

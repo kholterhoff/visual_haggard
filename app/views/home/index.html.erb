@@ -1,0 +1,300 @@
+<% content_for :title, "Visual Haggard" %>
+
+<div class="home-page" data-controller="motion-toggle">
+  <section
+    class="home-cover-wall"
+    data-controller="reels"
+  >
+    <button
+      type="button"
+      class="home-motion-toggle"
+      data-motion-toggle-target="button"
+      data-action="motion-toggle#toggle"
+      aria-pressed="false"
+    >
+      Pause motion
+    </button>
+    <div class="home-cover-reels" aria-hidden="true" inert>
+      <% @hero_cover_reels.each_with_index do |reel, reel_index| %>
+        <% direction_class = reel_index.even? ? "is-ascending" : "is-descending" %>
+        <div
+          class="home-cover-reel <%= direction_class %>"
+          data-reels-target="reel"
+          style="--reel-duration: <%= 24 + (reel_index * 4) %>s; --reel-delay: -<%= (reel_index * 2.6).round(1) %>s;"
+        >
+          <div class="home-cover-reel-track">
+            <% 2.times do |sequence_index| %>
+              <div class="home-cover-reel-sequence" data-reels-target="sequence" <%= %(aria-hidden="true") if sequence_index.positive? %>>
+                <% reel.each do |edition| %>
+            <% cover_source = edition.display_cover_source(style: :original) %>
+            <% tile_image = image_tag cover_source,
+              alt: "",
+              class: "home-cover-tile-image",
+              loading: reel_index.zero? && sequence_index.zero? ? "eager" : "lazy",
+              decoding: "async" %>
+                  <%= link_to tile_image, edition_path(edition), class: "home-cover-tile", tabindex: "-1", "aria-hidden": "true" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <div class="page-shell home-content-shell">
+    <section class="home-guides">
+      <article class="surface-panel home-guide-card home-guide-card--archive">
+        <p class="page-eyebrow">The archive</p>
+        <h2>Read Haggard through images</h2>
+        <p>Visual Haggard is a digital archive intended to preserve, centralize, and improve access to the illustrations of popular Victorian novelist H. Rider Haggard (1856 - 1925). The majority of Haggard's approximately fifty novels were lushly illustrated, many of them repeatedly in different editions and by different illustrators. Illustration was always an essential part of reading Haggard's romances during the nineteenth-century. Visual Haggard seeks to revalue and reintegrate the illustrations of Haggard's novels as unique artworks and texts for contemporary audiences.</p>
+      </article>
+
+      <aside class="home-highlight-card">
+        <p class="page-eyebrow">Getting started</p>
+        <div class="home-highlight-stat">
+          <strong><%= number_with_delimiter(@illustration_count) %></strong>
+          <span>images cataloged</span>
+        </div>
+        <p>Visual Haggard is a dynamic and growing archive. Visitors may use the Novels and Illustrators tabs to browse the site. Use the search bar to discover specific keywords depicted in the images.</p>
+      </aside>
+    </section>
+
+    <section class="home-feature-section">
+      <div class="section-heading">
+        <div>
+          <p class="page-eyebrow">Featured edition</p>
+          <h2>Open the archive through a single volume</h2>
+        </div>
+        <%= link_to "Browse novels", novels_path, class: "section-link" %>
+      </div>
+
+      <div
+        class="surface-panel home-feature-carousel"
+        data-controller="rotator"
+        data-rotator-interval-value="6200"
+        data-action="mouseenter->rotator#pause mouseleave->rotator#resume focusin->rotator#pause focusout->rotator#resume"
+        aria-roledescription="carousel"
+        aria-label="Featured edition carousel"
+      >
+        <% @featured_editions.each_with_index do |edition, index| %>
+          <article
+            class="home-feature-slide <%= "is-active" if index.zero? %>"
+            data-rotator-target="slide"
+            role="group"
+            aria-roledescription="slide"
+            aria-label="<%= "#{index + 1} of #{@featured_editions.size}" %>"
+            aria-hidden="<%= index.zero? ? "false" : "true" %>"
+          >
+            <div class="home-feature-slide-visual">
+              <% feature_image = image_tag edition.display_cover_source(style: :original),
+                alt: "#{edition.novel.name} - #{edition.display_title}",
+                class: "home-feature-image",
+                loading: index.zero? ? "eager" : "lazy",
+                decoding: "async" %>
+              <%= link_to feature_image, edition_path(edition), class: "home-feature-slide-cover" %>
+            </div>
+
+            <div class="home-feature-slide-copy">
+              <p class="home-feature-label">Edition</p>
+              <h3 class="home-feature-novel-title"><%= link_to edition.novel.name, novel_path(edition.novel) %></h3>
+              <p class="home-feature-edition-title"><%= link_to edition.display_title, edition_path(edition) %></p>
+              <p class="home-feature-description">
+                <%= edition.publication_citation.presence || "Follow this edition into its novel record, related illustrations, and bibliographic context." %>
+              </p>
+              <div class="page-actions">
+                <%= link_to "View this edition", edition_path(edition), class: "ui-button" %>
+                <%= link_to "View other editions", novel_path(edition.novel, anchor: "edition-archive"), class: "ui-button ui-button--secondary" %>
+              </div>
+            </div>
+          </article>
+        <% end %>
+
+        <% if @featured_editions.many? %>
+          <div class="home-feature-controls">
+            <button type="button" class="home-feature-arrow" data-action="rotator#previous" aria-label="Show previous featured edition">
+              <span aria-hidden="true">&larr;</span>
+            </button>
+
+            <div class="home-feature-dots" aria-label="Featured edition slides">
+              <% @featured_editions.each_with_index do |edition, index| %>
+                <button
+                  type="button"
+                  class="home-feature-dot <%= "is-active" if index.zero? %>"
+                  data-rotator-target="dot"
+                  data-action="rotator#select"
+                  data-rotator-index-param="<%= index %>"
+                  aria-label="Show <%= edition.novel.name %>, <%= edition.display_title %>"
+                ></button>
+              <% end %>
+            </div>
+
+            <button type="button" class="home-feature-pause" data-rotator-target="pauseButton" data-action="rotator#togglePause" aria-pressed="false">
+              Pause motion
+            </button>
+
+            <button type="button" class="home-feature-arrow" data-action="rotator#next" aria-label="Show next featured edition">
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <section class="home-style-section">
+      <% greiffenhagen = @style_illustrators.find { |illustrator| illustrator.name == "Maurice Greiffenhagen" } %>
+      <% horton = @style_illustrators.find { |illustrator| illustrator.name == "W.T. Horton" } %>
+      <div class="home-style-layout">
+        <div class="home-style-text">
+          <div class="section-heading">
+            <div>
+              <p class="page-eyebrow">Artist styles</p>
+              <h2>Discover 19th and 20th Century Illustration Styles</h2>
+            </div>
+          </div>
+
+          <p class="home-section-intro">
+            Visual Haggard makes stylistic contrast visible at a glance. <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> pushes Haggard toward lush Pre-Raphaelite atmosphere, flowing figures, and theatrical composition, while <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %> strips the image down to stark black-and-white symbolist design.
+          </p>
+
+          <p>
+            Greiffenhagen's work channels Rossettian beauty, gestural drapery, and a sensuous Pre-Raphaelite palette that shaped some of Haggard's most iconic visual identities. Horton proves how far Haggard illustration could drift from lush Victorian realism, moving instead toward pared-down symbolist abstraction and mystical black-and-white design.
+          </p>
+        </div>
+
+        <% if (left_style_edition = @style_editions[50]).present? %>
+          <% left_style_image = image_tag left_style_edition.display_cover_source(style: :original), alt: "#{left_style_edition.novel.name} - #{left_style_edition.display_title}", class: "home-style-edition-image", loading: "lazy", decoding: "async" %>
+          <div class="home-style-edition home-style-edition--lower-left">
+            <%= link_to left_style_image, edition_path(left_style_edition), class: "home-style-edition-link" %>
+          </div>
+        <% end %>
+
+        <% if (right_style_edition = @style_editions[109]).present? %>
+          <% right_style_image = image_tag right_style_edition.display_cover_source(style: :original), alt: "#{right_style_edition.novel.name} - #{right_style_edition.display_title}", class: "home-style-edition-image", loading: "lazy", decoding: "async" %>
+          <div class="home-style-edition home-style-edition--upper-right">
+            <%= link_to right_style_image, edition_path(right_style_edition), class: "home-style-edition-link" %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <section class="home-timeline-section">
+      <div class="surface-panel home-timeline-panel" data-controller="timeline-scroller">
+        <div class="section-heading">
+          <div>
+            <p class="page-eyebrow">Edition timeline</p>
+            <h2>Follow every edition across the archive's publication history</h2>
+          </div>
+        </div>
+
+        <p class="home-section-intro">
+          Scroll through the timeline to trace Haggard's editions from the archive's earliest surviving books to late twentieth-century revivals. Each marker links directly to an edition record, making the publication history of the archive itself browseable.
+        </p>
+
+        <div class="home-timeline-toolbar">
+          <p class="home-timeline-caption">Every dated edition in the archive, grouped by year.</p>
+          <div class="home-timeline-controls">
+            <button type="button" class="home-timeline-arrow" data-action="timeline-scroller#previous" aria-label="Scroll timeline backward">
+              <span aria-hidden="true">&larr;</span>
+            </button>
+            <button type="button" class="home-timeline-arrow" data-action="timeline-scroller#next" aria-label="Scroll timeline forward">
+              <span aria-hidden="true">&rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="home-timeline-track" data-timeline-scroller-target="track">
+          <% @timeline_groups.each do |group| %>
+            <section class="home-timeline-year">
+              <p class="home-timeline-year-label"><%= group[:year] %></p>
+              <p class="home-timeline-year-count"><%= pluralize(group[:editions].size, "edition") %></p>
+              <div class="home-timeline-stem"></div>
+              <div class="home-timeline-markers">
+                <% group[:editions].each do |edition| %>
+                  <% marker_label = "#{edition.novel.name} — #{edition.display_title}" %>
+                  <% tooltip_content = content_tag(:span, class: "home-timeline-tooltip", "aria-hidden": "true") do
+                    safe_join([
+                      content_tag(:strong, edition.novel.name),
+                      content_tag(:span, edition.display_title)
+                    ])
+                  end %>
+                  <%= link_to safe_join([content_tag(:span, marker_label, class: "sr-only"), tooltip_content]),
+                    edition_path(edition),
+                    class: "home-timeline-marker",
+                    "aria-label": "#{edition.novel.name}, #{edition.display_title}" %>
+                <% end %>
+              </div>
+            </section>
+          <% end %>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-periodical-section">
+      <div class="section-heading">
+        <div>
+          <p class="page-eyebrow">Periodicals</p>
+          <h2>The newspapers and magazines may be the archive's rarest witnesses</h2>
+        </div>
+      </div>
+
+      <div class="home-periodical-copy">
+        <p>
+          <em>Visual Haggard</em> treats periodicals as central, not peripheral. As the <%= link_to "Editor's Statement", editors_statement_path %> argues, illustrations circulated through newspapers and journals as powerful commercial and aesthetic objects, yet those serial publications were printed on cheap paper, scattered across local collections, and are far more ephemeral than bound books.
+        </p>
+        <p>
+          Even when quality issues remain in surviving scans, these fragile serial appearances can matter more than later book editions because they are harder to locate, easier to lose, and often preserve the archive's most fugitive visual history. The archive therefore treats periodical witnesses as essential evidence rather than incidental supplements.
+        </p>
+      </div>
+
+      <div class="home-periodical-grid">
+        <% @periodical_examples.each do |example| %>
+          <% example_image = image_tag example[:image_source], alt: example[:title], class: "home-periodical-image", loading: "lazy", decoding: "async" %>
+          <article class="surface-panel home-periodical-card">
+            <%= link_to example_image, example[:path], class: "home-periodical-image-link" %>
+            <div class="home-periodical-card-copy">
+              <p class="home-style-kicker"><%= example[:label] %></p>
+              <h3><%= link_to example[:title], example[:path] %></h3>
+              <p class="home-periodical-meta"><%= example[:subtitle] %></p>
+              <% if example[:detail].present? %>
+                <p class="home-periodical-detail"><%= example[:detail] %></p>
+              <% end %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    </section>
+
+    <section class="home-paperback-section">
+      <div class="section-heading">
+        <div>
+          <p class="page-eyebrow">Science-fiction afterlives</p>
+          <h2>Paperback and pulp reinventions carried Haggard into later genre markets</h2>
+        </div>
+      </div>
+
+      <p class="home-section-intro">
+        The archive tracks Haggard well beyond Victorian book illustration. Later speculative-fiction publishers and paperback houses recast these romances through saturated cover design, cinematic composition, and bold fantasy branding. Visual Haggard preserves that afterlife through artists such as Virgil Finlay, Dean Ellis, Ken Barr, and Michael Herring.
+      </p>
+
+      <div class="home-paperback-grid">
+        <% @paperback_illustrators.each do |illustrator| %>
+          <% representative_illustration = illustrator.representative_illustration(style: :original) %>
+          <% representative_edition = representative_illustration&.edition %>
+          <% paperback_image = image_tag illustrator.representative_image_source(style: :original), alt: illustrator.name, class: "home-paperback-image", loading: "lazy", decoding: "async" %>
+          <article class="surface-panel home-paperback-card">
+            <%= link_to paperback_image, illustrator_path(illustrator), class: "home-paperback-image-link" %>
+            <div class="home-paperback-card-copy">
+              <p class="home-style-kicker">Illustrator</p>
+              <h3><%= link_to illustrator.name, illustrator_path(illustrator) %></h3>
+              <% if representative_edition.present? %>
+                <p class="home-paperback-meta"><%= link_to representative_edition.display_title, edition_path(representative_edition) %></p>
+                <p class="home-paperback-submeta"><%= representative_edition.novel.name %></p>
+              <% end %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</div>
