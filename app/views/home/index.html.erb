@@ -50,9 +50,9 @@
   <div class="page-shell home-content-shell">
     <section class="home-guides">
       <article class="surface-panel home-guide-card home-guide-card--archive">
-        <p class="page-eyebrow">The archive</p>
+        <p class="page-eyebrow">What is Visual Haggard?</p>
         <h2>Read Haggard through images</h2>
-        <p>Visual Haggard is a digital archive intended to preserve, centralize, and improve access to the illustrations of popular Victorian novelist H. Rider Haggard (1856 - 1925). The majority of Haggard's approximately fifty novels were lushly illustrated, many of them repeatedly in different editions and by different illustrators. Illustration was always an essential part of reading Haggard's romances during the nineteenth-century. Visual Haggard seeks to revalue and reintegrate the illustrations of Haggard's novels as unique artworks and texts for contemporary audiences.</p>
+        <p>Visual Haggard is a digital archive dedicated to preserving and opening up the illustrations of popular Victorian author H. Rider Haggard (1856–1925). The majority of Haggard's approximately fifty novels were richly illustrated—many of them repeatedly, across different editions and by different artists. Illustration was always central to how readers encountered his romances in the nineteenth century. Visual Haggard restores those images to view, treating them as artworks and texts in their own right.</p>
       </article>
 
       <aside class="home-highlight-card">
@@ -61,7 +61,7 @@
           <strong><%= number_with_delimiter(@illustration_count) %></strong>
           <span>images cataloged</span>
         </div>
-        <p>Visual Haggard is a dynamic and growing archive. Visitors may use the Novels and Illustrators tabs to browse the site. Use the search bar to discover specific keywords depicted in the images.</p>
+        <p>Browse by novel or illustrator using the navigation above, or use the search bar to find images by subject, scene, or character.</p>
       </aside>
     </section>
 
@@ -69,7 +69,7 @@
       <div class="section-heading">
         <div>
           <p class="page-eyebrow">Featured edition</p>
-          <h2>Open the archive through a single volume</h2>
+          <h2>Featured edition</h2>
         </div>
         <%= link_to "Browse novels", novels_path, class: "section-link" %>
       </div>
@@ -154,12 +154,12 @@
           <div class="section-heading">
             <div>
               <p class="page-eyebrow">Artist styles</p>
-              <h2>Discover 19th and 20th Century Illustration Styles</h2>
+              <h2>Discover 19th and 20th century illustration styles</h2>
             </div>
           </div>
 
           <p class="home-section-intro">
-            Visual Haggard makes stylistic contrast visible at a glance. <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> pushes Haggard toward lush Pre-Raphaelite atmosphere, flowing figures, and theatrical composition, while <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %> strips the image down to stark black-and-white symbolist design.
+            The archive puts stylistic contrast directly alongside one another. <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> brings a lush Pre-Raphaelite sensibility to his illustrations — Rossettian figures, theatrical composition, and richly atmospheric palette — giving some of Haggard's most famous novels their visual identity. <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %> takes a completely different path, stripping illustration back to stark black-and-white symbolist design and showing how far Haggard's visual world could range from Victorian pictorial realism
           </p>
 
           <p>
@@ -188,12 +188,12 @@
         <div class="section-heading">
           <div>
             <p class="page-eyebrow">Edition timeline</p>
-            <h2>Follow every edition across the archive's publication history</h2>
+            <h2>Trace the archive's publication history</h2>
           </div>
         </div>
 
         <p class="home-section-intro">
-          Scroll through the timeline to trace Haggard's editions from the archive's earliest surviving books to late twentieth-century revivals. Each marker links directly to an edition record, making the publication history of the archive itself browseable.
+          Scroll through the timeline to trace Haggard's publishing history, from the earliest editions in the archive to late twentieth-century revivals. Each marker links directly to an edition record.
         </p>
 
         <div class="home-timeline-toolbar">
