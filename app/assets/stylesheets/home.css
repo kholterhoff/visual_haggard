@@ -93,6 +93,9 @@
   right: 1rem;
   bottom: 1rem;
   z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 2.5rem;
   padding: 0.6rem 0.95rem;
   border: 1px solid hsl(0 0% 100% / 0.72);
@@ -101,9 +104,9 @@
   color: hsl(0 0% 100%);
   font-family: var(--font-ui);
   font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
   cursor: pointer;
   backdrop-filter: blur(10px);
 }
@@ -978,6 +981,11 @@
 }
 
 @media (max-width: 780px) {
+  .home-content-shell > section {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .biography-portrait {
     float: none;
     width: 100%;

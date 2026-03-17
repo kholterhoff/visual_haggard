@@ -14,7 +14,7 @@
     >
       Pause motion
     </button>
-    <div class="home-cover-reels" aria-hidden="true" inert>
+    <div class="home-cover-reels">
       <% @hero_cover_reels.each_with_index do |reel, reel_index| %>
         <% direction_class = reel_index.even? ? "is-ascending" : "is-descending" %>
         <div
@@ -26,13 +26,18 @@
             <% 2.times do |sequence_index| %>
               <div class="home-cover-reel-sequence" data-reels-target="sequence" <%= %(aria-hidden="true") if sequence_index.positive? %>>
                 <% reel.each do |edition| %>
-            <% cover_source = edition.display_cover_source(style: :original) %>
-            <% tile_image = image_tag cover_source,
-              alt: "",
-              class: "home-cover-tile-image",
-              loading: reel_index.zero? && sequence_index.zero? ? "eager" : "lazy",
-              decoding: "async" %>
-                  <%= link_to tile_image, edition_path(edition), class: "home-cover-tile", tabindex: "-1", "aria-hidden": "true" %>
+                  <% cover_source = edition.display_cover_source(style: :original) %>
+                  <% link_options = { class: "home-cover-tile" } %>
+                  <% if sequence_index.positive? %>
+                    <% link_options[:tabindex] = "-1" %>
+                    <% link_options["aria-hidden"] = "true" %>
+                  <% end %>
+                  <% tile_image = image_tag cover_source,
+                    alt: "#{edition.novel.name} - #{edition.display_title}",
+                    class: "home-cover-tile-image",
+                    loading: reel_index.zero? && sequence_index.zero? ? "eager" : "lazy",
+                    decoding: "async" %>
+                  <%= link_to tile_image, edition_path(edition), link_options %>
                 <% end %>
               </div>
             <% end %>
