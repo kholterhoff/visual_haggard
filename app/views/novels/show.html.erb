@@ -1,9 +1,14 @@
 <% content_for :title, @novel.name %>
 <%
   visible_editions = @novel.visible_editions.to_a.sort_by(&:publication_sort_key)
-  all_illustrations = visible_editions.flat_map(&:illustrations).select do |illustration|
+  visible_illustrations = visible_editions.flat_map(&:illustrations)
+  all_illustrations = visible_illustrations.select do |illustration|
     illustration.display_image_source(style: :original).present?
   end
+  novel_illustrator_groups = visible_illustrations
+    .select(&:illustrator)
+    .group_by(&:illustrator)
+    .sort_by { |illustrator, _| illustrator.directory_sort_key }
   hero_edition = @novel.lead_cover_edition(style: :original)
   hero_illustration = @novel.lead_illustration(style: :original)
   hero_cover_source = @novel.display_cover_source(style: :original)
@@ -43,6 +48,7 @@
 
         <div class="meta-chip-row novel-meta-row">
           <%= link_to pluralize(visible_editions.size, "edition"), "#edition-archive", class: "meta-chip meta-chip-link" %>
+          <%= link_to pluralize(novel_illustrator_groups.size, "illustrator"), "#illustrator-archive", class: "meta-chip meta-chip-link" %>
           <%= link_to pluralize(all_illustrations.size, "illustration"), "#illustration-archive", class: "meta-chip meta-chip-link" %>
           <% if @novel.blog_posts.any? %>
             <%= link_to pluralize(@novel.blog_posts.size, "related essay"), "#related-essays", class: "meta-chip meta-chip-link" %>
@@ -112,6 +118,43 @@
                   <% if (citation = edition.publication_citation) %>
                     <p class="edition-details"><%= citation %></p>
                   <% end %>
+                </div>
+              <% end %>
+            </article>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <% if novel_illustrator_groups.any? %>
+      <section class="surface-panel novel-section" id="illustrator-archive">
+        <div class="section-heading">
+          <div>
+            <p class="page-eyebrow">Illustrator archive</p>
+            <h2>Illustrators of <%= @novel.name %></h2>
+          </div>
+        </div>
+
+        <div class="novel-illustrators-grid">
+          <% novel_illustrator_groups.each do |illustrator, illustrations| %>
+            <% representative_illustration = illustrations.find { |illustration| illustration.display_image_source(style: :original).present? } || illustrations.first %>
+            <% representative_source = representative_illustration&.display_image_source(style: :original) %>
+            <article class="novel-illustrator-card">
+              <%= link_to illustrator_path(illustrator), class: "novel-illustrator-link" do %>
+                <div class="novel-illustrator-thumbnail">
+                  <% if representative_source.present? %>
+                    <%= image_tag representative_source,
+                      alt: "Illustration by #{illustrator.name} from #{@novel.name}",
+                      loading: "lazy",
+                      decoding: "async" %>
+                  <% else %>
+                    <div class="placeholder-thumbnail">No image</div>
+                  <% end %>
+                </div>
+                <div class="novel-illustrator-copy">
+                  <p class="novel-illustrator-label">Illustrator</p>
+                  <h3><%= illustrator.name %></h3>
+                  <p class="novel-illustrator-meta"><%= pluralize(illustrations.size, "illustration") %> in this novel</p>
                 </div>
               <% end %>
             </article>

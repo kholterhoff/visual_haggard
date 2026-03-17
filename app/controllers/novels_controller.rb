@@ -4,7 +4,7 @@ class NovelsController < ApplicationController
       editions: [
         :blog_posts,
         :cover_image_attachment,
-        { illustrations: :image_attachment }
+        { illustrations: [:illustrator, :image_attachment] }
       ]
     ).order(:name).page(params[:page]).per(Novel::ARCHIVE_PAGE_SIZE)
 
@@ -18,7 +18,7 @@ class NovelsController < ApplicationController
       editions: [
         :blog_posts,
         :cover_image_attachment,
-        { illustrations: :image_attachment }
+        { illustrations: [:illustrator, :image_attachment] }
       ]
     ).find(params[:id])
     raise ActiveRecord::RecordNotFound if @novel.synthetic_placeholder?

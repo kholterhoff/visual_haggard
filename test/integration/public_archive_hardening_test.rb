@@ -149,6 +149,26 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select %(nav.pagination[aria-label="Pagination"])
   end
 
+  test "novel record exposes illustrator chip and illustrator archive section" do
+    novel = Novel.create!(name: "Illustrated Novel")
+    edition = novel.editions.create!(name: "First Issue", publication_date: "January 1913")
+    illustrator_a = Illustrator.create!(name: "Ada Artist")
+    illustrator_b = Illustrator.create!(name: "Beatrice Brush")
+    edition.illustrations.create!(name: "Plate one", illustrator: illustrator_a, image_url: "https://example.com/plate-one.jpg")
+    edition.illustrations.create!(name: "Plate two", illustrator: illustrator_a, image_url: "https://example.com/plate-two.jpg")
+    edition.illustrations.create!(name: "Plate three", illustrator: illustrator_b, image_url: "https://example.com/plate-three.jpg")
+
+    get novel_path(novel)
+
+    assert_response :success
+    assert_select %(a[href="#edition-archive"]), text: "1 edition"
+    assert_select %(a[href="#illustrator-archive"]), text: "2 illustrators"
+    assert_select %(a[href="#illustration-archive"]), text: "3 illustrations"
+    assert_select %(section#illustrator-archive h2), text: "Illustrators of Illustrated Novel"
+    assert_select %(section#illustrator-archive a[href="#{illustrator_path(illustrator_a)}"])
+    assert_select %(section#illustrator-archive a[href="#{illustrator_path(illustrator_b)}"])
+  end
+
   test "illustration and edition records retain semantic headings for assistive technology" do
     novel = Novel.create!(name: "Heading Test Novel")
     edition = novel.editions.create!(name: "Heading Test Edition")
