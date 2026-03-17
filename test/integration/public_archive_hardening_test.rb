@@ -185,4 +185,26 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1.sr-only", text: "Heading Test Illustration"
   end
+
+  test "public views italicize work titles" do
+    novel = Novel.create!(name: "Italicized Novel")
+    edition = novel.editions.create!(name: "Italicized Edition")
+    illustration = edition.illustrations.create!(name: "Italicized Illustration", image_url: "https://example.com/illustration.jpg")
+
+    get novel_path(novel)
+    assert_response :success
+    assert_select "h1 cite.work-title", text: "Italicized Novel"
+
+    get edition_path(edition)
+    assert_response :success
+    assert_select ".record-breadcrumbs cite.work-title", text: "Italicized Novel"
+
+    get illustration_path(illustration)
+    assert_response :success
+    assert_select ".record-meta dd cite.work-title", text: "Italicized Novel"
+
+    get search_path, params: { search: "Italicized" }
+    assert_response :success
+    assert_select "#search-novels h3 cite.work-title", text: "Italicized Novel"
+  end
 end

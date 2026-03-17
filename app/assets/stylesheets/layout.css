@@ -459,6 +459,10 @@ a.ui-button--secondary:focus-visible {
   letter-spacing: -0.045em;
 }
 
+.work-title {
+  font-style: italic;
+}
+
 .page-lead {
   max-width: 65ch;
   margin-top: 1rem;

@@ -44,7 +44,7 @@
 
       <div class="hero-content">
         <p class="page-eyebrow">Novel record</p>
-        <h1 class="page-title novel-title"><%= @novel.name %></h1>
+        <h1 class="page-title novel-title"><%= work_title(@novel.name) %></h1>
 
         <div class="meta-chip-row novel-meta-row">
           <%= link_to pluralize(visible_editions.size, "edition"), "#edition-archive", class: "meta-chip meta-chip-link" %>
@@ -92,7 +92,7 @@
         <div class="section-heading">
           <div>
             <p class="page-eyebrow">Edition archive</p>
-            <h2>Editions of <%= @novel.name %></h2>
+            <h2>Editions of <%= work_title(@novel.name) %></h2>
           </div>
         </div>
 
@@ -131,7 +131,7 @@
         <div class="section-heading">
           <div>
             <p class="page-eyebrow">Illustrator archive</p>
-            <h2>Illustrators of <%= @novel.name %></h2>
+            <h2>Illustrators of <%= work_title(@novel.name) %></h2>
           </div>
         </div>
 
@@ -168,7 +168,7 @@
         <div class="section-heading">
           <div>
             <p class="page-eyebrow">Illustration archive</p>
-            <h2>Illustrations from <%= @novel.name %></h2>
+            <h2>Illustrations from <%= work_title(@novel.name) %></h2>
           </div>
         </div>
 

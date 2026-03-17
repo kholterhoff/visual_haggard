@@ -68,4 +68,18 @@ class ArchiveIntegrityTest < ActiveSupport::TestCase
     assert_not_includes Illustration.browseable.to_a, illustration
     assert_not_includes Illustrator.publicly_visible.to_a, illustrator
   end
+
+  test "representative grid image prefers edition cover art for cover-like works" do
+    novel = Novel.create!(name: "Cover Query Novel")
+    edition = novel.editions.create!(name: "Cover Query Edition", cover_url: "https://example.com/cover.jpg")
+    illustrator = Illustrator.create!(name: "Cover Query Illustrator")
+    illustration = edition.illustrations.create!(
+      name: "Cover design",
+      illustrator: illustrator,
+      image_url: "https://example.com/interior.jpg"
+    )
+
+    assert_equal illustration.id, illustrator.representative_illustration.id
+    assert_equal "https://example.com/cover.jpg", illustrator.representative_grid_image_source
+  end
 end

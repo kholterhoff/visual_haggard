@@ -83,7 +83,7 @@
                 <div class="illustrator-work-copy">
                   <p class="illustrator-card-kicker">Illustration</p>
                   <h3><%= link_to illustration.name.presence || "Untitled illustration", illustration_path(illustration) %></h3>
-                  <p><strong><%= novel.name %></strong></p>
+                  <p><strong><%= work_title(novel.name) %></strong></p>
                   <p><%= edition.display_title %></p>
                 </div>
               </div>

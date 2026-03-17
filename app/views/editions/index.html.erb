@@ -13,7 +13,7 @@
       <% if current_novel != edition.novel.name %>
         <% current_novel = edition.novel.name %>
         <div class="novel-section">
-          <h2 class="novel-title"><%= link_to current_novel, novel_path(edition.novel) %></h2>
+          <h2 class="novel-title"><%= linked_work_title(current_novel, novel_path(edition.novel)) %></h2>
         </div>
       <% end %>
       

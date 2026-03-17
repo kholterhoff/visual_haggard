@@ -45,7 +45,7 @@
 
               <div class="novel-directory-links">
                 <% @novel_groups.fetch(letter).each do |novel| %>
-                  <%= link_to novel.name, novel_path(novel), class: "novel-directory-link" %>
+                  <%= linked_novel_title(novel, class: "novel-directory-link") %>
                 <% end %>
               </div>
             </section>
@@ -82,7 +82,7 @@
 
                 <div class="novel-grid-copy">
                   <p class="novel-grid-label">Novel</p>
-                  <h2><%= novel.name %></h2>
+                  <h2><%= work_title(novel.name) %></h2>
                 </div>
               <% end %>
             </article>

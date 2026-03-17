@@ -102,7 +102,7 @@
 
             <div class="home-feature-slide-copy">
               <p class="home-feature-label">Edition</p>
-              <h3 class="home-feature-novel-title"><%= link_to edition.novel.name, novel_path(edition.novel) %></h3>
+              <h3 class="home-feature-novel-title"><%= linked_novel_title(edition.novel) %></h3>
               <p class="home-feature-edition-title"><%= link_to edition.display_title, edition_path(edition) %></p>
               <p class="home-feature-description">
                 <%= edition.publication_citation.presence || "Follow this edition into its novel record, related illustrations, and bibliographic context." %>
@@ -162,21 +162,27 @@
             This archive makes stylistic contrast visible at a glance. <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> brings a lush Pre-Raphaelite sensibility to his illustrations. His romantic figures, theatrical compositions, and richly atmospheric palette give many of Haggard's most famous novels their visual identity. <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %> works at the opposite extreme, stripping scenes down to stark black-and-white symbolist abstraction. Together they show how wide the range of Haggard illustration actually was.
           </p>
           <p class="home-section-intro">            
-            Visual Haggard also makes it possible to compare how different artists interpreted the same story. King Solomon's Mines alone has been illustrated by eleven different hands—from Victorian wood-engravers to mid-century paperback painters—each reimagining Haggard's Africa using a distinct visual language.
+            Visual Haggard also makes it possible to compare how different artists interpreted the same story. <%= work_title("King Solomon's Mines") %> alone has been illustrated by eleven different hands—from Victorian wood-engravers to mid-century paperback painters—each reimagining Haggard's Africa using a distinct visual language.
           </p>
         </div>
 
         <% if (left_style_edition = @style_editions[50]).present? %>
           <% left_style_image = image_tag left_style_edition.display_cover_source(style: :original), alt: "#{left_style_edition.novel.name} - #{left_style_edition.display_title}", class: "home-style-edition-image", loading: "lazy", decoding: "async" %>
           <div class="home-style-edition home-style-edition--lower-left">
-            <%= link_to left_style_image, edition_path(left_style_edition), class: "home-style-edition-link" %>
+            <figure class="home-style-figure">
+              <%= link_to left_style_image, edition_path(left_style_edition), class: "home-style-edition-link" %>
+              <figcaption class="biography-portrait-citation home-style-citation"><%= style_edition_citation(left_style_edition) %></figcaption>
+            </figure>
           </div>
         <% end %>
 
         <% if (right_style_edition = @style_editions[109]).present? %>
           <% right_style_image = image_tag right_style_edition.display_cover_source(style: :original), alt: "#{right_style_edition.novel.name} - #{right_style_edition.display_title}", class: "home-style-edition-image", loading: "lazy", decoding: "async" %>
           <div class="home-style-edition home-style-edition--upper-right">
-            <%= link_to right_style_image, edition_path(right_style_edition), class: "home-style-edition-link" %>
+            <figure class="home-style-figure">
+              <%= link_to right_style_image, edition_path(right_style_edition), class: "home-style-edition-link" %>
+              <figcaption class="biography-portrait-citation home-style-citation"><%= style_edition_citation(right_style_edition) %></figcaption>
+            </figure>
           </div>
         <% end %>
       </div>
@@ -218,7 +224,7 @@
                   <% marker_label = "#{edition.novel.name} — #{edition.display_title}" %>
                   <% tooltip_content = content_tag(:span, class: "home-timeline-tooltip", "aria-hidden": "true") do
                     safe_join([
-                      content_tag(:strong, edition.novel.name),
+                      content_tag(:strong, work_title(edition.novel.name)),
                       content_tag(:span, edition.display_title)
                     ])
                   end %>
@@ -258,8 +264,8 @@
             <%= link_to example_image, example[:path], class: "home-periodical-image-link" %>
             <div class="home-periodical-card-copy">
               <p class="home-style-kicker"><%= example[:label] %></p>
-              <h3><%= link_to example[:title], example[:path] %></h3>
-              <p class="home-periodical-meta"><%= example[:subtitle] %></p>
+              <h3><%= linked_work_title(example[:title], example[:path]) %></h3>
+              <p class="home-periodical-meta"><%= work_title(example[:subtitle]) %></p>
               <% if example[:detail].present? %>
                 <p class="home-periodical-detail"><%= example[:detail] %></p>
               <% end %>
@@ -293,7 +299,7 @@
               <h3><%= link_to illustrator.name, illustrator_path(illustrator) %></h3>
               <% if representative_edition.present? %>
                 <p class="home-paperback-meta"><%= link_to representative_edition.display_title, edition_path(representative_edition) %></p>
-                <p class="home-paperback-submeta"><%= representative_edition.novel.name %></p>
+                <p class="home-paperback-submeta"><%= linked_novel_title(representative_edition.novel) %></p>
               <% end %>
             </div>
           </article>

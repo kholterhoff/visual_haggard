@@ -308,11 +308,15 @@ export default class extends Controller {
         <div class="search-card-body">
           <p class="search-card-kicker">Illustration</p>
           <h3>${this.escapeHtml(title)}</h3>
-          ${novelName ? `<p><strong>${this.escapeHtml(novelName)}</strong></p>` : ""}
+          ${novelName ? `<p><strong>${this.renderWorkTitle(novelName)}</strong></p>` : ""}
           ${illustratorName ? `<p>${this.escapeHtml(illustratorName)}</p>` : ""}
         </div>
       </a>
     `
+  }
+
+  renderWorkTitle(value) {
+    return `<cite class="work-title">${this.escapeHtml(value)}</cite>`
   }
 
   renderNovel(record) {
@@ -325,7 +329,7 @@ export default class extends Controller {
         ${this.renderImage(image, title)}
         <div class="search-card-body">
           <p class="search-card-kicker">Novel</p>
-          <h3>${this.escapeHtml(title)}</h3>
+          <h3>${this.renderWorkTitle(title)}</h3>
           ${summary ? `<p class="search-card-excerpt">${this.escapeHtml(summary)}</p>` : ""}
         </div>
       </a>
@@ -342,7 +346,7 @@ export default class extends Controller {
         <div>
           <p class="search-card-kicker">Edition</p>
           <h3>${this.escapeHtml(title)}</h3>
-          ${novelName ? `<p><strong>${this.escapeHtml(novelName)}</strong></p>` : ""}
+          ${novelName ? `<p><strong>${this.renderWorkTitle(novelName)}</strong></p>` : ""}
           ${citation ? `<p>${this.escapeHtml(citation)}</p>` : ""}
         </div>
       </a>

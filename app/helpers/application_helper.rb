@@ -89,7 +89,63 @@ module ApplicationHelper
     content_tag(:div, safe_join(fragments), class: "pagefind-record-data sr-only")
   end
 
+  def work_title(title, class_name: nil)
+    classes = ["work-title", class_name].compact.join(" ")
+    content_tag(:cite, title.to_s, class: classes.presence)
+  end
+
+  def linked_work_title(title, path, **options)
+    link_to work_title(title), path, options
+  end
+
+  def linked_novel_title(novel, **options)
+    linked_work_title(novel.name, novel_path(novel), **options)
+  end
+
+  def style_edition_citation(edition)
+    fragments = ["Cover. ".html_safe, work_title(edition.novel.name), ". ".html_safe]
+
+    if (edition_label = archive_reference_value(edition.display_title)).present?
+      fragments << edition_label
+      fragments << ". ".html_safe
+    end
+
+    publication_parts = []
+    publication_city = archive_reference_value(edition.publication_city)
+    publisher = archive_reference_value(edition.publisher)
+    publication_date = archive_reference_value(edition.publication_date)
+
+    if publication_city.present? && publisher.present?
+      publication_parts << "#{publication_city}: #{publisher}"
+    elsif publication_city.present? || publisher.present?
+      publication_parts << publication_city.presence || publisher
+    end
+
+    publication_parts << publication_date if publication_date.present?
+
+    if publication_parts.any?
+      fragments << publication_parts.join(", ")
+      fragments << ". ".html_safe
+    end
+
+    if (source = archive_reference_value(edition.source)).present?
+      fragments << source
+      fragments << ".".html_safe
+    elsif fragments.last == ". ".html_safe
+      fragments[-1] = ".".html_safe
+    end
+
+    safe_join(fragments)
+  end
+
   private
+
+  def archive_reference_value(value)
+    normalized = value.to_s.strip
+    return if normalized.blank? || %w[Unknown None].include?(normalized)
+
+    normalized
+  end
 
   def append_pagefind_tag(fragments, data_key, name, value)
     normalized = normalize_pagefind_value(value)

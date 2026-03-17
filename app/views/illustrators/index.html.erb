@@ -61,17 +61,16 @@
         </div>
       </div>
 
-      <div class="illustrator-grid" data-controller="photoswipe">
+        <div class="illustrator-grid" data-controller="photoswipe">
         <% @illustrators.each do |illustrator| %>
-          <% representative_illustration = illustrator.representative_illustration(style: :original) %>
-          <% preview_image = illustrator.representative_image_source(style: :original) %>
+          <% preview_image = illustrator.representative_grid_image_source(style: :original) %>
           <article class="illustrator-grid-card">
             <div class="illustrator-grid-image-link">
               <div class="illustrator-grid-image-frame">
                 <% if preview_image.present? %>
                   <%= zoomable_image_link preview_image, link_options: { class: "illustrator-zoom-link" } do %>
                     <%= image_tag preview_image,
-                      alt: "Representative illustration by #{illustrator.name}",
+                      alt: "Representative work by #{illustrator.name}",
                       class: "illustrator-grid-image",
                       loading: "lazy",
                       decoding: "async" %>

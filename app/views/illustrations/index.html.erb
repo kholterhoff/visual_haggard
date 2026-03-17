@@ -39,7 +39,7 @@
                 <p class="illustration-card-kicker">Illustration</p>
                 <h2><%= link_to illustration.name, illustration_path(illustration), class: "illustration-card-title-link" %></h2>
                 <p class="illustration-card-meta"><%= link_to illustration.edition.name, edition_path(illustration.edition) %></p>
-                <p class="illustration-card-meta"><%= link_to illustration.novel.name, novel_path(illustration.novel) %></p>
+                <p class="illustration-card-meta"><%= linked_novel_title(illustration.novel) %></p>
               </div>
             </article>
           <% end %>

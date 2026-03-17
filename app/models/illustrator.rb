@@ -47,6 +47,18 @@ class Illustrator < ApplicationRecord
     representative_image_source_for(illustration, style:)
   end
 
+  def representative_grid_image_source(style: :original)
+    illustration = representative_illustration(style:)
+    return unless illustration
+
+    cover_source = representative_cover_source_for(illustration.edition, style:)
+    if cover_source.present? && (matches_edition_cover?(illustration, style:) || cover_like_illustration?(illustration))
+      return cover_source
+    end
+
+    representative_image_source_for(illustration, style:)
+  end
+
   def directory_last_name
     token = name.to_s.strip.split(/\s+/).last.to_s.gsub(/\A[^A-Za-z]+|[^A-Za-z]+\z/, "")
     token.presence || name.to_s

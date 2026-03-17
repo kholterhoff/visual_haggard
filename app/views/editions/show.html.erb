@@ -39,7 +39,7 @@
       <p class="record-breadcrumbs">
         <%= link_to "Novels", novels_path %>
         /
-        <%= link_to @edition.novel.name, novel_path(@edition.novel) %>
+        <%= linked_novel_title(@edition.novel) %>
         /
         Edition
       </p>
@@ -69,7 +69,7 @@
           <dd><%= @edition.display_title %></dd>
 
           <dt>Novel</dt>
-          <dd><%= link_to @edition.novel.name, novel_path(@edition.novel) %></dd>
+          <dd><%= linked_novel_title(@edition.novel) %></dd>
 
           <% if @edition.publisher.present? && @edition.publisher != "Unknown" %>
             <dt>Published by</dt>
@@ -125,7 +125,7 @@
     <% end %>
 
     <div class="record-back-link">
-      <%= link_to "Back to #{@edition.novel.name}", novel_path(@edition.novel, anchor: "edition-archive"), class: "ui-button ui-button--secondary" %>
+      <%= link_to safe_join(["Back to ".html_safe, work_title(@edition.novel.name)]), novel_path(@edition.novel, anchor: "edition-archive"), class: "ui-button ui-button--secondary" %>
     </div>
   </div>
 </div>

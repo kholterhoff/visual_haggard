@@ -188,7 +188,7 @@
                   <div class="search-card-body">
                     <p class="search-card-kicker">Illustration</p>
                     <h3><%= link_to illustration.name.presence || "Untitled illustration", illustration_path(illustration) %></h3>
-                    <p><strong><%= novel.name %></strong></p>
+                    <p><strong><%= work_title(novel.name) %></strong></p>
                     <% if illustration.illustrator&.name.present? %>
                       <p><%= illustration.illustrator.name %></p>
                     <% elsif illustration.artist.present? %>
@@ -226,7 +226,7 @@
                   <% end %>
                   <div class="search-card-body">
                     <p class="search-card-kicker">Novel</p>
-                    <h3><%= novel.name %></h3>
+                    <h3><%= work_title(novel.name) %></h3>
                     <% if (excerpt = plain_text_excerpt(novel.description, length: 180)).present? %>
                       <p><%= excerpt %></p>
                     <% end %>
@@ -253,7 +253,7 @@
                   <div>
                     <p class="search-card-kicker">Edition</p>
                     <h3><%= edition.display_title %></h3>
-                    <p><strong><%= edition.novel.name %></strong></p>
+                    <p><strong><%= work_title(edition.novel.name) %></strong></p>
                     <% if (citation = edition.publication_citation) %>
                       <p><%= citation %></p>
                     <% end %>
