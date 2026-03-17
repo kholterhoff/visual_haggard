@@ -22,10 +22,27 @@ class ArchiveIntegrityTest < ActiveSupport::TestCase
       image_url: "https://example.com/representative.jpg"
     )
 
-    preloaded_illustrator = Illustrator.includes(illustrations: [{ image_attachment: :blob }, { edition: :novel }]).find(illustrator.id)
+    preloaded_illustrator = Illustrator.includes(illustrations: [{ image_attachment: :blob }, { edition: [:novel, { cover_image_attachment: :blob }] }]).find(illustrator.id)
 
     queries = capture_sql_queries do
       assert_equal illustration.id, preloaded_illustrator.representative_illustration.id
+    end
+
+    assert_equal 0, queries.size
+  end
+
+  test "lead illustration does not issue extra queries when preloaded" do
+    novel = Novel.create!(name: "Lead Illustration Novel")
+    edition = novel.editions.create!(name: "Lead Illustration Edition")
+    illustration = edition.illustrations.create!(
+      name: "Lead illustration",
+      image_url: "https://example.com/lead-illustration.jpg"
+    )
+
+    preloaded_novel = Novel.includes(editions: [:blog_posts, { illustrations: :image_attachment }]).find(novel.id)
+
+    queries = capture_sql_queries do
+      assert_equal illustration.id, preloaded_novel.lead_illustration.id
     end
 
     assert_equal 0, queries.size
@@ -47,6 +64,7 @@ class ArchiveIntegrityTest < ActiveSupport::TestCase
     assert illustrator.synthetic_placeholder?
 
     assert_not_includes Novel.publicly_visible.to_a, novel
+    assert_not_includes Edition.publicly_visible.to_a, edition
     assert_not_includes Illustration.browseable.to_a, illustration
     assert_not_includes Illustrator.publicly_visible.to_a, illustrator
   end

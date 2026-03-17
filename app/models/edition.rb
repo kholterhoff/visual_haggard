@@ -1,20 +1,66 @@
 class Edition < ApplicationRecord
   LEGACY_S3_ROOT = "https://s3-us-west-2.amazonaws.com/haggard".freeze
+  TEST_PLACEHOLDER_NAME = "Illustrator Edition".freeze
+  GENERATED_PLACEHOLDER_NAME = "First Edition".freeze
 
   belongs_to :novel
   has_many :illustrations, dependent: :destroy
   has_many :blog_posts, dependent: :destroy
-  
+
   has_one_attached :cover_image, dependent: :purge_later
-  
+
   validates :name, presence: true
-  
+
   include PgSearch::Model
   pg_search_scope :search_by_name_and_publisher,
     against: [:name, :publisher, :publication_city],
     using: {
       tsearch: { prefix: true }
     }
+
+  scope :generated_placeholder_records, lambda {
+    left_outer_joins(:illustrations, :blog_posts)
+      .where(
+        name: GENERATED_PLACEHOLDER_NAME,
+        publication_date: "Unknown",
+        publisher: "Unknown",
+        publication_city: [nil, ""],
+        source: [nil, ""],
+        long_name: [nil, ""],
+        cover_url: [nil, ""],
+        cover_thumbnail_url: [nil, ""],
+        image_file_name: [nil, ""]
+      )
+      .group("editions.id")
+      .having("COUNT(DISTINCT illustrations.id) = 0")
+      .having("COUNT(DISTINCT blog_posts.id) = 0")
+  }
+
+  scope :test_placeholder_records, lambda {
+    left_outer_joins(:blog_posts, illustrations: :illustrator)
+      .where(
+        name: TEST_PLACEHOLDER_NAME,
+        publication_date: [nil, ""],
+        publisher: [nil, ""],
+        publication_city: [nil, ""],
+        source: [nil, ""],
+        long_name: [nil, ""],
+        cover_url: [nil, ""],
+        cover_thumbnail_url: [nil, ""],
+        image_file_name: [nil, ""]
+      )
+      .group("editions.id")
+      .having("COUNT(DISTINCT blog_posts.id) = 0")
+      .having("COUNT(DISTINCT illustrations.id) > 0")
+      .having(Edition.test_placeholder_having_sql)
+  }
+
+  scope :publicly_visible, lambda {
+    joins(:novel)
+      .merge(Novel.publicly_visible)
+      .where.not(id: generated_placeholder_records.select(:id))
+      .where.not(id: test_placeholder_records.select(:id))
+  }
 
   # Define searchable associations for Ransack (used by ActiveAdmin)
   def self.ransackable_associations(auth_object = nil)
@@ -93,7 +139,7 @@ class Edition < ApplicationRecord
   end
 
   def test_placeholder?
-    name == "Illustrator Edition" &&
+    name == TEST_PLACEHOLDER_NAME &&
       publication_date.blank? &&
       publisher.blank? &&
       publication_city.blank? &&
@@ -107,10 +153,30 @@ class Edition < ApplicationRecord
       blog_posts.empty?
   end
 
+  def self.test_placeholder_having_sql
+    sanitize_sql_array(
+      [
+        <<~SQL.squish,
+          COUNT(DISTINCT CASE
+            WHEN illustrations.name = ?
+             AND COALESCE(illustrations.description, '') = ''
+             AND COALESCE(illustrations.page_number, '') = ''
+             AND illustrations.image_url = ?
+             AND illustrators.name = ?
+            THEN illustrations.id
+          END) = COUNT(DISTINCT illustrations.id)
+        SQL
+        Illustration::REPRESENTATIVE_PLACEHOLDER_NAME,
+        Illustration::TEST_PLACEHOLDER_IMAGE_URL,
+        Illustrator::PLACEHOLDER_NAME
+      ]
+    )
+  end
+
   private
 
   def generated_placeholder?
-    name == "First Edition" &&
+    name == GENERATED_PLACEHOLDER_NAME &&
       publication_date == "Unknown" &&
       publisher == "Unknown" &&
       publication_city.blank? &&

@@ -23,7 +23,7 @@ class HomeController < ApplicationController
     @periodical_examples = build_periodical_examples
     @paperback_illustrators = build_paperback_illustrators
   end
-  
+
   def biography
     edition = Edition.includes(:novel, illustrations: :image_attachment).find_by(id: BIOGRAPHY_PORTRAIT_EDITION_ID)
     @biography_portrait = edition&.illustrations&.find do |illustration|
@@ -79,15 +79,15 @@ class HomeController < ApplicationController
   end
 
   def cover_ready_editions
-    @cover_ready_editions ||= Edition.includes(:novel, { cover_image_attachment: :blob }, { illustrations: { image_attachment: :blob } })
+    @cover_ready_editions ||= Edition.publicly_visible
+                                     .includes(:novel, { cover_image_attachment: :blob }, { illustrations: { image_attachment: :blob } })
                                      .order(:id)
-                                     .to_a
-                                     .reject(&:synthetic_placeholder?)
                                      .select { |edition| edition.display_cover_source(style: :original).present? }
   end
 
   def build_style_illustrators
-    illustrators = Illustrator.includes(illustrations: [{ image_attachment: :blob }, { edition: :novel }])
+    illustrators = Illustrator.publicly_visible
+                              .includes(illustrations: [{ image_attachment: :blob }, { edition: [:novel, { cover_image_attachment: :blob }] }])
                               .where(id: STYLE_ILLUSTRATOR_IDS)
                               .index_by(&:id)
 
@@ -105,21 +105,18 @@ class HomeController < ApplicationController
   end
 
   def build_edition_timeline
-    editions = Edition.includes(:novel)
-                      .order(:id)
-                      .reject(&:synthetic_placeholder?)
-
-    dated = editions.select { |edition| edition.publication_year_value.present? }
-
-    dated
-      .group_by(&:publication_year_value)
-      .sort_by { |year, _| year }
-      .map do |year, grouped_editions|
-        {
-          year:,
-          editions: grouped_editions.sort_by { |edition| [edition.novel.name.downcase, edition.display_title.downcase, edition.id] }
-        }
-      end
+    Edition.publicly_visible
+           .includes(:novel)
+           .order(:id)
+           .select { |edition| edition.publication_year_value.present? }
+           .group_by(&:publication_year_value)
+           .sort_by { |year, _| year }
+           .map do |year, grouped_editions|
+             {
+               year:,
+               editions: grouped_editions.sort_by { |edition| [edition.novel.name.downcase, edition.display_title.downcase, edition.id] }
+             }
+           end
   end
 
   def build_periodical_examples
@@ -134,17 +131,17 @@ class HomeController < ApplicationController
       illustration = illustrations[illustration_id]
       next unless illustration
 
-        {
-          kind: :illustration,
-          label: "Periodical illustration",
-          title: illustration.edition.display_title,
-          subtitle: illustration.novel.name,
-          detail: illustration.edition.publication_date,
-          source: illustration.edition.source,
-          image_source: illustration.display_image_source(style: :original),
-          path: illustration_path(illustration)
-        }
-      end
+      {
+        kind: :illustration,
+        label: "Periodical illustration",
+        title: illustration.edition.display_title,
+        subtitle: illustration.novel.name,
+        detail: illustration.edition.publication_date,
+        source: illustration.edition.source,
+        image_source: illustration.display_image_source(style: :original),
+        path: illustration_path(illustration)
+      }
+    end
 
     example_records.concat(
       PERIODICAL_EDITION_IDS.filter_map do |edition_id|
@@ -168,7 +165,8 @@ class HomeController < ApplicationController
   end
 
   def build_paperback_illustrators
-    illustrators = Illustrator.includes(illustrations: [{ image_attachment: :blob }, { edition: :novel }])
+    illustrators = Illustrator.publicly_visible
+                              .includes(illustrations: [{ image_attachment: :blob }, { edition: [:novel, { cover_image_attachment: :blob }] }])
                               .where(id: PAPERBACK_ILLUSTRATOR_IDS)
                               .index_by(&:id)
 

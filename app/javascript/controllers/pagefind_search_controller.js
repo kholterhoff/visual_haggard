@@ -36,6 +36,7 @@ export default class extends Controller {
     "fallback",
     "shell",
     "status",
+    "announcer",
     "jumpChips",
     "illustrationsSection",
     "illustrationsCount",
@@ -77,22 +78,28 @@ export default class extends Controller {
   }
 
   async initializeSearch() {
-    let pagefind
-
     this.activateShell()
+    this.setBusy(true)
     this.hideAllSections()
     this.showStatus(`Searching the archive for <strong>${this.escapeHtml(this.query)}</strong>…`)
+    this.announce(`Searching the archive for ${this.query}.`)
 
-try {
-  pagefind = await import("/pagefind/pagefind.js")
-} catch (error) {
-  console.error("Pagefind could not be loaded", error)
-  if (this.query !== this.queryValue) {
-    this.shellTarget.hidden = false
-    this.showStatus("Static search is unavailable right now. Rebuild the Pagefind index before previewing the published archive.")
-  }
-  return
-}
+    let pagefind
+
+    try {
+      pagefind = await import("/pagefind/pagefind.js")
+    } catch (error) {
+      console.error("Pagefind could not be loaded", error)
+      this.setBusy(false)
+
+      if (this.query !== this.queryValue) {
+        this.shellTarget.hidden = false
+        this.showStatus("Static search is unavailable right now. Rebuild the Pagefind index before previewing the published archive.")
+        this.announce("Static search is unavailable right now.")
+      }
+      return
+    }
+
     try {
       const searches = await Promise.all(
         Object.entries(SECTION_CONFIG).map(async ([key, config]) => {
@@ -112,15 +119,21 @@ try {
       if (!totalMatches) {
         this.hideAllSections()
         this.showStatus(`No results were found for <strong>${this.escapeHtml(this.query)}</strong>.`)
+        this.setBusy(false)
+        this.announce(`No results were found for ${this.query}.`)
         return
       }
 
       this.hideStatus()
       await Promise.all(Object.keys(SECTION_CONFIG).map((key) => this.renderNextBatch(key, { reset: true })))
+      this.setBusy(false)
+      this.announceResults(totalMatches)
     } catch (error) {
       console.error("Pagefind search failed", error)
       this.hideAllSections()
+      this.setBusy(false)
       this.showStatus("Static search is unavailable right now. Rebuild the Pagefind index before previewing the published archive.")
+      this.announce("Static search is unavailable right now.")
     }
   }
 
@@ -128,7 +141,13 @@ try {
     const type = event.params.type
     if (!SECTION_CONFIG[type]) return
 
+    const beforeCount = this.renderedCounts[type] || 0
     await this.renderNextBatch(type)
+
+    const loadedCount = (this.renderedCounts[type] || 0) - beforeCount
+    if (loadedCount > 0) {
+      this.announce(`Loaded ${this.formatNumber(loadedCount)} more ${this.pluralize(loadedCount, SECTION_CONFIG[type].singular)}.`)
+    }
   }
 
   activateShell() {
@@ -146,8 +165,10 @@ try {
       this.renderedCounts = {}
       this.shellTarget.hidden = true
       this.fallbackTarget.hidden = false
+      this.setBusy(false)
       this.hideAllSections()
       this.hideStatus()
+      this.announce("")
       this.jumpChipsTarget.innerHTML = ""
       this.jumpChipsTarget.classList.add("is-hidden")
       return
@@ -164,7 +185,6 @@ try {
       field.value = query
     })
   }
-
 
   currentQuery() {
     const params = new URLSearchParams(window.location.search)
@@ -241,6 +261,24 @@ try {
   hideStatus() {
     this.statusTarget.hidden = true
     this.statusTarget.innerHTML = ""
+  }
+
+  announce(message) {
+    if (!this.hasAnnouncerTarget) return
+
+    this.announcerTarget.textContent = message
+  }
+
+  announceResults(totalMatches) {
+    const sectionSummaries = Object.entries(SECTION_CONFIG)
+      .filter(([type]) => (this.resultHandles[type] || []).length > 0)
+      .map(([type, config]) => `${this.formatNumber(this.resultHandles[type].length)} ${this.pluralize(this.resultHandles[type].length, config.singular)}`)
+
+    this.announce(`Found ${this.formatNumber(totalMatches)} results for ${this.query}. ${sectionSummaries.join(", ")}.`)
+  }
+
+  setBusy(isBusy) {
+    this.shellTarget.setAttribute("aria-busy", isBusy ? "true" : "false")
   }
 
   renderRecord(type, record) {

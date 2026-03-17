@@ -3,11 +3,18 @@ class Illustrator < ApplicationRecord
   PLACEHOLDER_NAME = "Efficient Illustrator".freeze
 
   has_many :illustrations, dependent: :destroy
-  
+
   validates :name, presence: true
-  
+
   include PgSearch::Model
-  scope :publicly_visible, -> { where.not(name: PLACEHOLDER_NAME) }
+  scope :synthetic_placeholder_records, lambda {
+    left_outer_joins(:illustrations)
+      .where(name: PLACEHOLDER_NAME, bio: [nil, ""])
+      .group("illustrators.id")
+      .having("COUNT(DISTINCT illustrations.id) > 0")
+      .having(Illustrator.synthetic_placeholder_having_sql)
+  }
+  scope :publicly_visible, -> { where.not(id: synthetic_placeholder_records.select(:id)) }
 
   pg_search_scope :search_by_name_and_bio,
     against: [:name, :bio],
@@ -27,6 +34,7 @@ class Illustrator < ApplicationRecord
 
   def representative_illustration(style: :original)
     representative_illustrations_for_selection(style:)
+      .to_a
       .select { |illustration| representative_image_source_for(illustration, style:).present? }
       .min_by { |illustration| [representative_illustration_priority(illustration, style:), illustration.id] }
   end
@@ -59,6 +67,24 @@ class Illustrator < ApplicationRecord
       illustrations.all?(&:test_placeholder?)
   end
 
+  def self.synthetic_placeholder_having_sql
+    sanitize_sql_array(
+      [
+        <<~SQL.squish,
+          COUNT(DISTINCT CASE
+            WHEN illustrations.name = ?
+             AND COALESCE(illustrations.description, '') = ''
+             AND COALESCE(illustrations.page_number, '') = ''
+             AND illustrations.image_url = ?
+            THEN illustrations.id
+          END) = COUNT(DISTINCT illustrations.id)
+        SQL
+        Illustration::REPRESENTATIVE_PLACEHOLDER_NAME,
+        Illustration::TEST_PLACEHOLDER_IMAGE_URL
+      ]
+    )
+  end
+
   private
 
   def representative_illustration_priority(illustration, style:)
@@ -87,13 +113,26 @@ class Illustrator < ApplicationRecord
   end
 
   def representative_illustrations_for_selection(style:)
-    if association(:illustrations).loaded?
+    if representative_illustrations_preloaded?
       illustrations.select { |illustration| illustration.edition&.novel.present? }
     else
       illustrations
         .browseable
-        .includes(image_attachment: :blob, edition: :novel)
+        .with_display_source
+        .includes(image_attachment: :blob, edition: [:novel, { cover_image_attachment: :blob }])
+        .order(:id)
     end
+  end
+
+  def representative_illustrations_preloaded?
+    association(:illustrations).loaded? &&
+      illustrations.all? do |illustration|
+        illustration.association(:image_attachment).loaded? &&
+          illustration.association(:edition).loaded? &&
+          illustration.edition.present? &&
+          illustration.edition.association(:novel).loaded? &&
+          illustration.edition.association(:cover_image_attachment).loaded?
+      end
   end
 
   def representative_image_source_for(illustration, style:)

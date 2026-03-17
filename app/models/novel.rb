@@ -6,13 +6,13 @@ class Novel < ApplicationRecord
   has_many :editions, dependent: :destroy
   has_many :illustrations, through: :editions
   has_many :blog_posts, dependent: :destroy
-  
+
   acts_as_taggable_on :tags
 
   scope :publicly_visible, -> { where.not(name: PLACEHOLDER_NAME) }
-  
+
   validates :name, presence: true
-  
+
   include PgSearch::Model
   pg_search_scope :search_by_name_and_description,
     against: [:name, :description],
@@ -31,7 +31,11 @@ class Novel < ApplicationRecord
   end
 
   def visible_editions
-    editions.reject(&:synthetic_placeholder?)
+    if association(:editions).loaded?
+      editions.reject(&:synthetic_placeholder?)
+    else
+      editions.merge(Edition.publicly_visible)
+    end
   end
 
   def synthetic_placeholder?
@@ -48,8 +52,18 @@ class Novel < ApplicationRecord
   end
 
   def lead_illustration(style: :original)
-    visible_editions.flat_map(&:illustrations).find do |illustration|
-      illustration.display_image_source(style:).present?
+    if lead_illustrations_preloaded?
+      visible_editions.flat_map(&:illustrations).find { |illustration| illustration.display_image_source(style:).present? }
+    else
+      illustrations
+        .joins(edition: :novel)
+        .merge(Novel.publicly_visible)
+        .where.not(edition_id: Edition.generated_placeholder_records.select(:id))
+        .where.not(edition_id: Edition.test_placeholder_records.select(:id))
+        .with_display_source
+        .includes(image_attachment: :blob)
+        .order(:edition_id, :id)
+        .first
     end
   end
 
@@ -72,5 +86,12 @@ class Novel < ApplicationRecord
 
   def directory_sort_key
     [directory_title.downcase, name.to_s.downcase]
+  end
+
+  private
+
+  def lead_illustrations_preloaded?
+    association(:editions).loaded? &&
+      visible_editions.all? { |edition| edition.association(:illustrations).loaded? }
   end
 end

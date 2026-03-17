@@ -17,6 +17,7 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select %(div.search-page[data-controller="pagefind-search"][data-pagefind-ignore="all"])
     assert_select %(div[data-pagefind-search-target="fallback"])
+    assert_select %(div[data-pagefind-search-target="announcer"][aria-live="polite"])
     assert_includes response.body, illustration.name
     assert_select %(a[href="#search-illustrations"])
     assert_select %(a[href="#{illustration_path(illustration)}"])
@@ -133,6 +134,10 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
   end
 
   test "public pages expose skip link, primary navigation, and labeled search" do
+    13.times do |record_index|
+      Novel.create!(name: "Paginated Novel #{record_index}")
+    end
+
     get novels_path
 
     assert_response :success
@@ -141,6 +146,7 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select %(nav.site-nav[aria-label="Primary"])
     assert_select %(label.sr-only[for="search"]), text: "Search the archive"
     assert_select %(nav.site-nav a[aria-current="page"]), text: "Novels"
+    assert_select %(nav.pagination[aria-label="Pagination"])
   end
 
   test "illustration and edition records retain semantic headings for assistive technology" do

@@ -7,6 +7,7 @@
   data-pagefind-ignore="all"
   data-pagefind-search-query-value="<%= current_query %>"
 >
+  <div class="sr-only" data-pagefind-search-target="announcer" aria-live="polite" aria-atomic="true"></div>
   <div class="page-shell">
     <header class="page-hero search-hero">
       <div>
@@ -55,7 +56,7 @@
     </header>
 
     <div class="search-pagefind-shell" data-pagefind-search-target="shell" hidden>
-      <section class="empty-state search-empty-state search-status-panel" data-pagefind-search-target="status" hidden></section>
+      <section class="empty-state search-empty-state search-status-panel" data-pagefind-search-target="status" role="status" aria-atomic="true" hidden></section>
 
       <section class="search-section surface-panel" id="pagefind-search-illustrations" data-pagefind-search-target="illustrationsSection" hidden>
         <div class="section-heading search-section-heading">

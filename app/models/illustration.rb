@@ -1,21 +1,29 @@
 class Illustration < ApplicationRecord
   LEGACY_S3_ROOT = "https://s3-us-west-2.amazonaws.com/haggard".freeze
+  REPRESENTATIVE_PLACEHOLDER_NAME = "Representative illustration".freeze
   TEST_PLACEHOLDER_IMAGE_URL = "https://example.com/representative.jpg".freeze
 
   belongs_to :edition
   belongs_to :illustrator, optional: true
   has_many :blog_posts, dependent: :destroy
-  
+
   has_one_attached :image, dependent: :purge_later
-  
+
   acts_as_taggable_on :tags
-  
+
   validates :name, presence: true
-  
+
   delegate :novel, to: :edition
 
-  scope :browseable, -> { joins(edition: :novel).merge(Novel.publicly_visible).distinct }
-  
+  scope :browseable, -> { joins(edition: :novel).merge(Novel.publicly_visible).where.not(edition_id: Edition.generated_placeholder_records.select(:id)).where.not(edition_id: Edition.test_placeholder_records.select(:id)).distinct }
+  scope :with_display_source, lambda {
+    left_outer_joins(:image_attachment)
+      .where(
+        "COALESCE(illustrations.image_file_name, '') <> '' OR COALESCE(illustrations.image_url, '') <> '' OR COALESCE(illustrations.image_thumbnail_url, '') <> '' OR active_storage_attachments.id IS NOT NULL"
+      )
+      .distinct
+  }
+
   def self.ransackable_associations(auth_object = nil)
     ["base_tags", "blog_posts", "edition", "illustrator", "tag_taggings", "taggings", "tags"]
   end
@@ -24,14 +32,14 @@ class Illustration < ApplicationRecord
   def self.ransackable_attributes(auth_object = nil)
     ["artist", "created_at", "description", "edition_id", "id", "illustrator_id", "name", "page_number", "updated_at"]
   end
-  
+
   include PgSearch::Model
   pg_search_scope :search_by_name_and_description,
     against: [:name, :description, :artist],
     using: {
       tsearch: { prefix: true }
     }
-    
+
   pg_search_scope :search_all,
     against: [:name, :description, :artist, :page_number],
     associated_against: {
@@ -68,7 +76,7 @@ class Illustration < ApplicationRecord
   end
 
   def test_placeholder?
-    name == "Representative illustration" &&
+    name == REPRESENTATIVE_PLACEHOLDER_NAME &&
       description.blank? &&
       page_number.blank? &&
       image_url == TEST_PLACEHOLDER_IMAGE_URL &&
