@@ -7,6 +7,6 @@ class EditionsController < ApplicationController
 
   def show
     @edition = Edition.includes(:novel, :blog_posts, { cover_image_attachment: :blob }, { illustrations: [:illustrator, { image_attachment: :blob }] }).find(params[:id])
-    raise ActiveRecord::RecordNotFound if @edition.synthetic_placeholder?
+    raise ActiveRecord::RecordNotFound if @edition.synthetic_placeholder? || @edition.novel.synthetic_placeholder?
   end
 end

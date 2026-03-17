@@ -89,6 +89,27 @@ class Edition < ApplicationRecord
   end
 
   def synthetic_placeholder?
+    generated_placeholder? || test_placeholder?
+  end
+
+  def test_placeholder?
+    name == "Illustrator Edition" &&
+      publication_date.blank? &&
+      publisher.blank? &&
+      publication_city.blank? &&
+      source.blank? &&
+      long_name.blank? &&
+      cover_url.blank? &&
+      cover_thumbnail_url.blank? &&
+      image_file_name.blank? &&
+      illustrations.any? &&
+      illustrations.all?(&:test_placeholder?) &&
+      blog_posts.empty?
+  end
+
+  private
+
+  def generated_placeholder?
     name == "First Edition" &&
       publication_date == "Unknown" &&
       publisher == "Unknown" &&
@@ -101,8 +122,6 @@ class Edition < ApplicationRecord
       illustrations.empty? &&
       blog_posts.empty?
   end
-
-  private
 
   def paperclip_cover_url(style:)
     build_legacy_s3_url("editions", image_file_name, image_updated_at, style)

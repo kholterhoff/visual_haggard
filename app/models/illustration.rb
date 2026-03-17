@@ -1,5 +1,6 @@
 class Illustration < ApplicationRecord
   LEGACY_S3_ROOT = "https://s3-us-west-2.amazonaws.com/haggard".freeze
+  TEST_PLACEHOLDER_IMAGE_URL = "https://example.com/representative.jpg".freeze
 
   belongs_to :edition
   belongs_to :illustrator, optional: true
@@ -13,7 +14,7 @@ class Illustration < ApplicationRecord
   
   delegate :novel, to: :edition
 
-  scope :browseable, -> { joins(edition: :novel).distinct }
+  scope :browseable, -> { joins(edition: :novel).merge(Novel.publicly_visible).distinct }
   
   def self.ransackable_associations(auth_object = nil)
     ["base_tags", "blog_posts", "edition", "illustrator", "tag_taggings", "taggings", "tags"]
@@ -64,6 +65,14 @@ class Illustration < ApplicationRecord
 
   def display_image_source(style: :original)
     image.attached? ? image : resolved_image_url(style:)
+  end
+
+  def test_placeholder?
+    name == "Representative illustration" &&
+      description.blank? &&
+      page_number.blank? &&
+      image_url == TEST_PLACEHOLDER_IMAGE_URL &&
+      illustrator&.name == Illustrator::PLACEHOLDER_NAME
   end
 
   private

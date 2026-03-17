@@ -1,6 +1,6 @@
 class IllustrationsController < ApplicationController
   def index
-    scope = Illustration.joins(edition: :novel)
+    scope = Illustration.browseable
                         .includes(:illustrator, { edition: :novel }, { image_attachment: :blob })
                         .order(:id)
     scope = scope.where(edition_id: params[:edition_id]) if params[:edition_id].present?
@@ -8,7 +8,7 @@ class IllustrationsController < ApplicationController
   end
 
   def show
-    @illustration = Illustration.joins(edition: :novel)
+    @illustration = Illustration.browseable
                                 .includes(:illustrator, { edition: :novel }, { image_attachment: :blob })
                                 .find(params[:id])
   end

@@ -73,13 +73,14 @@ class StaticSiteExporter
         specs << RouteSpec.new(request_path: request_path, output_path: output_path_for(request_path))
       end
 
-      Novel.order(:id).pluck(:id).each do |id|
+      Novel.publicly_visible.order(:id).pluck(:id).each do |id|
         path = novel_path(id)
         specs << RouteSpec.new(request_path: path, output_path: output_path_for(path))
       end
 
-      Edition.order(:id).find_each do |edition|
+      Edition.includes(:novel).order(:id).find_each do |edition|
         next if edition.synthetic_placeholder?
+        next if edition.novel.synthetic_placeholder?
 
         path = edition_path(edition)
         specs << RouteSpec.new(request_path: path, output_path: output_path_for(path))
@@ -90,7 +91,7 @@ class StaticSiteExporter
         specs << RouteSpec.new(request_path: path, output_path: output_path_for(path))
       end
 
-      Illustrator.order(:id).pluck(:id).each do |id|
+      Illustrator.publicly_visible.order(:id).pluck(:id).each do |id|
         path = illustrator_path(id)
         specs << RouteSpec.new(request_path: path, output_path: output_path_for(path))
       end

@@ -75,15 +75,15 @@ class ArchiveSearch
   end
 
   def novel_scope
-    Novel.includes(editions: [{ cover_image_attachment: :blob }, { illustrations: { image_attachment: :blob } }])
+    Novel.publicly_visible.includes(editions: [{ cover_image_attachment: :blob }, { illustrations: { image_attachment: :blob } }])
   end
 
   def edition_scope
-    Edition.includes(:novel, :illustrations, cover_image_attachment: :blob)
+    Edition.joins(:novel).merge(Novel.publicly_visible).includes(:novel, :illustrations, cover_image_attachment: :blob)
   end
 
   def illustrator_scope
-    Illustrator.includes(illustrations: [{ image_attachment: :blob }, { edition: :novel }])
+    Illustrator.publicly_visible.includes(illustrations: [{ image_attachment: :blob }, { edition: :novel }])
   end
 
   def illustration_ranked_sql
@@ -100,8 +100,8 @@ class ArchiveSearch
 
   def novel_ranked_sql
     @novel_ranked_sql ||= ranked_sql(
-      Novel.search_by_name_and_description(query),
-      apply_token_filters(Novel.joins(:tags).distinct, "tags.name")
+      Novel.publicly_visible.search_by_name_and_description(query),
+      apply_token_filters(Novel.publicly_visible.joins(:tags).distinct, "tags.name")
     )
   end
 
@@ -110,9 +110,11 @@ class ArchiveSearch
   end
 
   def edition_ranked_sql
+    public_editions = Edition.joins(:novel).merge(Novel.publicly_visible).distinct
+
     @edition_ranked_sql ||= ranked_sql(
-      Edition.search_by_name_and_publisher(query),
-      apply_token_filters_with_or(Edition.joins(:novel).distinct, ["novels.name", "novels.description"])
+      Edition.search_by_name_and_publisher(query).joins(:novel).merge(Novel.publicly_visible),
+      apply_token_filters_with_or(public_editions, ["novels.name", "novels.description"])
     )
   end
 
@@ -122,9 +124,9 @@ class ArchiveSearch
 
   def illustrator_ranked_sql
     @illustrator_ranked_sql ||= ranked_sql(
-      Illustrator.search_by_name_and_bio(query),
+      Illustrator.publicly_visible.search_by_name_and_bio(query),
       apply_token_filters(
-        Illustrator.joins(illustrations: [:tags, { edition: :novel }]).distinct,
+        Illustrator.publicly_visible.joins(illustrations: [:tags, { edition: :novel }]).distinct,
         "tags.name"
       )
     )

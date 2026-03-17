@@ -13,11 +13,11 @@ class ArchiveIntegrityTest < ActiveSupport::TestCase
   end
 
   test "representative illustration does not issue extra queries when preloaded" do
-    novel = Novel.create!(name: "Illustrator Novel")
-    edition = novel.editions.create!(name: "Illustrator Edition")
-    illustrator = Illustrator.create!(name: "Efficient Illustrator")
+    novel = Novel.create!(name: "Preloaded Query Novel")
+    edition = novel.editions.create!(name: "Preloaded Query Edition")
+    illustrator = Illustrator.create!(name: "Preloaded Query Illustrator")
     illustration = edition.illustrations.create!(
-      name: "Representative illustration",
+      name: "Representative work",
       illustrator: illustrator,
       image_url: "https://example.com/representative.jpg"
     )
@@ -29,5 +29,25 @@ class ArchiveIntegrityTest < ActiveSupport::TestCase
     end
 
     assert_equal 0, queries.size
+  end
+
+  test "placeholder archive records are excluded from public scopes" do
+    novel = Novel.create!(name: "Illustrator Novel")
+    edition = novel.editions.create!(name: "Illustrator Edition")
+    illustrator = Illustrator.create!(name: "Efficient Illustrator")
+    illustration = edition.illustrations.create!(
+      name: "Representative illustration",
+      illustrator: illustrator,
+      image_url: "https://example.com/representative.jpg"
+    )
+
+    assert novel.synthetic_placeholder?
+    assert edition.synthetic_placeholder?
+    assert illustration.test_placeholder?
+    assert illustrator.synthetic_placeholder?
+
+    assert_not_includes Novel.publicly_visible.to_a, novel
+    assert_not_includes Illustration.browseable.to_a, illustration
+    assert_not_includes Illustrator.publicly_visible.to_a, illustrator
   end
 end

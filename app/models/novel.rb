@@ -1,12 +1,15 @@
 class Novel < ApplicationRecord
   DIRECTORY_ARTICLE_PREFIX = /\A(?:a|an|the)\s+/i
   ARCHIVE_PAGE_SIZE = 12
+  PLACEHOLDER_NAME = "Illustrator Novel".freeze
 
   has_many :editions, dependent: :destroy
   has_many :illustrations, through: :editions
   has_many :blog_posts, dependent: :destroy
   
   acts_as_taggable_on :tags
+
+  scope :publicly_visible, -> { where.not(name: PLACEHOLDER_NAME) }
   
   validates :name, presence: true
   
@@ -29,6 +32,13 @@ class Novel < ApplicationRecord
 
   def visible_editions
     editions.reject(&:synthetic_placeholder?)
+  end
+
+  def synthetic_placeholder?
+    name == PLACEHOLDER_NAME &&
+      description.blank? &&
+      editions.any? &&
+      editions.all?(&:test_placeholder?)
   end
 
   def lead_cover_edition(style: :original)

@@ -1,11 +1,14 @@
 class Illustrator < ApplicationRecord
   COVER_KEYWORDS = /\b(cover|dust jacket|jacket|wrapper|wrappers)\b/i
+  PLACEHOLDER_NAME = "Efficient Illustrator".freeze
 
   has_many :illustrations, dependent: :destroy
   
   validates :name, presence: true
   
   include PgSearch::Model
+  scope :publicly_visible, -> { where.not(name: PLACEHOLDER_NAME) }
+
   pg_search_scope :search_by_name_and_bio,
     against: [:name, :bio],
     using: {
@@ -47,6 +50,13 @@ class Illustrator < ApplicationRecord
 
   def directory_sort_key
     [directory_last_name.downcase, name.to_s.downcase]
+  end
+
+  def synthetic_placeholder?
+    name == PLACEHOLDER_NAME &&
+      bio.blank? &&
+      illustrations.any? &&
+      illustrations.all?(&:test_placeholder?)
   end
 
   private
