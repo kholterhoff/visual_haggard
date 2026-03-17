@@ -52,7 +52,7 @@
       <article class="surface-panel home-guide-card home-guide-card--archive">
         <p class="page-eyebrow">What is Visual Haggard?</p>
         <h2>Read Haggard through images</h2>
-        <p>Visual Haggard is a digital archive dedicated to preserving and opening up the illustrations of popular Victorian author H. Rider Haggard (1856–1925). The majority of Haggard's approximately fifty novels were richly illustrated—many of them repeatedly, across different editions and by different artists. Illustration was always central to how readers encountered his romances in the nineteenth century. Visual Haggard restores those images to view, treating them as artworks and texts in their own right.</p>
+        <p>Visual Haggard is a digital archive of the illustrations that accompanied the fiction of H. Rider Haggard (1856–1925). Across roughly fifty novels, Haggard's texts were lavishly illustrated—often repeatedly, in different editions and by different artists. Illustration was central to the way readers encountered these romances in the nineteenth century, and this archive works to restore that visual dimension for contemporary audiences.</p>
       </article>
 
       <aside class="home-highlight-card">
@@ -69,7 +69,7 @@
       <div class="section-heading">
         <div>
           <p class="page-eyebrow">Featured edition</p>
-          <h2>Featured edition</h2>
+          <h2>Start with a single edition</h2>
         </div>
         <%= link_to "Browse novels", novels_path, class: "section-link" %>
       </div>
@@ -159,11 +159,10 @@
           </div>
 
           <p class="home-section-intro">
-            The archive puts stylistic contrast directly alongside one another. <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> brings a lush Pre-Raphaelite sensibility to his illustrations — Rossettian figures, theatrical composition, and richly atmospheric palette — giving some of Haggard's most famous novels their visual identity. <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %> takes a completely different path, stripping illustration back to stark black-and-white symbolist design and showing how far Haggard's visual world could range from Victorian pictorial realism
+            This archive makes stylistic contrast visible at a glance. <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> brings a lush Pre-Raphaelite sensibility to his illustrations. His romantic figures, theatrical compositions, and richly atmospheric palette give many of Haggard's most famous novels their visual identity. <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %> works at the opposite extreme, stripping scenes down to stark black-and-white symbolist abstraction. Together they show how wide the range of Haggard illustration actually was.
           </p>
-
-          <p>
-            Greiffenhagen's work channels Rossettian beauty, gestural drapery, and a sensuous Pre-Raphaelite palette that shaped some of Haggard's most iconic visual identities. Horton proves how far Haggard illustration could drift from lush Victorian realism, moving instead toward pared-down symbolist abstraction and mystical black-and-white design.
+          <p class="home-section-intro">            
+            Visual Haggard also makes it possible to compare how different artists interpreted the same story. King Solomon's Mines alone has been illustrated by eleven different hands—from Victorian wood-engravers to mid-century paperback painters—each reimagining Haggard's Africa using a distinct visual language.
           </p>
         </div>
 
@@ -239,16 +238,16 @@
       <div class="section-heading">
         <div>
           <p class="page-eyebrow">Periodicals</p>
-          <h2>The newspapers and magazines may be the archive's rarest witnesses</h2>
+          <h2>The newspapers and magazines are the archive's rarest witnesses</h2>
         </div>
       </div>
 
       <div class="home-periodical-copy">
         <p>
-          <em>Visual Haggard</em> treats periodicals as central, not peripheral. As the <%= link_to "Editor's Statement", editors_statement_path %> argues, illustrations circulated through newspapers and journals as powerful commercial and aesthetic objects, yet those serial publications were printed on cheap paper, scattered across local collections, and are far more ephemeral than bound books.
+          Visual Haggard treats periodicals as central, not peripheral. Illustrations circulated through newspapers and journals as powerful commercial and aesthetic objects, yet serial publications were printed on cheap paper, scattered across local collections, and survive far less reliably than bound books.
         </p>
         <p>
-          Even when quality issues remain in surviving scans, these fragile serial appearances can matter more than later book editions because they are harder to locate, easier to lose, and often preserve the archive's most fugitive visual history. The archive therefore treats periodical witnesses as essential evidence rather than incidental supplements.
+          Even when surviving scans are imperfect, these fragile serial appearances can matter more than later book editions — they are harder to locate, easier to lose, and often preserve illustrations that no bound volume reproduces. The archive treats them as essential evidence, not incidental supplements.        
         </p>
       </div>
 
@@ -279,7 +278,7 @@
       </div>
 
       <p class="home-section-intro">
-        The archive tracks Haggard well beyond Victorian book illustration. Later speculative-fiction publishers and paperback houses recast these romances through saturated cover design, cinematic composition, and bold fantasy branding. Visual Haggard preserves that afterlife through artists such as Virgil Finlay, Dean Ellis, Ken Barr, and Michael Herring.
+        The archive tracks Haggard well beyond Victorian book illustration. Later speculative-fiction publishers and paperback houses recast these romances through saturated cover design, cinematic composition, and bold fantasy branding      
       </p>
 
       <div class="home-paperback-grid">
