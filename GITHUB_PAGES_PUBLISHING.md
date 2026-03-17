@@ -41,6 +41,7 @@ PAGES_REMOTE=origin
 PAGES_BRANCH=gh-pages
 PAGES_WORKTREE=/Users/kateholterhoff/Documents/code/visual_haggard_pages
 STATIC_HOST=www.visualhaggard.org
+STATIC_REQUEST_HOST=127.0.0.1
 CUSTOM_DOMAIN=www.visualhaggard.org
 PAGEFIND_CMD="npx pagefind"
 PAGES_COMMIT_MESSAGE="Publish archive update"
@@ -67,4 +68,5 @@ The static export writes GitHub Pages-specific files automatically:
 - Publishing requires a committed `main` branch and a configured `origin` remote.
 - The script assumes `gh-pages` is dedicated to static output and will replace its working tree contents with `dist/`.
 - If Pagefind is missing, static export will warn and the published search UI will not work until the index is rebuilt.
+- `STATIC_REQUEST_HOST` controls the local host used for the export requests. Leave it at `127.0.0.1` unless your local Rails environment explicitly allows another host.
 - If any public page still renders `/rails/active_storage/...`, the export report will flag it as a static-publish warning.

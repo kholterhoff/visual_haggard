@@ -60,17 +60,28 @@ export default class extends Controller {
   }
 
   connect() {
-    this.query = this.currentQuery()
+    this.query = ""
     this.resultHandles = {}
     this.renderedCounts = {}
+    this.handleLocationChange = this.refresh.bind(this)
 
-    if (!this.query) return
+    document.addEventListener("turbo:load", this.handleLocationChange)
+    window.addEventListener("popstate", this.handleLocationChange)
 
-    this.initializeSearch()
+    this.refresh()
+  }
+
+  disconnect() {
+    document.removeEventListener("turbo:load", this.handleLocationChange)
+    window.removeEventListener("popstate", this.handleLocationChange)
   }
 
   async initializeSearch() {
     let pagefind
+
+    this.activateShell()
+    this.hideAllSections()
+    this.showStatus(`Searching the archive for <strong>${this.escapeHtml(this.query)}</strong>…`)
 
 try {
   pagefind = await import("/pagefind/pagefind.js")
@@ -82,9 +93,6 @@ try {
   }
   return
 }
-    this.activateShell()
-    this.showStatus(`Searching the archive for <strong>${this.escapeHtml(this.query)}</strong>…`)
-
     try {
       const searches = await Promise.all(
         Object.entries(SECTION_CONFIG).map(async ([key, config]) => {
@@ -127,6 +135,36 @@ try {
     this.shellTarget.hidden = false
     this.fallbackTarget.hidden = true
   }
+
+  refresh() {
+    const nextQuery = this.currentQuery()
+    this.syncSearchFields(nextQuery)
+
+    if (!nextQuery) {
+      this.query = ""
+      this.resultHandles = {}
+      this.renderedCounts = {}
+      this.shellTarget.hidden = true
+      this.fallbackTarget.hidden = false
+      this.hideAllSections()
+      this.hideStatus()
+      this.jumpChipsTarget.innerHTML = ""
+      this.jumpChipsTarget.classList.add("is-hidden")
+      return
+    }
+
+    if (nextQuery === this.query && !this.shellTarget.hidden) return
+
+    this.query = nextQuery
+    this.initializeSearch()
+  }
+
+  syncSearchFields(query) {
+    document.querySelectorAll('input[name="search"]').forEach((field) => {
+      field.value = query
+    })
+  }
+
 
   currentQuery() {
     const params = new URLSearchParams(window.location.search)

@@ -7,6 +7,7 @@ class StaticSiteExporter
   include Rails.application.routes.url_helpers
 
   DEFAULT_HOST = "www.visualhaggard.org".freeze
+  DEFAULT_REQUEST_HOST = "127.0.0.1".freeze
   DEFAULT_PAGEFIND_COMMAND = "pagefind".freeze
   PUBLIC_ROOT_FILES = %w[
     404.html
@@ -16,11 +17,12 @@ class StaticSiteExporter
     robots.txt
   ].freeze
 
-  attr_reader :output_root, :host, :warnings, :custom_domain
+  attr_reader :output_root, :host, :request_host, :warnings, :custom_domain
 
   def initialize(
     output_root: Rails.root.join("dist"),
     host: DEFAULT_HOST,
+    request_host: DEFAULT_REQUEST_HOST,
     precompile_assets: true,
     copy_public_assets: true,
     run_pagefind: true,
@@ -30,6 +32,7 @@ class StaticSiteExporter
   )
     @output_root = Pathname(output_root)
     @host = host
+    @request_host = request_host
     @precompile_assets = precompile_assets
     @copy_public_assets = copy_public_assets
     @run_pagefind = run_pagefind
@@ -142,7 +145,8 @@ class StaticSiteExporter
 
     env = {
       "RAILS_ENV" => "production",
-      "SECRET_KEY_BASE_DUMMY" => ENV.fetch("SECRET_KEY_BASE_DUMMY", "1")
+      "SECRET_KEY_BASE_DUMMY" => ENV.fetch("SECRET_KEY_BASE_DUMMY", "1"),
+      "AWS_EC2_METADATA_DISABLED" => ENV.fetch("AWS_EC2_METADATA_DISABLED", "true")
     }
 
     success = system(env, "bin/rails", "assets:precompile", chdir: Rails.root.to_s)
@@ -174,7 +178,7 @@ class StaticSiteExporter
 
   def export_routes!
     session = ActionDispatch::Integration::Session.new(Rails.application)
-    session.host! host
+    session.host! request_host
 
     route_specs.each_with_index do |route_spec, index|
       @out.puts "[#{index + 1}/#{route_specs.size}] Exporting #{route_spec.request_path}"
@@ -213,6 +217,7 @@ class StaticSiteExporter
     report_lines = []
     report_lines << "Static export completed at #{Time.current.iso8601}"
     report_lines << "Host: #{host}"
+    report_lines << "Request host: #{request_host}"
     report_lines << "Exported routes: #{route_specs.size}"
     report_lines << "Custom domain: #{custom_domain}" if custom_domain.present?
 

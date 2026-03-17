@@ -53,7 +53,7 @@
               </ul>
             </nav>
 
-            <%= form_with url: search_path, method: :get, class: "site-search", local: true do |form| %>
+            <%= form_with url: search_path, method: :get, class: "site-search", local: true, data: { turbo: false } do |form| %>
               <%= form.label :search, "Search the archive", class: "sr-only" %>
               <%= form.search_field :search,
                 value: params[:search].presence || params[:q],

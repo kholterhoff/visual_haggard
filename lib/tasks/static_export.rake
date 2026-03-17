@@ -3,6 +3,7 @@ namespace :static do
   task export: :environment do
     output_root = ENV["OUTPUT"].present? ? Pathname(ENV["OUTPUT"]) : Rails.root.join("dist")
     host = ENV.fetch("STATIC_HOST", StaticSiteExporter::DEFAULT_HOST)
+    request_host = ENV.fetch("STATIC_REQUEST_HOST", StaticSiteExporter::DEFAULT_REQUEST_HOST)
     precompile_assets = !%w[0 false no].include?(ENV.fetch("PRECOMPILE_ASSETS", "true").downcase)
     copy_public_assets = !%w[0 false no].include?(ENV.fetch("COPY_PUBLIC_ASSETS", "true").downcase)
     run_pagefind = !%w[0 false no].include?(ENV.fetch("RUN_PAGEFIND", "true").downcase)
@@ -11,6 +12,7 @@ namespace :static do
     exporter = StaticSiteExporter.new(
       output_root: output_root,
       host: host,
+      request_host: request_host,
       precompile_assets: precompile_assets,
       copy_public_assets: copy_public_assets,
       run_pagefind: run_pagefind,
