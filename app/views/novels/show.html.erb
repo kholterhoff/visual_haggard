@@ -1,6 +1,6 @@
 <% content_for :title, @novel.name %>
 <%
-  visible_editions = @novel.editions.reject(&:synthetic_placeholder?)
+  visible_editions = @novel.visible_editions.to_a.sort_by(&:publication_sort_key)
   all_illustrations = visible_editions.flat_map(&:illustrations).select do |illustration|
     illustration.display_image_source(style: :original).present?
   end
@@ -91,7 +91,7 @@
         </div>
 
         <div class="editions-grid">
-          <% visible_editions.sort_by { |edition| edition.publication_date.to_s }.each do |edition| %>
+          <% visible_editions.each do |edition| %>
             <% cover_source = edition.display_cover_source(style: :original) %>
             <% if cover_source.blank? %>
               <% lead_illustration = edition.illustrations.find { |illustration| illustration.display_image_source(style: :original).present? } %>

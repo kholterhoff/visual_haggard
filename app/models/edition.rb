@@ -135,10 +135,16 @@ class Edition < ApplicationRecord
   end
 
   def publication_year_value
-    return if publication_date.blank?
+    publication_date_parts[:year]
+  end
 
-    match = publication_date.to_s.match(/\b(1[0-9]{3}|20[0-9]{2})\b/)
-    match && match[1].to_i
+  def publication_sort_key
+    parts = publication_date_parts
+    year = parts[:year]
+    month = parts[:mon] || 0
+    day = parts[:mday] || 0
+
+    [year.nil? ? 1 : 0, year || Float::INFINITY, month, day, publication_date.to_s.downcase, id]
   end
 
   def synthetic_placeholder?
@@ -181,6 +187,15 @@ class Edition < ApplicationRecord
   end
 
   private
+
+  def publication_date_parts
+    @publication_date_parts ||= begin
+      raw_value = publication_date.to_s.strip
+      raw_value.present? ? Date._parse(raw_value, false).slice(:year, :mon, :mday) : {}
+    rescue ArgumentError
+      {}
+    end
+  end
 
   def generated_placeholder?
     name == GENERATED_PLACEHOLDER_NAME &&
