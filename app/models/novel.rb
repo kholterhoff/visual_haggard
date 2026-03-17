@@ -2,6 +2,8 @@ class Novel < ApplicationRecord
   DIRECTORY_ARTICLE_PREFIX = /\A(?:a|an|the)\s+/i
   ARCHIVE_PAGE_SIZE = 12
   PLACEHOLDER_NAME = "Illustrator Novel".freeze
+  STRING_MAXIMUM = 255
+  DESCRIPTION_MAXIMUM = 100_000
 
   has_many :editions, dependent: :destroy
   has_many :illustrations, through: :editions
@@ -11,7 +13,8 @@ class Novel < ApplicationRecord
 
   scope :publicly_visible, -> { where.not(name: PLACEHOLDER_NAME) }
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: STRING_MAXIMUM }
+  validates :description, length: { maximum: DESCRIPTION_MAXIMUM }, allow_blank: true
 
   include PgSearch::Model
   pg_search_scope :search_by_name_and_description,
@@ -20,14 +23,12 @@ class Novel < ApplicationRecord
       tsearch: { prefix: true }
     }
 
-  # Define searchable associations for Ransack (used by ActiveAdmin)
-  def self.ransackable_associations(auth_object = nil)
-    ["base_tags", "blog_posts", "editions", "illustrations", "tag_taggings", "taggings", "tags"]
+  def self.ransackable_associations(_auth_object = nil)
+    %w[base_tags blog_posts editions illustrations tag_taggings taggings tags]
   end
 
-  # Define searchable attributes for Ransack (used by ActiveAdmin)
-  def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "description", "id", "name", "updated_at"]
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[created_at description id name updated_at]
   end
 
   def visible_editions

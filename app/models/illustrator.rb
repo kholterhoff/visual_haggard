@@ -1,10 +1,13 @@
 class Illustrator < ApplicationRecord
   COVER_KEYWORDS = /\b(cover|dust jacket|jacket|wrapper|wrappers)\b/i
   PLACEHOLDER_NAME = "Efficient Illustrator".freeze
+  STRING_MAXIMUM = 255
+  BIO_MAXIMUM = 100_000
 
   has_many :illustrations, dependent: :destroy
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: STRING_MAXIMUM }
+  validates :bio, length: { maximum: BIO_MAXIMUM }, allow_blank: true
 
   include PgSearch::Model
   scope :synthetic_placeholder_records, lambda {
@@ -22,14 +25,12 @@ class Illustrator < ApplicationRecord
       tsearch: { prefix: true }
     }
 
-  # Define searchable associations for Ransack (used by ActiveAdmin)
-  def self.ransackable_associations(auth_object = nil)
-    ["illustrations"]
+  def self.ransackable_associations(_auth_object = nil)
+    %w[illustrations]
   end
 
-  # Define searchable attributes for Ransack (used by ActiveAdmin)
-  def self.ransackable_attributes(auth_object = nil)
-    ["bio", "created_at", "id", "name", "updated_at"]
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[bio created_at id name updated_at]
   end
 
   def representative_illustration(style: :original)

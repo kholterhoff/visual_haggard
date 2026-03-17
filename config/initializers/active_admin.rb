@@ -81,6 +81,9 @@ ActiveAdmin.setup do |config|
   # CanCanAdapter or make your own. Please refer to documentation.
   # config.authorization_adapter = ActiveAdmin::CanCanAdapter
 
+  # This admin remains intentionally single-user. If you add more administrators,
+  # configure a real authorization adapter (Pundit or CanCan) before expanding access.
+
   # In case you prefer Pundit over other solutions you can here pass
   # the name of default policy class. This policy will be used in every
   # case when Pundit is unable to find suitable policy.

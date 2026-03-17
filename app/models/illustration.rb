@@ -1,7 +1,11 @@
 class Illustration < ApplicationRecord
+  include SafeUrlFields
+
   LEGACY_S3_ROOT = "https://s3-us-west-2.amazonaws.com/haggard".freeze
   REPRESENTATIVE_PLACEHOLDER_NAME = "Representative illustration".freeze
   TEST_PLACEHOLDER_IMAGE_URL = "https://example.com/representative.jpg".freeze
+  STRING_MAXIMUM = 255
+  DESCRIPTION_MAXIMUM = 100_000
 
   belongs_to :edition
   belongs_to :illustrator, optional: true
@@ -11,11 +15,25 @@ class Illustration < ApplicationRecord
 
   acts_as_taggable_on :tags
 
-  validates :name, presence: true
+  validates :edition, presence: true
+  validates :name, presence: true, length: { maximum: STRING_MAXIMUM }
+  validates :artist, :page_number,
+            length: { maximum: STRING_MAXIMUM }, allow_blank: true
+  validates :image_url, :image_thumbnail_url, :google_book_link, :gutenberg_link, :internet_archive_link,
+            length: { maximum: STRING_MAXIMUM }, allow_blank: true
+  validates :description, length: { maximum: DESCRIPTION_MAXIMUM }, allow_blank: true
+  validates_http_url_or_legacy_reference :image_url, :image_thumbnail_url
+  validates_http_url :google_book_link, :gutenberg_link, :internet_archive_link
 
   delegate :novel, to: :edition
 
-  scope :browseable, -> { joins(edition: :novel).merge(Novel.publicly_visible).where.not(edition_id: Edition.generated_placeholder_records.select(:id)).where.not(edition_id: Edition.test_placeholder_records.select(:id)).distinct }
+  scope :browseable, lambda {
+    joins(edition: :novel)
+      .merge(Novel.publicly_visible)
+      .where.not(edition_id: Edition.generated_placeholder_records.select(:id))
+      .where.not(edition_id: Edition.test_placeholder_records.select(:id))
+      .distinct
+  }
   scope :with_display_source, lambda {
     left_outer_joins(:image_attachment)
       .where(
@@ -24,13 +42,12 @@ class Illustration < ApplicationRecord
       .distinct
   }
 
-  def self.ransackable_associations(auth_object = nil)
-    ["base_tags", "blog_posts", "edition", "illustrator", "tag_taggings", "taggings", "tags"]
+  def self.ransackable_associations(_auth_object = nil)
+    %w[base_tags blog_posts edition illustrator tag_taggings taggings tags]
   end
 
-  # Define searchable attributes for Ransack (used by ActiveAdmin)
-  def self.ransackable_attributes(auth_object = nil)
-    ["artist", "created_at", "description", "edition_id", "id", "illustrator_id", "name", "page_number", "updated_at"]
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[artist created_at description edition_id id illustrator_id name page_number updated_at]
   end
 
   include PgSearch::Model
@@ -85,6 +102,8 @@ class Illustration < ApplicationRecord
 
   private
 
+  # Archive metadata uses freeform labels such as "Frontispiece" and "Dust Jacket",
+  # so page_number intentionally remains a flexible string field.
   def paperclip_image_url(style:)
     build_legacy_s3_url("illustrations", image_file_name, image_updated_at, style)
   end

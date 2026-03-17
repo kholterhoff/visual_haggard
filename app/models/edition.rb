@@ -1,7 +1,10 @@
 class Edition < ApplicationRecord
+  include SafeUrlFields
+
   LEGACY_S3_ROOT = "https://s3-us-west-2.amazonaws.com/haggard".freeze
   TEST_PLACEHOLDER_NAME = "Illustrator Edition".freeze
   GENERATED_PLACEHOLDER_NAME = "First Edition".freeze
+  STRING_MAXIMUM = 255
 
   belongs_to :novel
   has_many :illustrations, dependent: :destroy
@@ -9,7 +12,13 @@ class Edition < ApplicationRecord
 
   has_one_attached :cover_image, dependent: :purge_later
 
-  validates :name, presence: true
+  validates :novel, presence: true
+  validates :name, presence: true, length: { maximum: STRING_MAXIMUM }
+  validates :publisher, :publication_date, :publication_city, :source, :long_name,
+            length: { maximum: STRING_MAXIMUM }, allow_blank: true
+  validates :cover_url, :cover_thumbnail_url,
+            length: { maximum: STRING_MAXIMUM }, allow_blank: true
+  validates_http_url_or_legacy_reference :cover_url, :cover_thumbnail_url
 
   include PgSearch::Model
   pg_search_scope :search_by_name_and_publisher,
@@ -62,14 +71,12 @@ class Edition < ApplicationRecord
       .where.not(id: test_placeholder_records.select(:id))
   }
 
-  # Define searchable associations for Ransack (used by ActiveAdmin)
-  def self.ransackable_associations(auth_object = nil)
-    ["blog_posts", "illustrations", "novel"]
+  def self.ransackable_associations(_auth_object = nil)
+    %w[blog_posts illustrations novel]
   end
 
-  # Define searchable attributes for Ransack (used by ActiveAdmin)
-  def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "id", "name", "novel_id", "publication_city", "publication_year", "publisher", "updated_at"]
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[created_at id name novel_id publication_city publication_date publisher source updated_at]
   end
 
   def legacy_cover_reference

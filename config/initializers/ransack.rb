@@ -1,45 +1,44 @@
-# Configure Ransack for ActiveStorage models and ActsAsTaggableOn
-# This is required when using ActiveAdmin with file attachments and tagging
+# Configure Ransack for ActiveStorage models and ActsAsTaggableOn.
+# These whitelists stay intentionally small because ActiveAdmin is the only caller.
 
-# Wait for ActsAsTaggableOn to be loaded before configuring
 Rails.application.config.to_prepare do
   ActsAsTaggableOn::Tagging.class_eval do
-    def self.ransackable_attributes(auth_object = nil)
-      ["context", "created_at", "id", "tag_id", "taggable_id", "taggable_type", "tagger_id", "tagger_type", "tenant"]
+    def self.ransackable_attributes(_auth_object = nil)
+      %w[context id tag_id taggable_id taggable_type]
     end
 
-    def self.ransackable_associations(auth_object = nil)
-      ["tag", "taggable", "tagger"]
+    def self.ransackable_associations(_auth_object = nil)
+      %w[tag taggable]
     end
   end
 
   ActsAsTaggableOn::Tag.class_eval do
-    def self.ransackable_attributes(auth_object = nil)
-      ["id", "name", "taggings_count"]
+    def self.ransackable_attributes(_auth_object = nil)
+      %w[id name]
     end
 
-    def self.ransackable_associations(auth_object = nil)
-      ["taggings"]
+    def self.ransackable_associations(_auth_object = nil)
+      %w[taggings]
     end
   end
-  
+
   ActiveStorage::Attachment.class_eval do
-    def self.ransackable_attributes(auth_object = nil)
-      ["blob_id", "created_at", "id", "name", "record_id", "record_type"]
+    def self.ransackable_attributes(_auth_object = nil)
+      %w[blob_id created_at id name record_id record_type]
     end
 
-    def self.ransackable_associations(auth_object = nil)
-      ["blob", "record"]
+    def self.ransackable_associations(_auth_object = nil)
+      %w[blob record]
     end
   end
 
   ActiveStorage::Blob.class_eval do
-    def self.ransackable_attributes(auth_object = nil)
-      ["byte_size", "checksum", "content_type", "created_at", "filename", "id", "key", "metadata"]
+    def self.ransackable_attributes(_auth_object = nil)
+      %w[byte_size content_type created_at filename id]
     end
 
-    def self.ransackable_associations(auth_object = nil)
-      ["attachments"]
+    def self.ransackable_associations(_auth_object = nil)
+      %w[attachments]
     end
   end
 end

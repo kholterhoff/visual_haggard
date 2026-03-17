@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_06_120000) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_17_170000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -82,16 +82,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_06_120000) do
     t.index ["novel_id"], name: "index_blog_posts_on_novel_id"
   end
 
-  create_table "comments", id: :serial, force: :cascade do |t|
-    t.integer "user_id"
-    t.string "comment", limit: 255
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.integer "illustration_id"
-    t.boolean "is_child"
-    t.integer "parent_comment_id"
-  end
-
   create_table "editions", id: :serial, force: :cascade do |t|
     t.integer "novel_id"
     t.string "name", limit: 255
@@ -142,7 +132,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_06_120000) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.text "bio"
-    t.integer "illustration_id"
   end
 
   create_table "novels", id: :serial, force: :cascade do |t|
