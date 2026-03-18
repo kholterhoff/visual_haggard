@@ -91,8 +91,8 @@
 .home-motion-toggle {
   position: absolute;
   right: 1rem;
-  bottom: 1rem;
-  z-index: 3;
+  bottom: 9rem;
+  z-index: 5;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -191,7 +191,7 @@
   position: relative;
   z-index: 4;
   max-width: 100%;
-  margin-top: -4.75rem;
+  margin-top: calc(-4.75rem - 50px);
 }
 
 .home-content-shell > section {
@@ -411,6 +411,7 @@
 }
 
 .home-feature-pause {
+  appearance: none;
   min-height: 42px;
   padding: 0.55rem 0.95rem;
   border: 1px solid hsl(var(--border));
@@ -418,14 +419,21 @@
   background: hsl(var(--card));
   color: hsl(var(--foreground));
   font-family: var(--font-ui);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-size: 0.9rem;
+  font-weight: normal;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
   cursor: pointer;
 }
 
 .home-feature-pause[aria-pressed="true"] {
   background: hsl(var(--secondary));
+}
+
+.home-feature-pause:hover,
+.home-feature-pause:focus-visible {
+  background: hsl(var(--secondary));
+  color: #000;
 }
 
 .home-section-intro {
@@ -1093,7 +1101,7 @@
   }
 
   .home-content-shell {
-    margin-top: -2.75rem;
+    margin-top: calc(-2.75rem - 50px);
   }
 
   .home-highlight-card,

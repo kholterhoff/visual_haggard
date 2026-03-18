@@ -103,29 +103,26 @@
           </div>
         </div>
 
-        <div class="record-gallery-grid" data-controller="photoswipe">
+        <div class="record-gallery-grid">
           <% @edition.illustrations.each do |illustration| %>
-            <article class="record-gallery-card">
+            <%= link_to illustration_path(illustration), class: "record-gallery-card record-gallery-card-link" do %>
               <% if illustration.display_image_source(style: :original).present? %>
-                <%= zoomable_image_link illustration.display_image_source(style: :original),
-                  link_options: { class: "record-gallery-image-link" } do %>
-                  <%= image_tag illustration.display_image_source(style: :original), alt: illustration.name, loading: "lazy", decoding: "async" %>
-                <% end %>
+                <%= image_tag illustration.display_image_source(style: :original), alt: illustration.name, loading: "lazy", decoding: "async" %>
               <% else %>
                 <div class="record-gallery-placeholder">No image</div>
               <% end %>
 
               <div class="record-gallery-card-copy">
-                <%= link_to illustration.name.presence || "Untitled illustration", illustration_path(illustration) %>
+                <span><%= illustration.name.presence || "Untitled illustration" %></span>
               </div>
-            </article>
+            <% end %>
           <% end %>
         </div>
       </section>
     <% end %>
 
     <div class="record-back-link">
-      <%= link_to safe_join(["Back to ".html_safe, work_title(@edition.novel.name)]), novel_path(@edition.novel, anchor: "edition-archive"), class: "ui-button ui-button--secondary" %>
+      <%= link_to safe_join([content_tag(:span, safe_join(["Back to".html_safe, "&nbsp;".html_safe]), class: "record-back-label"), work_title(@edition.novel.name)]), novel_path(@edition.novel, anchor: "edition-archive"), class: "ui-button ui-button--secondary" %>
     </div>
   </div>
 </div>

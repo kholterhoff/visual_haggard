@@ -87,6 +87,10 @@
   font-size: clamp(1.95rem, 4vw, 3.2rem);
 }
 
+.illustration-record-title {
+  margin: 0 0 1.15rem;
+}
+
 .illustration-lightbox {
   margin: 0;
 }

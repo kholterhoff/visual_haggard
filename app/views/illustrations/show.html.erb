@@ -45,8 +45,6 @@
       </p>
     </section>
 
-    <h1 class="sr-only"><%= @illustration.name %></h1>
-
     <section class="record-layout">
       <div class="record-figure">
         <% if original_source.present? %>
@@ -66,9 +64,30 @@
       </div>
 
       <aside class="record-meta">
+        <h1 class="sr-only"><%= @illustration.name %></h1>
+
         <dl>
+          <% if @illustration.illustrator.present? %>
+            <dt>Illustrator</dt>
+            <dd><%= link_to @illustration.illustrator.name, illustrator_path(@illustration.illustrator) %></dd>
+          <% elsif @illustration.artist.present? %>
+            <dt>Illustrator</dt>
+            <dd><%= @illustration.artist %></dd>
+          <% end %>
+
+          <dt>Title</dt>
+          <dd><%= @illustration.name %></dd>
+
           <dt>Novel</dt>
           <dd><%= linked_novel_title(@illustration.novel) %></dd>
+
+          <dt>Edition</dt>
+          <dd><%= link_to edition.display_title, edition_path(edition) %></dd>
+
+          <% if edition.publication_city.present? && edition.publication_city != "Unknown" %>
+            <dt>Publication City</dt>
+            <dd><%= edition.publication_city %></dd>
+          <% end %>
 
           <% if edition.publisher.present? && edition.publisher != "Unknown" %>
             <dt>Published by</dt>
@@ -76,34 +95,18 @@
           <% end %>
 
           <% if edition.publication_date.present? && edition.publication_date != "Unknown" %>
-            <dt>Published</dt>
+            <dt>Year Published</dt>
             <dd><%= edition.publication_date %></dd>
-          <% end %>
-
-          <% if edition.publication_city.present? && edition.publication_city != "Unknown" %>
-            <dt>Publication City</dt>
-            <dd><%= edition.publication_city %></dd>
-          <% end %>
-
-          <% if edition.source.present? && edition.source != "Unknown" %>
-            <dt>Edition Source</dt>
-            <dd><%= edition.source %></dd>
-          <% end %>
-
-          <dt>Edition</dt>
-          <dd><%= link_to edition.display_title, edition_path(edition) %></dd>
-
-          <% if @illustration.illustrator.present? %>
-            <dt>Illustrator</dt>
-            <dd><%= link_to @illustration.illustrator.name, illustrator_path(@illustration.illustrator) %></dd>
-          <% elsif @illustration.artist.present? %>
-            <dt>Artist</dt>
-            <dd><%= @illustration.artist %></dd>
           <% end %>
 
           <% if @illustration.page_number.present? %>
             <dt>Page</dt>
             <dd><%= @illustration.page_number %></dd>
+          <% end %>
+
+          <% if edition.source.present? && edition.source != "Unknown" %>
+            <dt>Edition Source</dt>
+            <dd><%= edition.source %></dd>
           <% end %>
 
           <% if @illustration.description.present? %>
@@ -120,7 +123,7 @@
     </section>
 
     <div class="record-back-link">
-      <%= link_to safe_join(["Back to ".html_safe, work_title(@illustration.novel.name)]), novel_path(@illustration.novel, anchor: "illustration-archive"), class: "ui-button ui-button--secondary" %>
+      <%= link_to safe_join([content_tag(:span, safe_join(["Back to".html_safe, "&nbsp;".html_safe]), class: "record-back-label"), work_title(@illustration.novel.name)]), novel_path(@illustration.novel, anchor: "illustration-archive"), class: "ui-button ui-button--secondary" %>
     </div>
   </div>
 </div>

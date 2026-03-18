@@ -172,24 +172,21 @@
           </div>
         </div>
 
-        <div class="illustrations-grid" data-controller="photoswipe">
+        <div class="illustrations-grid">
           <% all_illustrations.each do |illustration| %>
             <article class="illustration-tile">
-              <div class="illustration-tile-link">
+              <%= link_to illustration_path(illustration), class: "illustration-tile-link" do %>
                 <div class="illustration-thumbnail">
-                  <%= zoomable_image_link illustration.display_image_source(style: :original),
-                    link_options: { class: "illustration-zoom-link" } do %>
-                    <%= image_tag illustration.display_image_source(style: :original),
-                      alt: illustration.name.presence || "Illustration from #{@novel.name}",
-                      loading: "lazy",
-                      decoding: "async" %>
-                  <% end %>
+                  <%= image_tag illustration.display_image_source(style: :original),
+                    alt: illustration.name.presence || "Illustration from #{@novel.name}",
+                    loading: "lazy",
+                    decoding: "async" %>
                 </div>
                 <div class="illustration-tile-copy">
                   <p class="illustration-tile-label">Illustration</p>
-                  <h3><%= link_to illustration.name.presence || "Untitled illustration", illustration_path(illustration) %></h3>
+                  <h3><span class="illustration-tile-title"><%= illustration.name.presence || "Untitled illustration" %></span></h3>
                 </div>
-              </div>
+              <% end %>
             </article>
           <% end %>
         </div>
