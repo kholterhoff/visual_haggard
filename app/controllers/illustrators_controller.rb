@@ -14,5 +14,18 @@ class IllustratorsController < ApplicationController
                                  .browseable
                                  .includes(image_attachment: :blob, edition: :novel)
                                  .order(:id)
+    @illustration_groups = @illustrations
+                           .select { |illustration| illustration.edition.present? && illustration.edition.novel.present? }
+                           .group_by { |illustration| illustration.edition.novel }
+                           .map do |novel, illustrations|
+      {
+        novel:,
+        anchor_id: "illustrator-work-novel-#{novel.id}",
+        illustrations: illustrations.sort_by do |illustration|
+          [illustration.edition.publication_sort_key, illustration.edition.id, illustration.id]
+        end
+      }
+    end
+                           .sort_by { |group| group[:novel].directory_sort_key }
   end
 end

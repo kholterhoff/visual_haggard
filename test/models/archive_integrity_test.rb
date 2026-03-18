@@ -1,6 +1,15 @@
 require "test_helper"
 
 class ArchiveIntegrityTest < ActiveSupport::TestCase
+  test "public stylesheet manifest stays explicit and excludes active admin" do
+    manifest = Rails.root.join("app/assets/stylesheets/application.css").read
+
+    assert_includes manifest, "require layout"
+    assert_includes manifest, "require home"
+    refute_match(/require_tree\s+\./, manifest)
+    refute_match(/require(?:_self)?\s+active_admin|active_admin/, manifest)
+  end
+
   test "illustrations require a valid edition at the database layer" do
     error = assert_raises(ActiveRecord::InvalidForeignKey) do
       Illustration.connection.execute <<~SQL

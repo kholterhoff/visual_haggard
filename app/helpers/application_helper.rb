@@ -1,3 +1,5 @@
+require "cgi"
+
 module ApplicationHelper
   LEGACY_INTERNAL_HOSTS = %w[visualhaggard.org www.visualhaggard.org].freeze
 
@@ -13,7 +15,8 @@ module ApplicationHelper
   def normalized_simple_format(content)
     return "".html_safe if content.blank?
 
-    rewrite_legacy_internal_urls(simple_format(content))
+    normalized_content = normalize_legacy_rich_text(content)
+    simple_format(normalized_content, {}, sanitize: false)
   end
 
   def plain_text_excerpt(content, length: 180)
@@ -94,12 +97,16 @@ module ApplicationHelper
     content_tag(:cite, title.to_s, class: classes.presence)
   end
 
+  def novel_work_title(novel, short: false, class_name: nil)
+    work_title(short ? novel.short_title : novel.long_title, class_name:)
+  end
+
   def linked_work_title(title, path, **options)
     link_to work_title(title), path, options
   end
 
-  def linked_novel_title(novel, **options)
-    linked_work_title(novel.name, novel_path(novel), **options)
+  def linked_novel_title(novel, short: false, **options)
+    linked_work_title(short ? novel.short_title : novel.long_title, novel_path(novel), **options)
   end
 
   def style_edition_citation(edition)
@@ -139,6 +146,19 @@ module ApplicationHelper
   end
 
   private
+
+  def normalize_legacy_rich_text(content)
+    fragment = Nokogiri::HTML::DocumentFragment.parse(CGI.unescapeHTML(content.to_s))
+
+    normalize_legacy_inline_formatting(fragment)
+    rewrite_legacy_internal_urls_in_fragment(fragment)
+
+    sanitize(
+      fragment.to_html,
+      tags: %w[p br em i strong b cite a ul ol li blockquote],
+      attributes: %w[href title target rel]
+    )
+  end
 
   def archive_reference_value(value)
     normalized = value.to_s.strip
@@ -181,5 +201,28 @@ module ApplicationHelper
     normalized
   rescue URI::InvalidURIError
     value
+  end
+
+  def rewrite_legacy_internal_urls_in_fragment(fragment)
+    fragment.css("[href], [src]").each do |node|
+      %w[href src].each do |attribute|
+        value = node[attribute]
+        next if value.blank?
+
+        node[attribute] = normalize_legacy_internal_url(value)
+      end
+    end
+  end
+
+  def normalize_legacy_inline_formatting(fragment)
+    fragment.css("span").each do |node|
+      style = node["style"].to_s.downcase
+      classes = node["class"].to_s.downcase.split(/\s+/)
+      next unless style.include?("font-style:italic") || style.include?("font-style: italic") || classes.include?("italic") || classes.include?("italics")
+
+      node.name = "em"
+      node.remove_attribute("style")
+      node.remove_attribute("class")
+    end
   end
 end

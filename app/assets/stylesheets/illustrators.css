@@ -113,6 +113,19 @@
   gap: 1rem;
 }
 
+.illustrator-work-groups {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.illustrator-work-group {
+  scroll-margin-top: 6.5rem;
+}
+
+.illustrator-work-group-heading {
+  margin-bottom: 1rem;
+}
+
 .illustrator-grid-image-link,
 .illustrator-work-link {
   display: flex;
@@ -187,7 +200,8 @@
 }
 
 .illustrator-grid-copy h3,
-.illustrator-work-copy h3 {
+.illustrator-work-copy h3,
+.illustrator-work-copy h4 {
   margin: 0.55rem 0 0.75rem;
   font-size: 1.28rem;
   letter-spacing: -0.03em;

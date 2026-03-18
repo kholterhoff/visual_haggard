@@ -4,7 +4,15 @@
   hero_image = @illustrator.representative_image_source(style: :original)
 %>
 
-<div class="illustrator-show-page" data-pagefind-body>
+<div
+  class="illustrator-show-page"
+  data-pagefind-body
+  <% if @illustrations.size > 12 %>
+    data-controller="back-to-top"
+    data-back-to-top-minimum-items-value="12"
+    data-back-to-top-row-threshold-value="4"
+  <% end %>
+>
   <%= pagefind_record_data(
     filters: { record_type: "illustrator" },
     meta: {
@@ -32,6 +40,11 @@
         <div class="meta-chip-row illustrator-meta-row">
           <% if @illustrations.any? %>
             <%= link_to "#{pluralize(@illustrations.size, "illustration")} in the archive", "#illustrator-work-archive", class: "meta-chip meta-chip-link" %>
+            <% @illustration_groups.each do |group| %>
+              <%= link_to "##{group[:anchor_id]}", class: "meta-chip meta-chip-link", aria: { label: "#{group[:novel].name}: #{pluralize(group[:illustrations].size, "illustration")}" } do %>
+                <%= novel_work_title(group[:novel], short: true) %>
+              <% end %>
+            <% end %>
           <% else %>
             <span class="meta-chip">No illustrations in the archive</span>
           <% end %>
@@ -60,37 +73,61 @@
           </div>
         </div>
 
-        <div class="illustrator-work-grid" data-controller="photoswipe">
-          <% @illustrations.each do |illustration| %>
-            <% edition = illustration.edition %>
-            <% novel = edition&.novel %>
-            <% next if edition.blank? || novel.blank? %>
-            <article class="illustrator-work-card">
-              <div class="illustrator-work-link">
-                <div class="illustrator-work-image-frame">
-                  <% if (image_source = illustration.display_image_source(style: :original)).present? %>
-                    <%= zoomable_image_link image_source, link_options: { class: "illustrator-zoom-link" } do %>
-                      <%= image_tag image_source,
-                        alt: illustration.name,
-                        class: "illustrator-work-image",
-                        loading: "lazy",
-                        decoding: "async" %>
-                    <% end %>
-                  <% else %>
-                    <div class="illustrator-grid-placeholder">No image available</div>
-                  <% end %>
-                </div>
-                <div class="illustrator-work-copy">
-                  <p class="illustrator-card-kicker">Illustration</p>
-                  <h3><%= link_to illustration.name.presence || "Untitled illustration", illustration_path(illustration) %></h3>
-                  <p><strong><%= work_title(novel.name) %></strong></p>
-                  <p><%= edition.display_title %></p>
+        <div class="illustrator-work-groups">
+          <% @illustration_groups.each do |group| %>
+            <section class="illustrator-work-group" id="<%= group[:anchor_id] %>">
+              <div class="section-heading illustrator-work-group-heading">
+                <div>
+                  <p class="page-eyebrow">Novel</p>
+                  <h3>Illustrations from <%= work_title(group[:novel].name) %></h3>
                 </div>
               </div>
-            </article>
+
+              <div class="illustrator-work-grid" data-controller="photoswipe">
+                <% group[:illustrations].each do |illustration| %>
+                  <% edition = illustration.edition %>
+                  <% novel = group[:novel] %>
+                  <article class="illustrator-work-card" data-back-to-top-target="item">
+                    <div class="illustrator-work-link">
+                      <div class="illustrator-work-image-frame">
+                        <% if (image_source = illustration.display_image_source(style: :original)).present? %>
+                          <%= zoomable_image_link image_source, link_options: { class: "illustrator-zoom-link" } do %>
+                            <%= image_tag image_source,
+                              alt: illustration.name,
+                              class: "illustrator-work-image",
+                              loading: "lazy",
+                              decoding: "async" %>
+                          <% end %>
+                        <% else %>
+                          <div class="illustrator-grid-placeholder">No image available</div>
+                        <% end %>
+                      </div>
+                      <div class="illustrator-work-copy">
+                        <p class="illustrator-card-kicker">Illustration</p>
+                        <h4><%= link_to illustration.name.presence || "Untitled illustration", illustration_path(illustration) %></h4>
+                        <p><strong><%= work_title(novel.name) %></strong></p>
+                        <p><%= edition.display_title %></p>
+                      </div>
+                    </div>
+                  </article>
+                <% end %>
+              </div>
+            </section>
           <% end %>
         </div>
       </section>
+    <% end %>
+
+    <% if @illustrations.size > 12 %>
+      <button
+        type="button"
+        class="ui-button ui-button--secondary back-to-top-button"
+        data-back-to-top-target="button"
+        data-action="back-to-top#scroll"
+        hidden
+      >
+        Back to top
+      </button>
     <% end %>
   </div>
 </div>

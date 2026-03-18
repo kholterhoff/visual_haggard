@@ -14,7 +14,15 @@
   hero_cover_source = @novel.display_cover_source(style: :original)
 %>
 
-<div class="novel-page" data-pagefind-body>
+<div
+  class="novel-page"
+  data-pagefind-body
+  <% if all_illustrations.size > 12 %>
+    data-controller="back-to-top"
+    data-back-to-top-minimum-items-value="12"
+    data-back-to-top-row-threshold-value="4"
+  <% end %>
+>
   <%= pagefind_record_data(
     filters: { record_type: "novel" },
     meta: {
@@ -174,7 +182,7 @@
 
         <div class="illustrations-grid">
           <% all_illustrations.each do |illustration| %>
-            <article class="illustration-tile">
+            <article class="illustration-tile" data-back-to-top-target="item">
               <%= link_to illustration_path(illustration), class: "illustration-tile-link" do %>
                 <div class="illustration-thumbnail">
                   <%= image_tag illustration.display_image_source(style: :original),
@@ -196,5 +204,17 @@
     <div class="record-back-link">
       <%= link_to "Back to novels", novels_path, class: "ui-button ui-button--secondary" %>
     </div>
+
+    <% if all_illustrations.size > 12 %>
+      <button
+        type="button"
+        class="ui-button ui-button--secondary back-to-top-button"
+        data-back-to-top-target="button"
+        data-action="back-to-top#scroll"
+        hidden
+      >
+        Back to top
+      </button>
+    <% end %>
   </div>
 </div>

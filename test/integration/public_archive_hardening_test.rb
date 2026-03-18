@@ -169,6 +169,78 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select %(section#illustrator-archive a[href="#{illustrator_path(illustrator_b)}"])
   end
 
+  test "illustrator record groups illustrations by novel and exposes jump chips" do
+    illustrator = Illustrator.create!(name: "Grouped Illustrator")
+    novel_a = Novel.create!(name: "Alpha Novel")
+    novel_b = Novel.create!(name: "Beta Novel")
+    edition_a = novel_a.editions.create!(name: "First Alpha Edition", publication_date: "February 1913")
+    edition_b = novel_a.editions.create!(name: "Second Alpha Edition", publication_date: "January 1913")
+    edition_c = novel_b.editions.create!(name: "Beta Edition", publication_date: "1912")
+    alpha_first = edition_a.illustrations.create!(name: "Alpha later", illustrator:, image_url: "https://example.com/alpha-later.jpg")
+    alpha_second = edition_b.illustrations.create!(name: "Alpha earlier", illustrator:, image_url: "https://example.com/alpha-earlier.jpg")
+    beta = edition_c.illustrations.create!(name: "Beta plate", illustrator:, image_url: "https://example.com/beta.jpg")
+
+    get illustrator_path(illustrator)
+
+    assert_response :success
+    assert_select %(a[href="#illustrator-work-archive"]), text: "3 illustrations in the archive"
+    assert_select %(a[href="#illustrator-work-novel-#{novel_a.id}"] cite.work-title), text: "Alpha Novel"
+    assert_select %(a[href="#illustrator-work-novel-#{novel_b.id}"] cite.work-title), text: "Beta Novel"
+    assert_select %(section#illustrator-work-novel-#{novel_a.id} h3 cite.work-title), text: "Alpha Novel"
+    assert_select %(section#illustrator-work-novel-#{novel_b.id} h3 cite.work-title), text: "Beta Novel"
+    assert_operator response.body.index(alpha_second.name).to_i, :<, response.body.index(alpha_first.name).to_i
+    assert_includes response.body, beta.name
+  end
+
+  test "illustrator meta chips use short novel titles while group headings keep long titles" do
+    illustrator = Illustrator.create!(name: "Short Title Illustrator")
+    novel = Novel.create!(name: "Maiwa's Revenge; Or, The War of the Little Hand")
+    edition = novel.editions.create!(name: "Short Title Edition", publication_date: "1923")
+    edition.illustrations.create!(
+      name: "Short title plate",
+      illustrator: illustrator,
+      image_url: "https://example.com/short-title.jpg"
+    )
+
+    get illustrator_path(illustrator)
+
+    assert_response :success
+    assert_select %(a[href="#illustrator-work-novel-#{novel.id}"] cite.work-title), text: "Maiwa's Revenge"
+    assert_select %(section#illustrator-work-novel-#{novel.id} h3 cite.work-title), text: "Maiwa's Revenge; Or, The War of the Little Hand"
+  end
+
+  test "illustrator bios restore legacy italic markup in citations" do
+    illustrator = Illustrator.create!(
+      name: "Citation Illustrator",
+      bio: %(Houfe, Simon. &lt;span style="font-style:italic;"&gt;The Dictionary of British Book Illustrators and Caricaturists 1800-1914&lt;/span&gt;. Woodbridge, Suffolk: Antique Collectors' Club, 1981.)
+    )
+
+    get illustrator_path(illustrator)
+
+    assert_response :success
+    assert_select ".illustrator-bio em", text: "The Dictionary of British Book Illustrators and Caricaturists 1800-1914"
+    assert_no_match(/&lt;span/, response.body)
+  end
+
+  test "long illustration archives render a back to top control" do
+    novel = Novel.create!(name: "Long Archive Novel")
+    edition = novel.editions.create!(name: "Long Archive Edition")
+
+    13.times do |index|
+      edition.illustrations.create!(
+        name: "Long Archive Illustration #{index}",
+        image_url: "https://example.com/long-archive-#{index}.jpg"
+      )
+    end
+
+    get novel_path(novel)
+
+    assert_response :success
+    assert_select %(div.novel-page[data-controller="back-to-top"])
+    assert_select %(button.back-to-top-button[data-back-to-top-target="button"][hidden]), text: "Back to top"
+    assert_select %([data-back-to-top-target="item"]), count: 13
+  end
+
   test "illustration and edition records retain semantic headings for assistive technology" do
     novel = Novel.create!(name: "Heading Test Novel")
     edition = novel.editions.create!(name: "Heading Test Edition")

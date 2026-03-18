@@ -61,6 +61,9 @@ Rails.application.configure do
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
+  # Ignore precompiled manifests in development so stale files in public/assets
+  # never mask source CSS/JS changes during local work.
+  config.assets.resolve_with = [ :environment ]
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

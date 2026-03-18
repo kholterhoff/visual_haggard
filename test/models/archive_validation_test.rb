@@ -51,4 +51,23 @@ class ArchiveValidationTest < ActiveSupport::TestCase
     assert_not edition.valid?
     assert_includes edition.errors[:name], "is too long (maximum is 255 characters)"
   end
+
+  test "novel short titles follow the archive override rules" do
+    overrides = {
+      "Allan and the Holy Flower [The Holy Flower]" => "Allan and the Holy Flower",
+      "Benita [The Spirit of Bambatse]" => "Benita",
+      "Fair Margaret [Margaret]" => "Fair Margaret",
+      "Lysbeth, A Tale of the Dutch" => "Lysbeth",
+      "Pearl-Maiden: A Tale of the Fall of Jerusalem" => "Pearl-Maiden",
+      "Maiwa's Revenge; Or, The War of the Little Hand" => "Maiwa's Revenge",
+      "The Mahatma and the Hare, A Dream Story" => "The Mahatma and the Hare",
+      "She, A History of Adventure" => "She"
+    }
+
+    overrides.each do |long_title, short_title|
+      novel = Novel.new(name: long_title)
+      assert_equal short_title, novel.short_title
+      assert_equal long_title, novel.long_title
+    end
+  end
 end

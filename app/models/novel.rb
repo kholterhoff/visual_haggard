@@ -4,6 +4,16 @@ class Novel < ApplicationRecord
   PLACEHOLDER_NAME = "Illustrator Novel".freeze
   STRING_MAXIMUM = 255
   DESCRIPTION_MAXIMUM = 100_000
+  SHORT_TITLE_OVERRIDES = {
+    "Allan and the Holy Flower [The Holy Flower]" => "Allan and the Holy Flower",
+    "Benita [The Spirit of Bambatse]" => "Benita",
+    "Fair Margaret [Margaret]" => "Fair Margaret",
+    "Lysbeth, A Tale of the Dutch" => "Lysbeth",
+    "Pearl-Maiden: A Tale of the Fall of Jerusalem" => "Pearl-Maiden",
+    "Maiwa's Revenge; Or, The War of the Little Hand" => "Maiwa's Revenge",
+    "The Mahatma and the Hare, A Dream Story" => "The Mahatma and the Hare",
+    "She, A History of Adventure" => "She"
+  }.freeze
 
   has_many :editions, dependent: :destroy
   has_many :illustrations, through: :editions
@@ -73,6 +83,14 @@ class Novel < ApplicationRecord
     return cover_edition.display_cover_source(style:) if cover_edition
 
     lead_illustration(style:)&.display_image_source(style:)
+  end
+
+  def long_title
+    name.to_s
+  end
+
+  def short_title
+    SHORT_TITLE_OVERRIDES.fetch(long_title, long_title)
   end
 
   def directory_title

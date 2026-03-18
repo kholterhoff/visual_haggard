@@ -7,6 +7,7 @@ namespace :static do
     precompile_assets = !%w[0 false no].include?(ENV.fetch("PRECOMPILE_ASSETS", "true").downcase)
     copy_public_assets = !%w[0 false no].include?(ENV.fetch("COPY_PUBLIC_ASSETS", "true").downcase)
     run_pagefind = !%w[0 false no].include?(ENV.fetch("RUN_PAGEFIND", "true").downcase)
+    cleanup_compiled_assets = !%w[0 false no].include?(ENV.fetch("CLEANUP_COMPILED_ASSETS", "true").downcase)
     custom_domain = ENV["CUSTOM_DOMAIN"].to_s.strip.presence
 
     exporter = StaticSiteExporter.new(
@@ -16,6 +17,7 @@ namespace :static do
       precompile_assets: precompile_assets,
       copy_public_assets: copy_public_assets,
       run_pagefind: run_pagefind,
+      cleanup_compiled_assets: cleanup_compiled_assets,
       custom_domain: custom_domain
     )
 

@@ -13,7 +13,15 @@
   pagefind_image_source = cover_source.presence || lead_illustration_source
 %>
 
-<div class="edition-page" data-pagefind-body>
+<div
+  class="edition-page"
+  data-pagefind-body
+  <% if @edition.illustrations.size > 12 %>
+    data-controller="back-to-top"
+    data-back-to-top-minimum-items-value="12"
+    data-back-to-top-row-threshold-value="4"
+  <% end %>
+>
   <%= pagefind_record_data(
     filters: { record_type: "edition" },
     meta: {
@@ -105,7 +113,7 @@
 
         <div class="record-gallery-grid">
           <% @edition.illustrations.each do |illustration| %>
-            <%= link_to illustration_path(illustration), class: "record-gallery-card record-gallery-card-link" do %>
+            <%= link_to illustration_path(illustration), class: "record-gallery-card record-gallery-card-link", data: { back_to_top_target: "item" } do %>
               <% if illustration.display_image_source(style: :original).present? %>
                 <%= image_tag illustration.display_image_source(style: :original), alt: illustration.name, loading: "lazy", decoding: "async" %>
               <% else %>
@@ -124,5 +132,17 @@
     <div class="record-back-link">
       <%= link_to safe_join([content_tag(:span, safe_join(["Back to".html_safe, "&nbsp;".html_safe]), class: "record-back-label"), work_title(@edition.novel.name)]), novel_path(@edition.novel, anchor: "edition-archive"), class: "ui-button ui-button--secondary" %>
     </div>
+
+    <% if @edition.illustrations.size > 12 %>
+      <button
+        type="button"
+        class="ui-button ui-button--secondary back-to-top-button"
+        data-back-to-top-target="button"
+        data-action="back-to-top#scroll"
+        hidden
+      >
+        Back to top
+      </button>
+    <% end %>
   </div>
 </div>

@@ -1,4 +1,5 @@
 require "fileutils"
+require "json"
 require "nokogiri"
 require "uri"
 require "shellwords"
@@ -26,6 +27,7 @@ class StaticSiteExporter
     precompile_assets: true,
     copy_public_assets: true,
     run_pagefind: true,
+    cleanup_compiled_assets: true,
     pagefind_command: ENV.fetch("PAGEFIND_CMD", DEFAULT_PAGEFIND_COMMAND),
     custom_domain: nil,
     out: $stdout
@@ -36,10 +38,12 @@ class StaticSiteExporter
     @precompile_assets = precompile_assets
     @copy_public_assets = copy_public_assets
     @run_pagefind = run_pagefind
+    @cleanup_compiled_assets = cleanup_compiled_assets
     @pagefind_command = pagefind_command
     @custom_domain = custom_domain.to_s.strip.presence
     @out = out
     @warnings = []
+    @asset_replacements = {}
   end
 
   def export!
@@ -50,6 +54,8 @@ class StaticSiteExporter
     export_routes!
     index_search! if @run_pagefind
     write_report!
+  ensure
+    cleanup_compiled_assets! if @precompile_assets && @cleanup_compiled_assets
   end
 
   def default_url_options
@@ -129,7 +135,8 @@ class StaticSiteExporter
       node["action"] = rewritten if rewritten.present?
     end
 
-    document.to_html
+    rewritten_html = document.to_html
+    apply_asset_replacements(rewritten_html)
   end
 
   private
@@ -152,6 +159,8 @@ class StaticSiteExporter
 
     success = system(env, "bin/rails", "assets:precompile", chdir: Rails.root.to_s)
     raise "Asset precompile failed" unless success
+
+    load_asset_replacements!
   end
 
   def copy_public_files!
@@ -233,8 +242,52 @@ class StaticSiteExporter
     output_root.join("static_export_report.txt").write(report_lines.join("\n") + "\n")
   end
 
+  def cleanup_compiled_assets!
+    generated_paths = [
+      Rails.root.join("public", "assets"),
+      Rails.root.join("tmp", "cache", "assets")
+    ]
+
+    removed_any = generated_paths.any?(&:exist?)
+    generated_paths.each do |path|
+      FileUtils.rm_rf(path) if path.exist?
+    end
+
+    @out.puts "Cleaned generated asset directories for local development." if removed_any
+  end
+
   def novel_total_pages
     @novel_total_pages ||= ((Novel.count.to_f / Novel::ARCHIVE_PAGE_SIZE).ceil).clamp(1, Float::INFINITY)
+  end
+
+  def load_asset_replacements!
+    manifest_path = Dir[Rails.root.join("public", "assets", ".sprockets-manifest-*.json").to_s]
+      .max_by { |path| File.mtime(path) }
+    return unless manifest_path.present?
+
+    manifest = JSON.parse(File.read(manifest_path))
+    logical_assets = manifest.fetch("assets", {})
+    files = manifest.fetch("files", {})
+
+    @asset_replacements = files.each_with_object({}) do |(digested_name, metadata), replacements|
+      logical_path = metadata["logical_path"]
+      next if logical_path.blank?
+
+      current_digested_name = logical_assets[logical_path]
+      next if current_digested_name.blank? || current_digested_name == digested_name
+
+      replacements["/assets/#{digested_name}"] = "/assets/#{current_digested_name}"
+    end
+  end
+
+  def apply_asset_replacements(html)
+    return html if @asset_replacements.empty?
+
+    rewritten_html = html.dup
+    @asset_replacements.sort_by { |old_path, _| -old_path.length }.each do |old_path, new_path|
+      rewritten_html.gsub!(old_path, new_path)
+    end
+    rewritten_html
   end
 
   def rewrite_internal_path(value)
