@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_17_170000) do
+ActiveRecord::Schema[7.1].define(version: 2026_03_29_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -123,7 +123,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_17_170000) do
     t.boolean "is_same_gutenberg_edition"
     t.boolean "is_same_internet_archive_edition"
     t.integer "illustrator_id"
+    t.string "identical_image_group"
     t.index ["edition_id"], name: "index_illustrations_on_edition_id"
+    t.index ["identical_image_group"], name: "index_illustrations_on_identical_image_group"
     t.index ["illustrator_id"], name: "index_illustrations_on_illustrator_id"
   end
 

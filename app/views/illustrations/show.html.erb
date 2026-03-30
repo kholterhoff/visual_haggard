@@ -122,6 +122,44 @@
       </aside>
     </section>
 
+    <% if @identical_illustrations.any? %>
+      <section class="surface-panel illustrations-grid-panel illustration-identical-images" aria-labelledby="identical-images-heading">
+        <div class="illustration-identical-images-header">
+          <p class="page-eyebrow">Variant images</p>
+          <h2 id="identical-images-heading">Other variants in the archive</h2>
+        </div>
+
+        <div class="illustrations-grid-page">
+          <% @identical_illustrations.each do |illustration| %>
+            <% image_source = illustration.display_image_source(style: :original) %>
+            <article class="illustration-card">
+              <% if image_source.present? %>
+                <%= link_to illustration_path(illustration), class: "illustration-card-image-link" do %>
+                  <div class="illustration-card-image-frame">
+                    <%= image_tag image_source, alt: illustration.name, loading: "lazy", decoding: "async" %>
+                  </div>
+                <% end %>
+              <% else %>
+                <div class="illustration-card-image-frame">
+                  <div class="illustration-card-placeholder">No image</div>
+                </div>
+              <% end %>
+
+              <div class="illustration-card-body">
+                <p class="illustration-card-kicker">Variant image</p>
+                <h2><%= link_to illustration.name, illustration_path(illustration), class: "illustration-card-title-link" %></h2>
+                <p class="illustration-card-meta"><%= link_to illustration.edition.display_title, edition_path(illustration.edition) %></p>
+                <p class="illustration-card-meta"><%= linked_novel_title(illustration.novel) %></p>
+                <% if illustration.page_number.present? %>
+                  <p class="illustration-card-meta">Page <%= illustration.page_number %></p>
+                <% end %>
+              </div>
+            </article>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
     <div class="record-back-link">
       <%= link_to safe_join([content_tag(:span, safe_join(["Back to".html_safe, "&nbsp;".html_safe]), class: "record-back-label"), work_title(@illustration.novel.name)]), novel_path(@illustration.novel, anchor: "illustration-archive"), class: "ui-button ui-button--secondary" %>
     </div>

@@ -19,6 +19,21 @@ ActiveAdmin.register Illustration do
   includes :illustrator, { edition: :novel }, image_attachment: :blob
   config.filters = false
 
+  member_action :update_sibling_groupings, method: :patch do
+    unless Illustration.identical_image_group_supported?
+      redirect_to resource_path, alert: "Variant illustration grouping is unavailable until the latest database migration is applied."
+      next
+    end
+
+    selected_ids = params.fetch(:identical_grouping, {})
+                        .select { |_illustration_id, value| value == "same" }
+                        .keys
+
+    resource.assign_identical_siblings_from_novel!(selected_ids)
+
+    redirect_to resource_path, notice: "Variant illustration selections saved."
+  end
+
   index do
     selectable_column
     id_column
@@ -43,6 +58,7 @@ ActiveAdmin.register Illustration do
       row :tag_list
       row :image_url
       row :image_thumbnail_url
+      row :identical_image_group if Illustration.identical_image_group_supported?
       row :google_book_link
       row :gutenberg_link
       row :internet_archive_link
@@ -53,7 +69,27 @@ ActiveAdmin.register Illustration do
 
     if resource.display_image_source(style: :original).present?
       panel "Image preview" do
-        image_tag resource.display_image_source(style: :original), style: "max-width: 320px; height: auto;"
+        image_tag resource.display_image_source(style: :original), style: "max-width: 320px; max-height: 300px; width: auto; height: auto;"
+      end
+    end
+
+    panel "Other illustrations from #{resource.novel.name}" do
+      related_illustrations = resource.other_illustrations_from_novel
+                                     .includes(:edition, image_attachment: :blob)
+                                     .to_a
+                                     .sort_by do |illustration|
+        [
+          resource.grouped_with?(illustration) ? 0 : 1,
+          illustration.edition.publication_sort_key,
+          illustration.id
+        ]
+      end
+
+      if Illustration.identical_image_group_supported?
+        render partial: "admin/illustrations/related_novel_illustrations",
+               locals: { current_illustration: resource, illustrations: related_illustrations }
+      else
+        para "Variant illustration controls will appear here after the database migration for this feature has been applied."
       end
     end
   end

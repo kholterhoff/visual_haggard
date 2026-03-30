@@ -1,0 +1,52 @@
+<% if illustrations.any? %>
+  <%= form_with url: update_sibling_groupings_admin_illustration_path(current_illustration), method: :patch, local: true, class: "admin-illustration-sibling-form" do %>
+    <p class="admin-illustration-sibling-instructions">
+      Select <strong>Same variant image</strong> for every illustration that should be linked to this one on the public site, then save.
+    </p>
+
+    <div class="admin-illustration-sibling-grid">
+      <% illustrations.each do |illustration| %>
+        <% image_source = illustration.display_image_source(style: :original) %>
+        <% matched_group = current_illustration.grouped_with?(illustration) %>
+        <article class="admin-illustration-sibling-card<%= " admin-illustration-sibling-card--matched" if matched_group %>">
+          <%= link_to admin_illustration_path(illustration), class: "admin-illustration-sibling-thumb" do %>
+            <% if image_source.present? %>
+              <%= image_tag image_source, alt: illustration.name, loading: "lazy", decoding: "async" %>
+            <% else %>
+              <span class="admin-illustration-sibling-placeholder">No image</span>
+            <% end %>
+          <% end %>
+
+          <div class="admin-illustration-sibling-body">
+            <p class="admin-illustration-sibling-meta"><%= illustration.edition.display_title %></p>
+            <h3><%= link_to illustration.name, admin_illustration_path(illustration) %></h3>
+            <% if illustration.page_number.present? %>
+              <p class="admin-illustration-sibling-meta">Page <%= illustration.page_number %></p>
+            <% end %>
+            <% if matched_group %>
+              <span class="status_tag ok">Currently linked</span>
+            <% end %>
+          </div>
+
+          <fieldset class="admin-illustration-sibling-radios">
+            <legend>Grouping</legend>
+            <label>
+              <%= radio_button_tag "identical_grouping[#{illustration.id}]", "same", matched_group %>
+              Same variant image
+            </label>
+            <label>
+              <%= radio_button_tag "identical_grouping[#{illustration.id}]", "different", !matched_group %>
+              Different variant image
+            </label>
+          </fieldset>
+        </article>
+      <% end %>
+    </div>
+
+    <div class="admin-illustration-sibling-actions">
+      <%= submit_tag "Save variant illustrations", class: "button" %>
+    </div>
+  <% end %>
+<% else %>
+  <p class="admin-illustration-sibling-empty">No other illustrations are attached to this novel yet.</p>
+<% end %>

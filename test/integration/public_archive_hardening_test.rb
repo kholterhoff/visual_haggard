@@ -89,6 +89,71 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Private Collection"
   end
 
+  test "illustration page lists other variant images when grouped" do
+    novel = Novel.create!(name: "Grouped Illustration Novel")
+    edition_a = novel.editions.create!(name: "1910 edition", publication_date: "1910")
+    edition_b = novel.editions.create!(name: "1915 edition", publication_date: "1915")
+    current = edition_a.illustrations.create!(
+      name: "Current plate",
+      image_url: "https://example.com/current.jpg",
+      identical_image_group: "plate-a"
+    )
+    identical = edition_b.illustrations.create!(
+      name: "Second plate",
+      image_url: "https://example.com/second.jpg",
+      page_number: "Frontispiece",
+      identical_image_group: "plate-a"
+    )
+    edition_a.illustrations.create!(
+      name: "Ungrouped plate",
+      image_url: "https://example.com/ungrouped.jpg"
+    )
+
+    get illustration_path(current)
+
+    assert_response :success
+    assert_select "section.illustration-identical-images", count: 1
+    assert_select "section.illustration-identical-images h2", text: "Other variants in the archive"
+    assert_select %(section.illustration-identical-images a[href="#{illustration_path(identical)}"]), text: "Second plate"
+    assert_select %(section.illustration-identical-images a[href="#{edition_path(identical.edition)}"]), text: "1915 edition"
+    assert_select "section.illustration-identical-images .illustration-card", count: 1
+  end
+
+  test "illustration page hides variant images section when no group is assigned" do
+    novel = Novel.create!(name: "Ungrouped Novel")
+    edition = novel.editions.create!(name: "Ungrouped Edition")
+    illustration = edition.illustrations.create!(
+      name: "Solo plate",
+      image_url: "https://example.com/solo.jpg"
+    )
+
+    get illustration_path(illustration)
+
+    assert_response :success
+    assert_select "section.illustration-identical-images", count: 0
+  end
+
+  test "illustration page still renders when identical grouping column is unavailable" do
+    novel = Novel.create!(name: "Migration Safety Novel")
+    edition = novel.editions.create!(name: "Migration Safety Edition")
+    illustration = edition.illustrations.create!(
+      name: "Migration Safety Illustration",
+      image_url: "https://example.com/safe.jpg"
+    )
+
+    original_method = Illustration.method(:identical_image_group_supported?)
+    Illustration.singleton_class.define_method(:identical_image_group_supported?) { false }
+
+    begin
+      get illustration_path(illustration)
+    ensure
+      Illustration.singleton_class.define_method(:identical_image_group_supported?, original_method)
+    end
+
+    assert_response :success
+    assert_select "section.illustration-identical-images", count: 0
+  end
+
   test "edition record shows explicit publication metadata" do
     novel = Novel.create!(name: "Maiwa's Revenge; Or, The War of the Little Hand")
     edition = novel.editions.create!(
