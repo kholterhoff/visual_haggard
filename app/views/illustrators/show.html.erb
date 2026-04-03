@@ -1,7 +1,26 @@
 <% content_for :title, @illustrator.name %>
 <%
-  hero_illustration = @illustrator.representative_illustration(style: :original)
-  hero_image = @illustrator.representative_image_source(style: :original)
+  cover_entries = @illustrator.cover_carousel_entries(style: :original, limit: 5)
+  hero_image = cover_entries.first&.dig(:source) || @illustrator.representative_image_source(style: :original)
+  illustrator_cover_carousel_entries = cover_entries.map do |entry|
+    illustration = entry[:illustration]
+    edition = entry[:edition]
+    novel = entry[:novel]
+    meta_parts = [
+      work_title(novel.name),
+      edition.publication_citation.presence
+    ].compact
+
+    {
+      source: entry[:source],
+      path: edition_path(edition),
+      alt: "#{@illustrator.name} cover art for #{novel.name}",
+      eyebrow: illustration&.cover_related? ? illustration.page_number.presence || "Cover art" : "Cover art",
+      title: edition.display_title,
+      meta: safe_join(meta_parts, " &middot; ".html_safe),
+      dot_label: "#{novel.short_title}, #{edition.display_title}"
+    }
+  end
 %>
 
 <div
@@ -52,15 +71,12 @@
       </div>
 
       <div class="illustrator-show-image">
-        <% if hero_illustration.present? && hero_image.present? %>
-          <div class="illustrator-show-image-frame" data-controller="photoswipe">
-            <%= zoomable_image_link hero_image, alt: @illustrator.name do %>
-              <%= image_tag hero_image, alt: @illustrator.name, decoding: "async" %>
-            <% end %>
-          </div>
-        <% else %>
-          <div class="illustrator-grid-placeholder">No image available</div>
-        <% end %>
+        <div class="illustrator-show-image-frame illustrator-show-image-frame--carousel">
+          <%= render "shared/archive_cover_carousel",
+            entries: illustrator_cover_carousel_entries,
+            aria_label: "Cover and dust jacket carousel for #{@illustrator.name}",
+            empty_message: "No cover or dust jacket is currently available for this illustrator." %>
+        </div>
       </div>
     </section>
 
@@ -87,28 +103,29 @@
                 <% group[:illustrations].each do |illustration| %>
                   <% edition = illustration.edition %>
                   <% novel = group[:novel] %>
+                  <% edition_label = condensed_edition_label(edition, novel:) %>
                   <article class="illustrator-work-card" data-back-to-top-target="item">
-                    <div class="illustrator-work-link">
+                    <%= link_to illustration_path(illustration), class: "illustrator-work-link" do %>
                       <div class="illustrator-work-image-frame">
                         <% if (image_source = illustration.display_image_source(style: :original)).present? %>
-                          <%= zoomable_image_link image_source, link_options: { class: "illustrator-zoom-link" } do %>
-                            <%= image_tag image_source,
-                              alt: illustration.name,
-                              class: "illustrator-work-image",
-                              loading: "lazy",
-                              decoding: "async" %>
-                          <% end %>
+                          <%= image_tag image_source,
+                            alt: illustration.name,
+                            class: "illustrator-work-image",
+                            loading: "lazy",
+                            decoding: "async" %>
                         <% else %>
                           <div class="illustrator-grid-placeholder">No image available</div>
                         <% end %>
                       </div>
                       <div class="illustrator-work-copy">
                         <p class="illustrator-card-kicker">Illustration</p>
-                        <h4><%= link_to illustration.name.presence || "Untitled illustration", illustration_path(illustration) %></h4>
+                        <h4><span class="illustrator-work-title"><%= illustration.name.presence || "Untitled illustration" %></span></h4>
                         <p><strong><%= work_title(novel.name) %></strong></p>
-                        <p><%= edition.display_title %></p>
+                        <% if edition_label.present? %>
+                          <p><%= edition_label %></p>
+                        <% end %>
                       </div>
-                    </div>
+                    <% end %>
                   </article>
                 <% end %>
               </div>

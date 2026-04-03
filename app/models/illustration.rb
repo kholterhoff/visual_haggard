@@ -1,6 +1,8 @@
 class Illustration < ApplicationRecord
+  include AssignsLowestAvailableId
   include SafeUrlFields
 
+  COVER_KEYWORDS = /\b(cover|dust jacket|jacket|wrapper|wrappers)\b/i
   LEGACY_S3_ROOT = "https://s3-us-west-2.amazonaws.com/haggard".freeze
   REPRESENTATIVE_PLACEHOLDER_NAME = "Representative illustration".freeze
   TEST_PLACEHOLDER_IMAGE_URL = "https://example.com/representative.jpg".freeze
@@ -16,12 +18,13 @@ class Illustration < ApplicationRecord
   acts_as_taggable_on :tags
 
   before_validation :normalize_identical_image_group
+  before_validation :normalize_text_moment_group
 
   validates :edition, presence: true
   validates :name, presence: true, length: { maximum: STRING_MAXIMUM }
   validates :artist, :page_number,
             length: { maximum: STRING_MAXIMUM }, allow_blank: true
-  validates :identical_image_group, length: { maximum: STRING_MAXIMUM }, allow_blank: true
+  validates :identical_image_group, :text_moment_group, length: { maximum: STRING_MAXIMUM }, allow_blank: true
   validates :image_url, :image_thumbnail_url, :google_book_link, :gutenberg_link, :internet_archive_link,
             length: { maximum: STRING_MAXIMUM }, allow_blank: true
   validates :description, length: { maximum: DESCRIPTION_MAXIMUM }, allow_blank: true
@@ -46,11 +49,20 @@ class Illustration < ApplicationRecord
   }
 
   def self.identical_image_group_supported?
-    return true if columns_hash.key?("identical_image_group")
+    group_column_supported?(:identical_image_group)
+  end
 
-    if connection.data_source_exists?(table_name) && connection.column_exists?(table_name, :identical_image_group)
+  def self.text_moment_group_supported?
+    group_column_supported?(:text_moment_group)
+  end
+
+  def self.group_column_supported?(column_name)
+    column_name = column_name.to_s
+    return true if columns_hash.key?(column_name)
+
+    if connection.data_source_exists?(table_name) && connection.column_exists?(table_name, column_name)
       reset_column_information
-      return columns_hash.key?("identical_image_group")
+      return columns_hash.key?(column_name)
     end
 
     false
@@ -59,7 +71,11 @@ class Illustration < ApplicationRecord
   end
 
   def self.build_identical_image_group_token
-    "illustration-group-#{SecureRandom.hex(10)}"
+    build_group_token("illustration-group")
+  end
+
+  def self.build_text_moment_group_token
+    build_group_token("text-moment-group")
   end
 
   def self.ransackable_associations(_auth_object = nil)
@@ -112,6 +128,10 @@ class Illustration < ApplicationRecord
     image.attached? ? image : resolved_image_url(style:)
   end
 
+  def cover_related?
+    [name, page_number, description].compact.join(" ").match?(COVER_KEYWORDS)
+  end
+
   def identical_image_group
     return unless self.class.identical_image_group_supported?
 
@@ -124,11 +144,30 @@ class Illustration < ApplicationRecord
     self[:identical_image_group] = value
   end
 
+  def text_moment_group
+    return unless self.class.text_moment_group_supported?
+
+    self[:text_moment_group]
+  end
+
+  def text_moment_group=(value)
+    return unless self.class.text_moment_group_supported?
+
+    self[:text_moment_group] = value
+  end
+
   def other_identical_illustrations(scope = Illustration.all)
     return scope.none unless self.class.identical_image_group_supported?
     return scope.none if identical_image_group.blank?
 
     scope.where(identical_image_group: identical_image_group).where.not(id: id)
+  end
+
+  def other_text_moment_illustrations(scope = Illustration.all)
+    return scope.none unless self.class.text_moment_group_supported?
+    return scope.none if text_moment_group.blank?
+
+    scope.where(text_moment_group: text_moment_group).where.not(id: id)
   end
 
   def other_illustrations_from_novel
@@ -141,47 +180,48 @@ class Illustration < ApplicationRecord
     identical_image_group.present? && identical_image_group == other_illustration.identical_image_group
   end
 
+  def same_variant_selected?(other_illustration)
+    return false unless self.class.identical_image_group_supported?
+    return false if other_illustration.blank?
+
+    if identical_image_group.present? && other_illustration.identical_image_group.present?
+      return identical_image_group == other_illustration.identical_image_group
+    end
+
+    grouped_with?(other_illustration)
+  end
+
+  def shares_text_moment_with?(other_illustration)
+    return false unless self.class.text_moment_group_supported?
+
+    text_moment_group.present? && text_moment_group == other_illustration.text_moment_group
+  end
+
+  def same_scene_selected?(other_illustration)
+    return false unless self.class.text_moment_group_supported?
+    return false if other_illustration.blank?
+
+    if text_moment_group.present? && other_illustration.text_moment_group.present?
+      return text_moment_group == other_illustration.text_moment_group
+    end
+
+    shares_text_moment_with?(other_illustration)
+  end
+
   def assign_identical_siblings_from_novel!(selected_sibling_ids)
     return unless self.class.identical_image_group_supported?
 
-    sibling_ids = Array(selected_sibling_ids).map(&:to_i).uniq
-    managed_siblings = other_illustrations_from_novel
-    managed_sibling_ids = managed_siblings.pluck(:id)
-    selected_siblings = managed_siblings.where(id: sibling_ids).to_a
-    selected_ids = selected_siblings.map(&:id)
-    unselected_ids = managed_sibling_ids - selected_ids
-    current_group = identical_image_group.presence
-    selected_groups = selected_siblings.map { |illustration| illustration.identical_image_group.presence }.compact
-    groups_to_merge = ([current_group] + selected_groups).compact.uniq
-    timestamp = Time.current
-
-    transaction do
-      if selected_siblings.any?
-        target_group = current_group || selected_groups.first || self.class.build_identical_image_group_token
-
-        if groups_to_merge.any?
-          Illustration.where(identical_image_group: groups_to_merge).update_all(identical_image_group: target_group, updated_at: timestamp)
-        end
-
-        Illustration.where(id: [id] + selected_ids).update_all(identical_image_group: target_group, updated_at: timestamp)
-
-        if unselected_ids.any?
-          Illustration.where(id: unselected_ids, identical_image_group: target_group).update_all(identical_image_group: nil, updated_at: timestamp)
-        end
-      elsif current_group.present?
-        external_group_records_exist = Illustration.where(identical_image_group: current_group)
-                                                  .where.not(id: [id] + managed_sibling_ids)
-                                                  .exists?
-
-        if external_group_records_exist
-          Illustration.where(id: unselected_ids, identical_image_group: current_group).update_all(identical_image_group: nil, updated_at: timestamp)
-        else
-          Illustration.where(id: [id] + managed_sibling_ids, identical_image_group: current_group).update_all(identical_image_group: nil, updated_at: timestamp)
-        end
-      end
+    assign_grouped_siblings_from_novel!(selected_sibling_ids, group_column: :identical_image_group) do
+      self.class.build_identical_image_group_token
     end
+  end
 
-    reload
+  def assign_text_moment_siblings_from_novel!(selected_sibling_ids)
+    return unless self.class.text_moment_group_supported?
+
+    assign_grouped_siblings_from_novel!(selected_sibling_ids, group_column: :text_moment_group) do
+      self.class.build_text_moment_group_token
+    end
   end
 
   def test_placeholder?
@@ -197,9 +237,67 @@ class Illustration < ApplicationRecord
   # Archive metadata uses freeform labels such as "Frontispiece" and "Dust Jacket",
   # so page_number intentionally remains a flexible string field.
   def normalize_identical_image_group
-    return unless self.class.identical_image_group_supported?
+    normalize_group_token(:identical_image_group)
+  end
 
-    self.identical_image_group = identical_image_group.to_s.strip.presence
+  def normalize_text_moment_group
+    normalize_group_token(:text_moment_group)
+  end
+
+  def assign_grouped_siblings_from_novel!(selected_sibling_ids, group_column:)
+    sibling_ids = Array(selected_sibling_ids).map(&:to_i).uniq
+    managed_siblings = other_illustrations_from_novel
+    managed_sibling_ids = managed_siblings.pluck(:id)
+    selected_siblings = managed_siblings.where(id: sibling_ids).to_a
+    selected_ids = selected_siblings.map(&:id)
+    unselected_ids = managed_sibling_ids - selected_ids
+    current_group = public_send(group_column).presence
+    selected_groups = selected_siblings.map { |illustration| illustration.public_send(group_column).presence }.compact
+    groups_to_merge = ([current_group] + selected_groups).compact.uniq
+    timestamp = Time.current
+
+    transaction do
+      if selected_siblings.any?
+        target_group = current_group || selected_groups.first || yield
+
+        if groups_to_merge.any?
+          Illustration.where(group_column => groups_to_merge).update_all(group_column => target_group, updated_at: timestamp)
+        end
+
+        Illustration.where(id: [id] + selected_ids).update_all(group_column => target_group, updated_at: timestamp)
+
+        if unselected_ids.any?
+          Illustration.where(id: unselected_ids, group_column => target_group).update_all(group_column => nil, updated_at: timestamp)
+        end
+      elsif current_group.present?
+        external_group_records_exist = Illustration.where(group_column => current_group)
+                                                  .where.not(id: [id] + managed_sibling_ids)
+                                                  .exists?
+
+        if external_group_records_exist
+          Illustration.where(id: unselected_ids, group_column => current_group).update_all(group_column => nil, updated_at: timestamp)
+        else
+          Illustration.where(id: [id] + managed_sibling_ids, group_column => current_group).update_all(group_column => nil, updated_at: timestamp)
+        end
+      end
+    end
+
+    reload
+  end
+
+  def normalize_group_token(group_column)
+    supported =
+      case group_column
+      when :identical_image_group
+        self.class.identical_image_group_supported?
+      when :text_moment_group
+        self.class.text_moment_group_supported?
+      else
+        false
+      end
+    return unless supported
+
+    public_send("#{group_column}=", public_send(group_column).to_s.strip.presence)
   end
 
   def paperclip_image_url(style:)
@@ -215,5 +313,9 @@ class Illustration < ApplicationRecord
 
   def legacy_id_partition
     "000/000/#{id}"
+  end
+
+  def self.build_group_token(prefix)
+    "#{prefix}-#{SecureRandom.hex(10)}"
   end
 end

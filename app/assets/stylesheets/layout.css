@@ -539,6 +539,173 @@ a.ui-button--secondary:focus-visible {
   margin-bottom: 1.35rem;
 }
 
+.record-cover-carousel {
+  width: 100%;
+}
+
+.record-cover-carousel-rotator {
+  display: grid;
+  gap: 1rem;
+}
+
+.record-cover-carousel-stage {
+  position: relative;
+  min-height: clamp(320px, 56vw, 620px);
+}
+
+.record-cover-slide {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.95rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px);
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.record-cover-slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.record-cover-slide-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.record-cover-slide-link {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.record-cover-slide-image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: clamp(260px, 46vw, 520px);
+  object-fit: contain;
+  object-position: center top;
+  background: hsl(var(--secondary));
+}
+
+.record-cover-slide-copy {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0 0.1rem;
+}
+
+.record-cover-slide-eyebrow {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.record-cover-slide-title {
+  margin: 0;
+  font-size: clamp(1.05rem, 1.5vw, 1.28rem);
+  letter-spacing: -0.03em;
+  line-height: 1.35;
+}
+
+.record-cover-slide-meta {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.record-cover-carousel-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.record-cover-carousel-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.record-cover-carousel-dot {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: hsl(var(--foreground) / 0.18);
+  cursor: pointer;
+}
+
+.record-cover-carousel-dot.is-active {
+  background: hsl(var(--foreground));
+}
+
+.record-cover-carousel-pause {
+  appearance: none;
+  min-height: 42px;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: normal;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.record-cover-carousel-pause[aria-pressed="true"] {
+  background: hsl(var(--secondary));
+}
+
+.record-cover-carousel-pause:hover,
+.record-cover-carousel-pause:focus-visible {
+  background: hsl(var(--secondary));
+  color: #000;
+}
+
+.record-cover-carousel-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(260px, 44vw, 420px);
+  padding: 1.2rem;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+}
+
+@media (max-width: 780px) {
+  .record-cover-carousel-stage {
+    min-height: 430px;
+  }
+
+  .record-cover-slide-image {
+    max-height: 320px;
+  }
+
+  .record-cover-carousel-controls {
+    justify-content: center;
+  }
+}
+
 .section-heading h2 {
   font-size: clamp(1.55rem, 2.6vw, 2.3rem);
   letter-spacing: -0.03em;

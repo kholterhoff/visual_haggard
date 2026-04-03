@@ -1,0 +1,76 @@
+<div class="record-cover-carousel">
+  <% if entries.any? %>
+    <div
+      class="record-cover-carousel-rotator"
+      data-controller="rotator"
+      data-rotator-interval-value="5600"
+      data-action="mouseenter->rotator#pause mouseleave->rotator#resume focusin->rotator#pause focusout->rotator#resume"
+      aria-roledescription="carousel"
+      aria-label="<%= aria_label %>"
+    >
+      <div class="record-cover-carousel-stage">
+        <% entries.each_with_index do |entry, index| %>
+          <article
+            class="record-cover-slide <%= "is-active" if index.zero? %>"
+            data-rotator-target="slide"
+            role="group"
+            aria-roledescription="slide"
+            aria-label="<%= "#{index + 1} of #{entries.size}" %>"
+            aria-hidden="<%= index.zero? ? "false" : "true" %>"
+          >
+            <div class="record-cover-slide-visual">
+              <%= link_to entry[:path], class: "record-cover-slide-link" do %>
+                <%= image_tag entry[:source],
+                  alt: entry[:alt],
+                  class: "record-cover-slide-image",
+                  loading: index.zero? ? "eager" : "lazy",
+                  decoding: "async" %>
+              <% end %>
+            </div>
+
+            <div class="record-cover-slide-copy">
+              <% if entry[:eyebrow].present? %>
+                <p class="record-cover-slide-eyebrow"><%= entry[:eyebrow] %></p>
+              <% end %>
+              <% if entry[:title].present? %>
+                <p class="record-cover-slide-title"><%= entry[:title] %></p>
+              <% end %>
+              <% if entry[:meta].present? %>
+                <p class="record-cover-slide-meta"><%= entry[:meta] %></p>
+              <% end %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+
+      <% if entries.many? %>
+        <div class="record-cover-carousel-controls">
+          <div class="record-cover-carousel-dots" aria-label="<%= "#{aria_label} slides" %>">
+            <% entries.each_with_index do |entry, index| %>
+              <button
+                type="button"
+                class="record-cover-carousel-dot <%= "is-active" if index.zero? %>"
+                data-rotator-target="dot"
+                data-action="rotator#select"
+                data-rotator-index-param="<%= index %>"
+                aria-label="Show <%= entry[:dot_label] %>"
+              ></button>
+            <% end %>
+          </div>
+
+          <button
+            type="button"
+            class="record-cover-carousel-pause"
+            data-rotator-target="pauseButton"
+            data-action="rotator#togglePause"
+            aria-pressed="false"
+          >
+            Pause motion
+          </button>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="record-cover-carousel-empty"><%= empty_message %></div>
+  <% end %>
+</div>

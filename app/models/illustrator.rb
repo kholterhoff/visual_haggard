@@ -1,5 +1,9 @@
 class Illustrator < ApplicationRecord
-  COVER_KEYWORDS = /\b(cover|dust jacket|jacket|wrapper|wrappers)\b/i
+  include AssignsLowestAvailableId
+  PERIODICAL_CAROUSEL_KEYWORDS = /\b(magazine|weekly|journal|newspaper)\b/i
+  PREFERRED_CAROUSEL_EDITION_IDS = {
+    4 => [109, 4, 79]
+  }.freeze
   PLACEHOLDER_NAME = "Efficient Illustrator".freeze
   STRING_MAXIMUM = 255
   BIO_MAXIMUM = 100_000
@@ -33,6 +37,10 @@ class Illustrator < ApplicationRecord
     %w[bio created_at id name updated_at]
   end
 
+  def self.preferred_carousel_edition_ids
+    PREFERRED_CAROUSEL_EDITION_IDS
+  end
+
   def representative_illustration(style: :original)
     representative_illustrations_for_selection(style:)
       .to_a
@@ -52,11 +60,25 @@ class Illustrator < ApplicationRecord
     return unless illustration
 
     cover_source = representative_cover_source_for(illustration.edition, style:)
-    if cover_source.present? && (matches_edition_cover?(illustration, style:) || cover_like_illustration?(illustration))
+    if cover_source.present? && (matches_edition_cover?(illustration, style:) || illustration.cover_related?)
       return cover_source
     end
 
     representative_image_source_for(illustration, style:)
+  end
+
+  def cover_carousel_entries(style: :original, limit: 5)
+    prioritize_preferred_carousel_editions(editions_for_cover_carousel(style:))
+      .first(limit)
+      .map do |entry|
+        edition = entry[:edition]
+        {
+          illustration: entry[:illustration],
+          edition:,
+          novel: edition.novel,
+          source: entry[:source]
+        }
+      end
   end
 
   def directory_last_name
@@ -100,9 +122,26 @@ class Illustrator < ApplicationRecord
 
   private
 
+  def preferred_carousel_edition_ids
+    self.class.preferred_carousel_edition_ids.fetch(id, [])
+  end
+
+  def prioritize_preferred_carousel_editions(entries)
+    preferred_ids = preferred_carousel_edition_ids
+    return entries if preferred_ids.empty?
+
+    entries
+      .each_with_index
+      .sort_by do |(entry, index)|
+        preferred_index = preferred_ids.index(entry[:edition].id)
+        [preferred_index.nil? ? 1 : 0, preferred_index || preferred_ids.length, index]
+      end
+      .map(&:first)
+  end
+
   def representative_illustration_priority(illustration, style:)
     return 0 if matches_edition_cover?(illustration, style:)
-    return 1 if cover_like_illustration?(illustration)
+    return 1 if illustration.cover_related?
 
     2
   end
@@ -118,11 +157,121 @@ class Illustrator < ApplicationRecord
     illustration_source == edition_source
   end
 
-  def cover_like_illustration?(illustration)
-    [illustration.name, illustration.page_number, illustration.description]
+  def editions_for_cover_carousel(style:)
+    illustrations_grouped_by_edition
+      .filter_map do |edition, illustrations|
+        cover_illustration = cover_illustration_for_carousel(edition, illustrations, style:)
+        next if cover_illustration.blank?
+
+        cover_source = representative_cover_source_for(edition, style:) || representative_image_source_for(cover_illustration, style:)
+        next if cover_source.blank?
+
+        {
+          edition:,
+          illustration: cover_illustration,
+          source: cover_source,
+          priority: cover_carousel_priority_for(edition, illustrations, cover_illustration, style:),
+          supporting_illustration_count: supporting_illustration_count_for_carousel(illustrations, style:)
+        }
+      end
+      .sort_by do |entry|
+        [
+          entry[:priority],
+          -entry[:supporting_illustration_count],
+          entry[:edition].publication_sort_key,
+          entry[:edition].id,
+          entry[:illustration].id
+        ]
+      end
+  end
+
+  def illustrations_grouped_by_edition
+    representative_illustrations_for_selection(style: :original)
+      .group_by(&:edition)
+      .select { |edition, _illustrations| edition.present? && edition.novel.present? }
+  end
+
+  def cover_illustration_for_carousel(edition, illustrations, style:)
+    explicit_cover_illustration = explicit_cover_illustration_for_carousel(illustrations, style:)
+    return explicit_cover_illustration if explicit_cover_illustration.present?
+    return unless edition_cover_fallback_for_carousel?(edition, illustrations, style:)
+
+    illustrations
+      .select { |illustration| representative_image_source_for(illustration, style:).present? }
+      .min_by { |illustration| [edition_cover_fallback_priority(illustration), illustration.id] }
+  end
+
+  def explicit_cover_illustration_for_carousel(illustrations, style:)
+    illustrations
+      .select do |illustration|
+        representative_image_source_for(illustration, style:).present? &&
+          cover_evidence_for_carousel?(illustration, style:)
+      end
+      .min_by { |illustration| [cover_evidence_priority(illustration, style:), illustration.id] }
+  end
+
+  def cover_evidence_for_carousel?(illustration, style:)
+    illustration.cover_related? || matches_edition_cover?(illustration, style:)
+  end
+
+  def cover_evidence_priority(illustration, style:)
+    return 0 if matches_edition_cover?(illustration, style:)
+    return 1 if illustration.page_number.to_s.match?(/dust jacket/i)
+    return 2 if illustration.page_number.to_s.match?(/cover|wrapper/i)
+
+    3
+  end
+
+  def edition_cover_fallback_for_carousel?(edition, illustrations, style:)
+    representative_cover_source_for(edition, style:).present? &&
+      !periodical_edition_for_carousel?(edition) &&
+      strong_edition_presence_for_carousel?(illustrations, style:)
+  end
+
+  def edition_cover_fallback_priority(illustration)
+    return 0 if illustration.page_number.to_s.match?(/frontispiece/i)
+
+    1
+  end
+
+  def periodical_edition_for_carousel?(edition)
+    [edition.display_title, edition.publisher, edition.long_name]
       .compact
       .join(" ")
-      .match?(COVER_KEYWORDS)
+      .match?(PERIODICAL_CAROUSEL_KEYWORDS)
+  end
+
+  def edition_title_priority_for_carousel(edition)
+    title = [edition.display_title, edition.long_name]
+      .compact
+      .join(" ")
+
+    return 0 if title.match?(/\bauthorized edition\b/i)
+    return 1 if title.match?(/\b1st\b|\bfirst\b/i)
+    return 2 if title.match?(/\bnew edition\b|\bsilver edition\b/i)
+
+    3
+  end
+
+  def strong_edition_presence_for_carousel?(illustrations, style:)
+    visible_illustrations = supporting_illustrations_for_carousel(illustrations, style:)
+    visible_illustrations.any? { |illustration| illustration.page_number.to_s.match?(/frontispiece/i) } ||
+      visible_illustrations.many?
+  end
+
+  def supporting_illustrations_for_carousel(illustrations, style:)
+    illustrations.select { |illustration| representative_image_source_for(illustration, style:).present? }
+  end
+
+  def supporting_illustration_count_for_carousel(illustrations, style:)
+    supporting_illustrations_for_carousel(illustrations, style:).size
+  end
+
+  def cover_carousel_priority_for(edition, illustrations, cover_illustration, style:)
+    return 0 if matches_edition_cover?(cover_illustration, style:) || cover_illustration.cover_related?
+    return 1 + edition_title_priority_for_carousel(edition) if edition_cover_fallback_for_carousel?(edition, illustrations, style:)
+
+    5
   end
 
   def representative_illustrations_for_selection(style:)

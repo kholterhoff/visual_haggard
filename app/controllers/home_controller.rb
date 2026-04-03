@@ -6,6 +6,7 @@ class HomeController < ApplicationController
   FEATURED_EDITION_IDS = [504, 501].freeze
   STYLE_ILLUSTRATOR_IDS = [4, 35].freeze
   STYLE_EDITION_IDS = [50, 109].freeze
+  STYLE_NOVEL_TITLE = "King Solomon's Mines".freeze
   PERIODICAL_ILLUSTRATION_IDS = [1145, 2045, 2042, 1962].freeze
   PERIODICAL_EDITION_IDS = [510].freeze
   PAPERBACK_ILLUSTRATOR_IDS = [69, 70, 61, 68].freeze
@@ -19,6 +20,7 @@ class HomeController < ApplicationController
     @illustration_count = Illustration.count
     @style_illustrators = build_style_illustrators
     @style_editions = build_style_editions(cover_editions)
+    @style_novel = Novel.publicly_visible.find_by(name: STYLE_NOVEL_TITLE)
     @timeline_groups = build_edition_timeline
     @periodical_examples = build_periodical_examples
     @paperback_illustrators = build_paperback_illustrators

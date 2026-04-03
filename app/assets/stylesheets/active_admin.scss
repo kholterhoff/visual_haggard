@@ -86,6 +86,12 @@
   color: #68717d;
 }
 
+.admin-illustration-sibling-statuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
 body.admin_illustrations.show #main_content .panel_contents > img {
   display: block;
   max-width: 320px !important;

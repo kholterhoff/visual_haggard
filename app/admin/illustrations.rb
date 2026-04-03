@@ -20,18 +20,22 @@ ActiveAdmin.register Illustration do
   config.filters = false
 
   member_action :update_sibling_groupings, method: :patch do
-    unless Illustration.identical_image_group_supported?
-      redirect_to resource_path, alert: "Variant illustration grouping is unavailable until the latest database migration is applied."
+    unless Illustration.identical_image_group_supported? || Illustration.text_moment_group_supported?
+      redirect_to resource_path, alert: "Illustration grouping is unavailable until the latest database migration is applied."
       next
     end
 
-    selected_ids = params.fetch(:identical_grouping, {})
-                        .select { |_illustration_id, value| value == "same" }
-                        .keys
+    selected_variant_ids = params.fetch(:identical_grouping, {})
+                               .select { |_illustration_id, value| value == "same" }
+                               .keys
+    selected_text_moment_ids = params.fetch(:text_moment_grouping, {})
+                                    .select { |_illustration_id, value| value == "same" }
+                                    .keys
 
-    resource.assign_identical_siblings_from_novel!(selected_ids)
+    resource.assign_identical_siblings_from_novel!(selected_variant_ids) if Illustration.identical_image_group_supported?
+    resource.assign_text_moment_siblings_from_novel!(selected_text_moment_ids) if Illustration.text_moment_group_supported?
 
-    redirect_to resource_path, notice: "Variant illustration selections saved."
+    redirect_to resource_path, notice: "Illustration grouping selections saved."
   end
 
   index do
@@ -59,6 +63,7 @@ ActiveAdmin.register Illustration do
       row :image_url
       row :image_thumbnail_url
       row :identical_image_group if Illustration.identical_image_group_supported?
+      row :text_moment_group if Illustration.text_moment_group_supported?
       row :google_book_link
       row :gutenberg_link
       row :internet_archive_link
@@ -79,17 +84,37 @@ ActiveAdmin.register Illustration do
                                      .to_a
                                      .sort_by do |illustration|
         [
-          resource.grouped_with?(illustration) ? 0 : 1,
+          (resource.same_variant_selected?(illustration) || resource.same_scene_selected?(illustration)) ? 0 : 1,
+          resource.same_variant_selected?(illustration) ? 0 : 1,
+          resource.same_scene_selected?(illustration) ? 0 : 1,
           illustration.edition.publication_sort_key,
           illustration.id
         ]
       end
 
-      if Illustration.identical_image_group_supported?
+      if Illustration.identical_image_group_supported? || Illustration.text_moment_group_supported?
         render partial: "admin/illustrations/related_novel_illustrations",
-               locals: { current_illustration: resource, illustrations: related_illustrations }
+               locals: {
+                 current_illustration: resource,
+                 illustrations: related_illustrations,
+                 supports_variant_grouping: Illustration.identical_image_group_supported?,
+                 supports_text_moment_grouping: Illustration.text_moment_group_supported?
+               }
       else
-        para "Variant illustration controls will appear here after the database migration for this feature has been applied."
+        para "Illustration grouping controls will appear here after the latest database migration for this feature has been applied."
+      end
+    end
+  end
+
+  controller do
+    rescue_from ActiveRecord::RecordNotFound, with: :handle_missing_illustration
+
+    private
+
+    def handle_missing_illustration
+      respond_to do |format|
+        format.html { redirect_to admin_illustrations_path, alert: "That illustration could not be found." }
+        format.any { head :not_found }
       end
     end
   end

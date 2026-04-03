@@ -4,6 +4,7 @@
   <section
     class="home-cover-wall"
     data-controller="reels"
+    data-reels-ready="false"
   >
     <button
       type="button"
@@ -35,8 +36,9 @@
                   <% tile_image = image_tag cover_source,
                     alt: "#{edition.novel.name} - #{edition.display_title}",
                     class: "home-cover-tile-image",
-                    loading: reel_index.zero? && sequence_index.zero? ? "eager" : "lazy",
-                    decoding: "async" %>
+                    loading: sequence_index.zero? ? "eager" : "lazy",
+                    decoding: "async",
+                    data: (sequence_index.zero? ? { reels_target: "image" } : {}) %>
                   <%= link_to tile_image, edition_path(edition), link_options %>
                 <% end %>
               </div>
@@ -56,7 +58,6 @@
       </article>
 
       <aside class="home-highlight-card">
-        <p class="page-eyebrow">Getting started</p>
         <div class="home-highlight-stat">
           <strong><%= number_with_delimiter(@illustration_count) %></strong>
           <span>images cataloged</span>
@@ -162,7 +163,7 @@
             This archive makes stylistic contrast visible at a glance. <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> brings a lush Pre-Raphaelite sensibility to his illustrations. His romantic figures, theatrical compositions, and richly atmospheric palette give many of Haggard's most famous novels their visual identity. <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %> works at the opposite extreme, stripping scenes down to stark black-and-white symbolist abstraction. Together they show how wide the range of Haggard illustration actually was.
           </p>
           <p class="home-section-intro">            
-            Visual Haggard also makes it possible to compare how different artists interpreted the same story. <%= work_title("King Solomon's Mines") %> alone has been illustrated by eleven different hands—from Victorian wood-engravers to mid-century paperback painters—each reimagining Haggard's Africa using a distinct visual language.
+            Visual Haggard also makes it possible to compare how different artists interpreted the same story. <%= @style_novel.present? ? linked_novel_title(@style_novel) : work_title("King Solomon's Mines") %> alone has been illustrated by eleven different hands—from Victorian wood-engravers to mid-century paperback painters—each reimagining Haggard's Africa using a distinct visual language.
           </p>
         </div>
 
@@ -293,15 +294,27 @@
           <% representative_edition = representative_illustration&.edition %>
           <% paperback_image = image_tag illustrator.representative_image_source(style: :original), alt: illustrator.name, class: "home-paperback-image", loading: "lazy", decoding: "async" %>
           <article class="surface-panel home-paperback-card">
-            <%= link_to paperback_image, illustrator_path(illustrator), class: "home-paperback-image-link" %>
-            <div class="home-paperback-card-copy">
-              <p class="home-style-kicker">Illustrator</p>
-              <h3><%= link_to illustrator.name, illustrator_path(illustrator) %></h3>
-              <% if representative_edition.present? %>
-                <p class="home-paperback-meta"><%= link_to representative_edition.display_title, edition_path(representative_edition) %></p>
-                <p class="home-paperback-submeta"><%= linked_novel_title(representative_edition.novel) %></p>
+            <% if representative_edition.present? %>
+              <%= link_to edition_path(representative_edition), class: "home-paperback-card-link" do %>
+                <span class="home-paperback-image-link">
+                  <%= paperback_image %>
+                </span>
+                <div class="home-paperback-card-copy">
+                  <p class="home-style-kicker">Illustrator</p>
+                  <h3><%= illustrator.name %></h3>
+                  <p class="home-paperback-meta"><%= representative_edition.display_title %></p>
+                  <p class="home-paperback-submeta"><%= work_title(representative_edition.novel.name) %></p>
+                </div>
               <% end %>
-            </div>
+            <% else %>
+              <span class="home-paperback-image-link">
+                <%= paperback_image %>
+              </span>
+              <div class="home-paperback-card-copy">
+                <p class="home-style-kicker">Illustrator</p>
+                <h3><%= illustrator.name %></h3>
+              </div>
+            <% end %>
           </article>
         <% end %>
       </div>

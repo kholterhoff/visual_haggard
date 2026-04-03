@@ -89,6 +89,74 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Private Collection"
   end
 
+  test "novel record shows a rotating cover and dust jacket carousel with pause control" do
+    novel = Novel.create!(name: "Carousel Novel")
+    first = novel.editions.create!(name: "1910 Edition", publication_date: "1910", cover_url: "https://example.com/1910-cover.jpg")
+    second = novel.editions.create!(name: "1911 Edition", publication_date: "1911")
+    second.illustrations.create!(
+      name: "1911 Dust Jacket",
+      page_number: "Dust Jacket",
+      image_url: "https://example.com/1911-dust-jacket.jpg"
+    )
+    third = novel.editions.create!(name: "1912 Edition", publication_date: "1912")
+    third.illustrations.create!(
+      name: "Interior scene",
+      page_number: "Facing page 12",
+      image_url: "https://example.com/1912-interior.jpg"
+    )
+
+    get novel_path(novel)
+
+    assert_response :success
+    assert_select %(div.record-cover-carousel-rotator[aria-label="Cover and dust jacket carousel for Carousel Novel"])
+    assert_select ".record-cover-slide", count: 2
+    assert_select ".record-cover-slide-title", text: "1910 Edition"
+    assert_select ".record-cover-slide-title", text: "1911 Edition"
+    assert_select ".record-cover-slide-title", text: "1912 Edition", count: 0
+    assert_select %(a.record-cover-slide-link[href="#{edition_path(first)}"]), count: 1
+    assert_select %(a.record-cover-slide-link[href="#{edition_path(second)}"]), count: 1
+    assert_select "button.record-cover-carousel-pause", text: "Pause motion"
+    assert_select "button.record-cover-carousel-dot", count: 2
+  end
+
+  test "illustrator record shows a rotating cover and dust jacket carousel with pause control" do
+    illustrator = Illustrator.create!(name: "Carousel Illustrator")
+    novel = Novel.create!(name: "Carousel Illustrator Novel")
+    first = novel.editions.create!(name: "1910 Edition", publication_date: "1910", cover_url: "https://example.com/1910-cover.jpg")
+    second = novel.editions.create!(name: "1911 Edition", publication_date: "1911", cover_url: "https://example.com/1911-cover.jpg")
+    third = novel.editions.create!(name: "1912 Edition", publication_date: "1912")
+    first.illustrations.create!(
+      name: "Cover design",
+      illustrator:,
+      image_url: "https://example.com/cover-design.jpg"
+    )
+    second.illustrations.create!(
+      name: "1911 Dust Jacket",
+      illustrator:,
+      page_number: "Dust Jacket",
+      image_url: "https://example.com/1911-dust-jacket.jpg"
+    )
+    third.illustrations.create!(
+      name: "Interior scene",
+      illustrator:,
+      page_number: "Facing page 18",
+      image_url: "https://example.com/1912-interior.jpg"
+    )
+
+    get illustrator_path(illustrator)
+
+    assert_response :success
+    assert_select %(div.record-cover-carousel-rotator[aria-label="Cover and dust jacket carousel for Carousel Illustrator"])
+    assert_select ".record-cover-slide", count: 2
+    assert_select ".record-cover-slide-title", text: "1910 Edition"
+    assert_select ".record-cover-slide-title", text: "1911 Edition"
+    assert_select ".record-cover-slide-title", text: "Interior scene", count: 0
+    assert_select %(a.record-cover-slide-link[href="#{edition_path(first)}"]), count: 1
+    assert_select %(a.record-cover-slide-link[href="#{edition_path(second)}"]), count: 1
+    assert_select "button.record-cover-carousel-pause", text: "Pause motion"
+    assert_select "button.record-cover-carousel-dot", count: 2
+  end
+
   test "illustration page lists other variant images when grouped" do
     novel = Novel.create!(name: "Grouped Illustration Novel")
     edition_a = novel.editions.create!(name: "1910 edition", publication_date: "1910")
@@ -114,12 +182,81 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "section.illustration-identical-images", count: 1
     assert_select "section.illustration-identical-images h2", text: "Other variants in the archive"
-    assert_select %(section.illustration-identical-images a[href="#{illustration_path(identical)}"]), text: "Second plate"
-    assert_select %(section.illustration-identical-images a[href="#{edition_path(identical.edition)}"]), text: "1915 edition"
+    assert_select "section.illustration-identical-images button.illustration-compare-trigger", text: "Compare Variant Images"
+    assert_select %(section.illustration-identical-images a.illustration-card--linked[href="#{illustration_path(identical)}"]), count: 1
+    assert_select "section.illustration-identical-images .illustration-card-title-link", text: "Second plate"
+    assert_select "section.illustration-identical-images .illustration-card-meta", text: "1915 edition"
     assert_select "section.illustration-identical-images .illustration-card", count: 1
+    assert_select "section.illustration-identical-images dialog.illustration-compare-dialog", count: 1
+    assert_select %(section.illustration-identical-images dialog a.illustration-compare-card-title[href="#{illustration_path(current)}"]), text: "Current plate"
+    assert_select %(section.illustration-identical-images dialog a.illustration-compare-card-title[href="#{illustration_path(identical)}"]), text: "Second plate"
   end
 
-  test "illustration page hides variant images section when no group is assigned" do
+  test "illustration page lists other illustrations of this scene" do
+    novel = Novel.create!(name: "Text Moment Novel")
+    edition_a = novel.editions.create!(name: "1910 edition", publication_date: "1910")
+    edition_b = novel.editions.create!(name: "1915 edition", publication_date: "1915")
+    current = edition_a.illustrations.create!(
+      name: "Current plate",
+      image_url: "https://example.com/current.jpg",
+      identical_image_group: "plate-a",
+      text_moment_group: "moment-a"
+    )
+    variant = edition_b.illustrations.create!(
+      name: "Variant plate",
+      image_url: "https://example.com/variant.jpg",
+      identical_image_group: "plate-a"
+    )
+    same_moment = edition_b.illustrations.create!(
+      name: "Same scene plate",
+      image_url: "https://example.com/moment.jpg",
+      page_number: "Facing page 12",
+      text_moment_group: "moment-a"
+    )
+
+    get illustration_path(current)
+
+    assert_response :success
+    assert_select "section.illustration-identical-images", count: 1
+    assert_select "section.illustration-text-moment-group", count: 1
+    assert_select "section.illustration-text-moment-group h2", text: "Other illustrations of this scene"
+    assert_select "section.illustration-text-moment-group button.illustration-compare-trigger", text: "Compare Illustrations"
+    assert_select %(section.illustration-text-moment-group a.illustration-card--linked[href="#{illustration_path(same_moment)}"]), count: 1
+    assert_select "section.illustration-text-moment-group .illustration-card-title-link", text: "Same scene plate"
+    assert_select "section.illustration-text-moment-group .illustration-card-title-link", text: "Variant plate", count: 0
+    assert_operator response.body.index("Other variants in the archive"), :<, response.body.index("Other illustrations of this scene")
+    assert_select "section.illustration-text-moment-group dialog.illustration-compare-dialog h2", text: "Compare Illustrations of This Scene"
+    assert_select %(section.illustration-text-moment-group dialog a.illustration-compare-card-title[href="#{illustration_path(current)}"]), text: "Current plate"
+    assert_select %(section.illustration-text-moment-group dialog a.illustration-compare-card-title[href="#{illustration_path(same_moment)}"]), text: "Same scene plate"
+    assert_select %(section.illustration-text-moment-group dialog a.illustration-compare-card-title[href="#{illustration_path(variant)}"]), count: 0
+  end
+
+  test "illustration cards appear only in variants when an illustration is both a variant and the same scene" do
+    novel = Novel.create!(name: "Overlapping Group Novel")
+    edition_a = novel.editions.create!(name: "1910 edition", publication_date: "1910")
+    edition_b = novel.editions.create!(name: "1915 edition", publication_date: "1915")
+    current = edition_a.illustrations.create!(
+      name: "Current plate",
+      image_url: "https://example.com/current.jpg",
+      identical_image_group: "plate-a",
+      text_moment_group: "moment-a"
+    )
+    overlapping = edition_b.illustrations.create!(
+      name: "Overlapping plate",
+      image_url: "https://example.com/overlap.jpg",
+      identical_image_group: "plate-a",
+      text_moment_group: "moment-a"
+    )
+
+    get illustration_path(current)
+
+    assert_response :success
+    assert_select %(section.illustration-identical-images a.illustration-card--linked[href="#{illustration_path(overlapping)}"]), count: 1
+    assert_select %(section.illustration-text-moment-group a.illustration-card--linked[href="#{illustration_path(overlapping)}"]), count: 0
+    assert_select "section.illustration-text-moment-group", count: 0
+  end
+
+  test "illustration page hides grouping sections when no group is assigned" do
     novel = Novel.create!(name: "Ungrouped Novel")
     edition = novel.editions.create!(name: "Ungrouped Edition")
     illustration = edition.illustrations.create!(
@@ -131,9 +268,10 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "section.illustration-identical-images", count: 0
+    assert_select "section.illustration-text-moment-group", count: 0
   end
 
-  test "illustration page still renders when identical grouping column is unavailable" do
+  test "illustration page still renders when grouping columns are unavailable" do
     novel = Novel.create!(name: "Migration Safety Novel")
     edition = novel.editions.create!(name: "Migration Safety Edition")
     illustration = edition.illustrations.create!(
@@ -141,17 +279,21 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
       image_url: "https://example.com/safe.jpg"
     )
 
-    original_method = Illustration.method(:identical_image_group_supported?)
+    original_identical_method = Illustration.method(:identical_image_group_supported?)
+    original_text_moment_method = Illustration.method(:text_moment_group_supported?)
     Illustration.singleton_class.define_method(:identical_image_group_supported?) { false }
+    Illustration.singleton_class.define_method(:text_moment_group_supported?) { false }
 
     begin
       get illustration_path(illustration)
     ensure
-      Illustration.singleton_class.define_method(:identical_image_group_supported?, original_method)
+      Illustration.singleton_class.define_method(:identical_image_group_supported?, original_identical_method)
+      Illustration.singleton_class.define_method(:text_moment_group_supported?, original_text_moment_method)
     end
 
     assert_response :success
     assert_select "section.illustration-identical-images", count: 0
+    assert_select "section.illustration-text-moment-group", count: 0
   end
 
   test "edition record shows explicit publication metadata" do
@@ -253,6 +395,9 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select %(a[href="#illustrator-work-novel-#{novel_b.id}"] cite.work-title), text: "Beta Novel"
     assert_select %(section#illustrator-work-novel-#{novel_a.id} h3 cite.work-title), text: "Alpha Novel"
     assert_select %(section#illustrator-work-novel-#{novel_b.id} h3 cite.work-title), text: "Beta Novel"
+    assert_select %(section#illustrator-work-novel-#{novel_a.id} a.illustrator-work-link[href="#{illustration_path(alpha_first)}"]), count: 1
+    assert_select %(section#illustrator-work-novel-#{novel_a.id} a.illustrator-work-link[href="#{illustration_path(alpha_second)}"]), count: 1
+    assert_select %(section#illustrator-work-novel-#{novel_b.id} a.illustrator-work-link[href="#{illustration_path(beta)}"]), count: 1
     assert_operator response.body.index(alpha_second.name).to_i, :<, response.body.index(alpha_first.name).to_i
     assert_includes response.body, beta.name
   end

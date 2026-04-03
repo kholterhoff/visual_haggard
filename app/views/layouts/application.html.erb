@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <% favicon_version = "20260402c" %>
     <title><%= content_for?(:title) ? yield(:title) + " - Visual Haggard" : "Visual Haggard" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta charset="utf-8">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= tag.link rel: "icon", type: "image/svg+xml", href: "/favicon.svg?v=#{favicon_version}" %>
+    <%= tag.link rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32.png?v=#{favicon_version}" %>
+    <%= tag.link rel: "alternate icon", type: "image/x-icon", href: "/favicon.ico?v=#{favicon_version}" %>
+    <%= tag.link rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png?v=#{favicon_version}" %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css", "data-turbo-track": "reload" %>

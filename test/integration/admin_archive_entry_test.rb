@@ -69,14 +69,20 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     edition_a = Edition.create!(novel:, name: "First Edition", publication_date: "1910")
     edition_b = Edition.create!(novel:, name: "Second Edition", publication_date: "1915")
     current = edition_a.illustrations.create!(
-      name: "Current plate",
+      name: "'It's gold, lad,' I said, 'or I'm a Dutchman'",
       image_url: "https://example.com/current.jpg",
+      identical_image_group: "plate-a",
+      text_moment_group: "scene-a"
+    )
+    variant_match = edition_b.illustrations.create!(
+      name: "Variant match",
+      image_url: "https://example.com/variant.jpg",
       identical_image_group: "plate-a"
     )
-    grouped_match = edition_b.illustrations.create!(
-      name: "Grouped match",
-      image_url: "https://example.com/grouped.jpg",
-      identical_image_group: "plate-a"
+    same_scene_match = edition_b.illustrations.create!(
+      name: "'It's gold, lad,' I said, 'or I'm a Dutchman.'",
+      image_url: "https://example.com/text-moment.jpg",
+      text_moment_group: "scene-a"
     )
     other_plate = edition_a.illustrations.create!(
       name: "Other plate",
@@ -94,15 +100,32 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "Other illustrations from Grouped Illustration Novel"
-    assert_select ".admin-illustration-sibling-card", count: 2
-    assert_select %(a[href="/admin/illustrations/#{grouped_match.id}"]), text: "Grouped match"
+    assert_select ".admin-illustration-sibling-card", count: 3
+    assert_select %(a[href="/admin/illustrations/#{variant_match.id}"]), text: "Variant match"
+    assert_select %(a[href="/admin/illustrations/#{same_scene_match.id}"]), text: "'It's gold, lad,' I said, 'or I'm a Dutchman.'"
     assert_select %(a[href="/admin/illustrations/#{other_plate.id}"]), text: "Other plate"
-    assert_select %(input[type="radio"][name="identical_grouping[#{grouped_match.id}]"][value="same"][checked="checked"]), count: 1
+    assert_select %(input[type="radio"][name="identical_grouping[#{variant_match.id}]"][value="same"][checked="checked"]), count: 1
+    assert_select %(input[type="radio"][name="text_moment_grouping[#{variant_match.id}]"][value="different"][checked="checked"]), count: 1
+    assert_select %(input[type="radio"][name="identical_grouping[#{same_scene_match.id}]"][value="different"][checked="checked"]), count: 1
+    assert_select %(input[type="radio"][name="text_moment_grouping[#{same_scene_match.id}]"][value="same"][checked="checked"]), count: 1
     assert_select %(input[type="radio"][name="identical_grouping[#{other_plate.id}]"][value="different"][checked="checked"]), count: 1
+    assert_select %(input[type="radio"][name="text_moment_grouping[#{other_plate.id}]"][value="different"][checked="checked"]), count: 1
     assert_no_match(/Outside plate/, response.body)
   end
 
-  test "admin can update identical illustration siblings from the thumbnail panel" do
+  test "missing admin illustration redirects to the illustrations index" do
+    missing_id = Illustration.maximum(:id).to_i + 1000
+
+    get "/admin/illustrations/#{missing_id}"
+
+    assert_redirected_to "/admin/illustrations"
+    follow_redirect!
+
+    assert_response :success
+    assert_includes response.body, "That illustration could not be found."
+  end
+
+  test "admin can update illustration siblings from the thumbnail panel" do
     novel = Novel.create!(name: "Selection Novel")
     edition_a = Edition.create!(novel:, name: "First Edition")
     edition_b = Edition.create!(novel:, name: "Second Edition")
@@ -114,6 +137,10 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
       name: "Identical plate",
       image_url: "https://example.com/identical.jpg"
     )
+    same_moment = edition_b.illustrations.create!(
+      name: "Same moment plate",
+      image_url: "https://example.com/moment.jpg"
+    )
     different = edition_b.illustrations.create!(
       name: "Different plate",
       image_url: "https://example.com/different.jpg"
@@ -122,6 +149,12 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     patch "/admin/illustrations/#{current.id}/update_sibling_groupings", params: {
       identical_grouping: {
         identical.id.to_s => "same",
+        same_moment.id.to_s => "different",
+        different.id.to_s => "different"
+      },
+      text_moment_grouping: {
+        identical.id.to_s => "different",
+        same_moment.id.to_s => "same",
         different.id.to_s => "different"
       }
     }
@@ -129,11 +162,17 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     assert_response :redirect
     current.reload
     identical.reload
+    same_moment.reload
     different.reload
 
     assert current.identical_image_group.present?
     assert_equal current.identical_image_group, identical.identical_image_group
+    assert_nil same_moment.identical_image_group
+    assert current.text_moment_group.present?
+    assert_equal current.text_moment_group, same_moment.text_moment_group
+    assert_nil identical.text_moment_group
     assert_nil different.identical_image_group
+    assert_nil different.text_moment_group
   end
 
   private

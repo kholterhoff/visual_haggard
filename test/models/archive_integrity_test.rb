@@ -91,4 +91,159 @@ class ArchiveIntegrityTest < ActiveSupport::TestCase
     assert_equal illustration.id, illustrator.representative_illustration.id
     assert_equal "https://example.com/cover.jpg", illustrator.representative_grid_image_source
   end
+
+  test "illustrator cover carousel includes book-edition covers when illustrator has strong edition presence" do
+    illustrator = Illustrator.create!(name: "Edition Cover Illustrator")
+    novel = Novel.create!(name: "Edition Cover Novel")
+    edition = novel.editions.create!(name: "Edition with Cover", cover_url: "https://example.com/edition-cover.jpg")
+    illustration = edition.illustrations.create!(
+      name: "Frontispiece illustration",
+      illustrator:,
+      page_number: "Frontispiece",
+      image_url: "https://example.com/interior-scene.jpg"
+    )
+
+    entries = illustrator.cover_carousel_entries
+
+    assert_equal 1, entries.size
+    assert_equal illustration.id, entries.first[:illustration].id
+    assert_equal edition.id, entries.first[:edition].id
+    assert_equal "https://example.com/edition-cover.jpg", entries.first[:source]
+  end
+
+  test "illustrator cover carousel excludes periodical edition covers when illustrator only has interior illustrations" do
+    illustrator = Illustrator.create!(name: "Periodical Illustrator")
+    novel = Novel.create!(name: "Serialized Novel")
+    edition = novel.editions.create!(
+      name: "The Windsor Magazine, vol. 21",
+      publisher: "George Newnes",
+      cover_url: "https://example.com/windsor-cover.jpg"
+    )
+    edition.illustrations.create!(
+      name: "Interior scene",
+      illustrator:,
+      page_number: "Facing page 18",
+      image_url: "https://example.com/interior-scene.jpg"
+    )
+
+    entries = illustrator.cover_carousel_entries
+
+    assert_empty entries
+  end
+
+  test "novel cover carousel entries use cover and dust jacket sources and cap at five" do
+    novel = Novel.create!(name: "Carousel Novel")
+    first = novel.editions.create!(name: "1910 Edition", publication_date: "1910", cover_url: "https://example.com/1910-cover.jpg")
+    second = novel.editions.create!(name: "1911 Edition", publication_date: "1911")
+    second_dust_jacket = second.illustrations.create!(
+      name: "1911 Dust Jacket",
+      page_number: "Dust Jacket",
+      image_url: "https://example.com/1911-dust-jacket.jpg"
+    )
+    third = novel.editions.create!(name: "1912 Edition", publication_date: "1912")
+    third.illustrations.create!(
+      name: "Interior plate",
+      page_number: "Facing page 10",
+      image_url: "https://example.com/1912-interior.jpg"
+    )
+    fourth = novel.editions.create!(name: "1913 Edition", publication_date: "1913", cover_url: "https://example.com/1913-cover.jpg")
+    fifth = novel.editions.create!(name: "1914 Edition", publication_date: "1914", cover_url: "https://example.com/1914-cover.jpg")
+    sixth = novel.editions.create!(name: "1915 Edition", publication_date: "1915", cover_url: "https://example.com/1915-cover.jpg")
+    seventh = novel.editions.create!(name: "1916 Edition", publication_date: "1916", cover_url: "https://example.com/1916-cover.jpg")
+
+    entries = novel.cover_carousel_entries
+
+    assert_equal [first.id, second.id, fourth.id, fifth.id, sixth.id], entries.map { |entry| entry[:edition].id }
+    assert_equal "https://example.com/1911-dust-jacket.jpg", entries.second[:source]
+    assert_equal second_dust_jacket.id, entries.second[:illustration].id
+    assert_equal 5, entries.size
+    assert_not_includes entries.map { |entry| entry[:edition].id }, third.id
+    assert_not_includes entries.map { |entry| entry[:edition].id }, seventh.id
+  end
+
+  test "illustrator cover carousel entries prefer relevant cover art and cap at five" do
+    illustrator = Illustrator.create!(name: "Carousel Illustrator")
+    novel = Novel.create!(name: "Illustrator Cover Novel")
+    editions = 7.times.map do |index|
+      novel.editions.create!(
+        name: "Edition #{index + 1}",
+        publication_date: "19#{10 + index}",
+        cover_url: "https://example.com/cover-#{index + 1}.jpg"
+      )
+    end
+
+    matched_cover = editions[0].illustrations.create!(
+      name: "Cover design",
+      illustrator:,
+      image_url: "https://example.com/interior-cover-reference.jpg"
+    )
+    dust_jacket = editions[1].illustrations.create!(
+      name: "Edition two wrapper",
+      illustrator:,
+      page_number: "Dust Jacket",
+      image_url: "https://example.com/dust-jacket-two.jpg"
+    )
+    editions[2].illustrations.create!(
+      name: "Interior scene",
+      illustrator:,
+      page_number: "Facing page 22",
+      image_url: "https://example.com/interior-scene.jpg"
+    )
+    editions[3].illustrations.create!(
+      name: "Jacket art",
+      illustrator:,
+      image_url: "https://example.com/jacket-art-four.jpg"
+    )
+    editions[4].illustrations.create!(
+      name: "Wrapper design",
+      illustrator:,
+      image_url: "https://example.com/wrapper-five.jpg"
+    )
+    editions[5].illustrations.create!(
+      name: "Cover art",
+      illustrator:,
+      image_url: "https://example.com/cover-six.jpg"
+    )
+    editions[6].illustrations.create!(
+      name: "Dust jacket design",
+      illustrator:,
+      page_number: "Dust Jacket",
+      image_url: "https://example.com/dust-jacket-seven.jpg"
+    )
+
+    entries = illustrator.cover_carousel_entries
+
+    assert_equal 5, entries.size
+    assert_equal matched_cover.id, entries.first[:illustration].id
+    assert_equal "https://example.com/cover-1.jpg", entries.first[:source]
+    assert_equal dust_jacket.id, entries.second[:illustration].id
+    assert_equal "https://example.com/cover-2.jpg", entries.second[:source]
+    assert_not_includes entries.map { |entry| entry[:illustration].name }, "Interior scene"
+    assert_not_includes entries.map { |entry| entry[:edition].id }, editions[6].id
+  end
+
+  test "illustrator cover carousel honors preferred edition ordering" do
+    illustrator = Illustrator.create!(name: "Preferred Carousel Illustrator")
+    novel_a = Novel.create!(name: "Preferred Novel A")
+    novel_b = Novel.create!(name: "Preferred Novel B")
+    novel_c = Novel.create!(name: "Preferred Novel C")
+    edition_a = novel_a.editions.create!(name: "Authorized Edition", cover_url: "https://example.com/a-cover.jpg")
+    edition_b = novel_b.editions.create!(name: "Authorized Edition", cover_url: "https://example.com/b-cover.jpg")
+    edition_c = novel_c.editions.create!(name: "Authorized Edition", cover_url: "https://example.com/c-cover.jpg")
+
+    edition_a.illustrations.create!(name: "A frontispiece", illustrator:, page_number: "Frontispiece", image_url: "https://example.com/a.jpg")
+    edition_b.illustrations.create!(name: "B frontispiece", illustrator:, page_number: "Frontispiece", image_url: "https://example.com/b.jpg")
+    edition_c.illustrations.create!(name: "C frontispiece", illustrator:, page_number: "Frontispiece", image_url: "https://example.com/c.jpg")
+
+    original_method = Illustrator.method(:preferred_carousel_edition_ids)
+    Illustrator.singleton_class.define_method(:preferred_carousel_edition_ids) { { illustrator.id => [edition_c.id, edition_a.id] } }
+
+    begin
+      entries = illustrator.cover_carousel_entries
+
+      assert_equal [edition_c.id, edition_a.id, edition_b.id], entries.map { |entry| entry[:edition].id }
+    ensure
+      Illustrator.singleton_class.define_method(:preferred_carousel_edition_ids, original_method)
+    end
+  end
 end

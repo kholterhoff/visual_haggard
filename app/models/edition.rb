@@ -1,4 +1,5 @@
 class Edition < ApplicationRecord
+  include AssignsLowestAvailableId
   include SafeUrlFields
 
   LEGACY_S3_ROOT = "https://s3-us-west-2.amazonaws.com/haggard".freeze
@@ -104,6 +105,16 @@ class Edition < ApplicationRecord
     cover_image.attached? ? cover_image : resolved_cover_url(style:)
   end
 
+  def cover_related_illustration(style: :original)
+    illustrations_for_cover_selection
+      .select { |illustration| illustration.cover_related? && illustration.display_image_source(style:).present? }
+      .min_by { |illustration| [cover_related_priority(illustration), illustration.id] }
+  end
+
+  def cover_carousel_source(style: :original)
+    display_cover_source(style:) || cover_related_illustration(style:)&.display_image_source(style:)
+  end
+
   def cover_source_priority
     return 0 if cover_image.attached?
     return 1 if image_file_name.present?
@@ -187,6 +198,22 @@ class Edition < ApplicationRecord
   end
 
   private
+
+  def illustrations_for_cover_selection
+    if association(:illustrations).loaded?
+      illustrations
+    else
+      illustrations.includes(:image_attachment).order(:id)
+    end
+  end
+
+  def cover_related_priority(illustration)
+    page_marker = illustration.page_number.to_s
+    return 0 if page_marker.match?(/dust jacket/i)
+    return 1 if page_marker.match?(/cover|wrapper/i)
+
+    2
+  end
 
   def publication_date_parts
     @publication_date_parts ||= begin

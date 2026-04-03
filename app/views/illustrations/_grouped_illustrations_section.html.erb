@@ -1,0 +1,117 @@
+<%
+  compare_illustrations = ([current_illustration] + illustrations).uniq(&:id)
+  compare_dialog_id = "#{heading_id}-compare-dialog"
+  compare_title_id = "#{compare_dialog_id}-title"
+%>
+
+<section
+  class="surface-panel illustrations-grid-panel illustration-group-section <%= section_class %>"
+  aria-labelledby="<%= heading_id %>"
+  data-controller="illustration-compare"
+>
+  <div class="section-heading illustration-group-section-heading">
+    <div class="illustration-group-section-header">
+      <p class="page-eyebrow"><%= eyebrow %></p>
+      <h2 id="<%= heading_id %>"><%= heading %></h2>
+    </div>
+
+    <button
+      type="button"
+      class="ui-button ui-button--secondary illustration-compare-trigger"
+      aria-controls="<%= compare_dialog_id %>"
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      data-illustration-compare-target="trigger"
+      data-action="illustration-compare#open"
+    >
+      <%= compare_button_label %>
+    </button>
+  </div>
+
+  <div class="illustrations-grid-page">
+    <% illustrations.each do |illustration| %>
+      <% image_source = illustration.display_image_source(style: :original) %>
+      <%= link_to illustration_path(illustration), class: "illustration-card illustration-card--linked" do %>
+        <% if image_source.present? %>
+          <div class="illustration-card-image-frame">
+            <%= image_tag image_source, alt: illustration.name, loading: "lazy", decoding: "async" %>
+          </div>
+        <% else %>
+          <div class="illustration-card-image-frame">
+            <div class="illustration-card-placeholder">No image</div>
+          </div>
+        <% end %>
+
+        <div class="illustration-card-body">
+          <p class="illustration-card-kicker"><%= kicker %></p>
+          <h2><span class="illustration-card-title-link"><%= illustration.name %></span></h2>
+          <p class="illustration-card-meta"><%= illustration.edition.display_title %></p>
+          <p class="illustration-card-meta"><%= illustration.novel.name %></p>
+          <% if illustration.page_number.present? %>
+            <p class="illustration-card-meta">Page <%= illustration.page_number %></p>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <dialog
+    id="<%= compare_dialog_id %>"
+    class="illustration-compare-dialog"
+    aria-labelledby="<%= compare_title_id %>"
+    data-illustration-compare-target="dialog"
+    data-action="cancel->illustration-compare#handleCancel close->illustration-compare#handleClose click->illustration-compare#closeOnBackdrop"
+  >
+    <div class="illustration-compare-dialog-shell">
+      <div class="illustration-compare-dialog-header">
+        <div>
+          <p class="page-eyebrow"><%= compare_dialog_eyebrow %></p>
+          <h2 id="<%= compare_title_id %>"><%= compare_dialog_title %></h2>
+        </div>
+
+        <button
+          type="button"
+          class="ui-button ui-button--secondary illustration-compare-close"
+          data-action="illustration-compare#close"
+        >
+          Close
+        </button>
+      </div>
+
+      <div class="illustration-compare-dialog-grid" data-controller="photoswipe">
+        <% compare_illustrations.each do |illustration| %>
+          <% image_source = illustration.display_image_source(style: :original) %>
+          <article class="illustration-compare-card">
+            <div class="illustration-compare-card-media">
+              <% if image_source.present? %>
+                <%= zoomable_image_link image_source,
+                  alt: illustration.name,
+                  link_options: { class: "illustration-compare-card-image-link" } do %>
+                  <%= image_tag image_source, alt: illustration.name, loading: "lazy", decoding: "async" %>
+                <% end %>
+              <% else %>
+                <div class="illustration-compare-card-placeholder">No image</div>
+              <% end %>
+            </div>
+
+            <div class="illustration-compare-card-body">
+              <% if illustration == current_illustration %>
+                <span class="illustration-compare-card-badge">Current illustration</span>
+              <% end %>
+
+              <p class="illustration-card-kicker"><%= kicker %></p>
+              <h3>
+                <%= link_to illustration.name, illustration_path(illustration), class: "illustration-compare-card-title" %>
+              </h3>
+              <p class="illustration-card-meta"><%= illustration.edition.display_title %></p>
+              <p class="illustration-card-meta"><%= illustration.novel.name %></p>
+              <% if illustration.page_number.present? %>
+                <p class="illustration-card-meta">Page <%= illustration.page_number %></p>
+              <% end %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    </div>
+  </dialog>
+</section>

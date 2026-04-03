@@ -9,9 +9,23 @@
     .select(&:illustrator)
     .group_by(&:illustrator)
     .sort_by { |illustrator, _| illustrator.directory_sort_key }
-  hero_edition = @novel.lead_cover_edition(style: :original)
-  hero_illustration = @novel.lead_illustration(style: :original)
-  hero_cover_source = @novel.display_cover_source(style: :original)
+  cover_entries = @novel.cover_carousel_entries(style: :original, limit: 5)
+  hero_cover_source = cover_entries.first&.dig(:source) || @novel.display_cover_source(style: :original)
+  novel_cover_carousel_entries = cover_entries.map do |entry|
+    edition = entry[:edition]
+    illustration = entry[:illustration]
+    cover_label = illustration&.page_number.presence || (illustration.present? ? "Dust jacket" : "Cover")
+
+    {
+      source: entry[:source],
+      path: edition_path(edition),
+      alt: "#{@novel.name} - #{edition.display_title}",
+      eyebrow: cover_label,
+      title: edition.display_title,
+      meta: edition.publication_citation.presence || "Edition record",
+      dot_label: "#{edition.display_title} cover"
+    }
+  end
 %>
 
 <div
@@ -37,17 +51,11 @@
 
   <div class="page-shell">
     <section class="novel-hero surface-panel">
-      <div class="hero-image">
-        <% if hero_edition %>
-          <%= image_tag hero_edition.display_cover_source(style: :original), alt: "#{@novel.name} cover", decoding: "async" %>
-        <% elsif hero_illustration %>
-          <div data-controller="photoswipe">
-            <%= zoomable_image_link hero_illustration.display_image_source(style: :original),
-              alt: "Illustration from #{@novel.name}" %>
-          </div>
-        <% else %>
-          <div class="record-placeholder">No illustration available</div>
-        <% end %>
+      <div class="hero-image hero-image--carousel">
+        <%= render "shared/archive_cover_carousel",
+          entries: novel_cover_carousel_entries,
+          aria_label: "Cover and dust jacket carousel for #{@novel.name}",
+          empty_message: "No cover or dust jacket is currently available for this novel." %>
       </div>
 
       <div class="hero-content">

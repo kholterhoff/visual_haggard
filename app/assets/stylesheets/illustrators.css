@@ -137,6 +137,10 @@
   background: hsl(var(--card));
 }
 
+.illustrator-work-link {
+  font-weight: normal;
+}
+
 .illustrator-grid-image-link:hover,
 .illustrator-work-link:hover {
   color: inherit;
@@ -242,6 +246,16 @@
 .illustrator-show-image-frame {
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
+}
+
+.illustrator-show-image-frame--carousel {
+  padding: 1rem;
+}
+
+.illustrator-show-image-frame--carousel .record-cover-slide-image {
+  width: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 .illustrator-show-image img {

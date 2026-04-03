@@ -12,6 +12,8 @@ class StaticSiteExporter
   DEFAULT_PAGEFIND_COMMAND = "pagefind".freeze
   PUBLIC_ROOT_FILES = %w[
     404.html
+    favicon.svg
+    favicon-32.png
     favicon.ico
     apple-touch-icon.png
     apple-touch-icon-precomposed.png

@@ -1,4 +1,6 @@
 class Novel < ApplicationRecord
+  include AssignsLowestAvailableId
+
   DIRECTORY_ARTICLE_PREFIX = /\A(?:a|an|the)\s+/i
   ARCHIVE_PAGE_SIZE = 12
   PLACEHOLDER_NAME = "Illustrator Novel".freeze
@@ -85,6 +87,29 @@ class Novel < ApplicationRecord
     lead_illustration(style:)&.display_image_source(style:)
   end
 
+  def cover_carousel_entries(style: :original, limit: 5)
+    editions_for_cover_carousel
+      .sort_by(&:publication_sort_key)
+      .filter_map do |edition|
+        source = edition.display_cover_source(style:)
+        cover_illustration = nil
+
+        if source.blank?
+          cover_illustration = edition.cover_related_illustration(style:)
+          source = cover_illustration&.display_image_source(style:)
+        end
+
+        next if source.blank?
+
+        {
+          edition:,
+          illustration: cover_illustration,
+          source:
+        }
+      end
+      .first(limit)
+  end
+
   def long_title
     name.to_s
   end
@@ -108,6 +133,10 @@ class Novel < ApplicationRecord
   end
 
   private
+
+  def editions_for_cover_carousel
+    visible_editions.to_a
+  end
 
   def lead_illustrations_preloaded?
     association(:editions).loaded? &&

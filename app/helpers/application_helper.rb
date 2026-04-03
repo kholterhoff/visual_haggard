@@ -109,6 +109,28 @@ module ApplicationHelper
     linked_work_title(short ? novel.short_title : novel.long_title, novel_path(novel), **options)
   end
 
+  def condensed_edition_label(edition, novel: nil)
+    label = edition&.display_title.to_s.strip
+    return if label.blank?
+    return label if novel.blank?
+
+    bracketed_titles = novel.long_title.to_s.scan(/\[([^\]]+)\]/).flatten
+    candidate_titles = [novel.long_title, novel.short_title, *bracketed_titles]
+                      .map { |title| title.to_s.strip.presence }
+                      .compact
+                      .uniq
+                      .sort_by { |title| -title.length }
+
+    candidate_titles.each do |title|
+      return if label.casecmp?(title)
+
+      shortened = label.sub(/\A#{Regexp.escape(title)}(?:\s*[-,:;]\s*|\s+)/i, "").strip
+      return shortened if shortened.present? && shortened.casecmp?(label) != 0
+    end
+
+    label
+  end
+
   def style_edition_citation(edition)
     fragments = ["Cover. ".html_safe, work_title(edition.novel.name), ". ".html_safe]
 
