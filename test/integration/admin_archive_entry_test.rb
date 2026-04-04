@@ -104,12 +104,14 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     assert_select %(a[href="/admin/illustrations/#{variant_match.id}"]), text: "Variant match"
     assert_select %(a[href="/admin/illustrations/#{same_scene_match.id}"]), text: "'It's gold, lad,' I said, 'or I'm a Dutchman.'"
     assert_select %(a[href="/admin/illustrations/#{other_plate.id}"]), text: "Other plate"
-    assert_select %(input[type="radio"][name="identical_grouping[#{variant_match.id}]"][value="same"][checked="checked"]), count: 1
+    assert_includes response.body, "All illustrations default to"
     assert_select %(input[type="radio"][name="text_moment_grouping[#{variant_match.id}]"][value="different"][checked="checked"]), count: 1
     assert_select %(input[type="radio"][name="identical_grouping[#{same_scene_match.id}]"][value="different"][checked="checked"]), count: 1
-    assert_select %(input[type="radio"][name="text_moment_grouping[#{same_scene_match.id}]"][value="same"][checked="checked"]), count: 1
+    assert_select %(input[type="radio"][name="identical_grouping[#{variant_match.id}]"][value="different"][checked="checked"]), count: 1
+    assert_select %(input[type="radio"][name="text_moment_grouping[#{same_scene_match.id}]"][value="different"][checked="checked"]), count: 1
     assert_select %(input[type="radio"][name="identical_grouping[#{other_plate.id}]"][value="different"][checked="checked"]), count: 1
     assert_select %(input[type="radio"][name="text_moment_grouping[#{other_plate.id}]"][value="different"][checked="checked"]), count: 1
+    assert_select %(input[type="radio"][value="same"][checked="checked"]), count: 0
     assert_no_match(/Outside plate/, response.body)
   end
 

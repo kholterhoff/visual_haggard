@@ -1019,6 +1019,10 @@
     padding-top: 0;
   }
 
+  .home-cover-reel:nth-child(n + 5) {
+    display: none;
+  }
+
   .home-guides,
   .home-feature-slide,
   .home-style-grid,

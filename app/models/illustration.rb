@@ -174,40 +174,6 @@ class Illustration < ApplicationRecord
     Illustration.where(edition_id: novel.editions.select(:id)).where.not(id: id)
   end
 
-  def grouped_with?(other_illustration)
-    return false unless self.class.identical_image_group_supported?
-
-    identical_image_group.present? && identical_image_group == other_illustration.identical_image_group
-  end
-
-  def same_variant_selected?(other_illustration)
-    return false unless self.class.identical_image_group_supported?
-    return false if other_illustration.blank?
-
-    if identical_image_group.present? && other_illustration.identical_image_group.present?
-      return identical_image_group == other_illustration.identical_image_group
-    end
-
-    grouped_with?(other_illustration)
-  end
-
-  def shares_text_moment_with?(other_illustration)
-    return false unless self.class.text_moment_group_supported?
-
-    text_moment_group.present? && text_moment_group == other_illustration.text_moment_group
-  end
-
-  def same_scene_selected?(other_illustration)
-    return false unless self.class.text_moment_group_supported?
-    return false if other_illustration.blank?
-
-    if text_moment_group.present? && other_illustration.text_moment_group.present?
-      return text_moment_group == other_illustration.text_moment_group
-    end
-
-    shares_text_moment_with?(other_illustration)
-  end
-
   def assign_identical_siblings_from_novel!(selected_sibling_ids)
     return unless self.class.identical_image_group_supported?
 

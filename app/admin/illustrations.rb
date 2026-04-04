@@ -84,9 +84,6 @@ ActiveAdmin.register Illustration do
                                      .to_a
                                      .sort_by do |illustration|
         [
-          (resource.same_variant_selected?(illustration) || resource.same_scene_selected?(illustration)) ? 0 : 1,
-          resource.same_variant_selected?(illustration) ? 0 : 1,
-          resource.same_scene_selected?(illustration) ? 0 : 1,
           illustration.edition.publication_sort_key,
           illustration.id
         ]
