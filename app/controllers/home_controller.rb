@@ -19,6 +19,19 @@ class HomeController < ApplicationController
     allan_quatermain: "Allan Quatermain",
     maiwas_revenge: "Maiwa's Revenge; Or, The War of the Little Hand"
   }.freeze
+  EDITORS_STATEMENT_NOVEL_TITLES = {
+    king_solomons_mines: "King Solomon's Mines",
+    dawn: "Dawn",
+    she: "She, A History of Adventure"
+  }.freeze
+  EDITORS_STATEMENT_ILLUSTRATOR_NAMES = {
+    maurice_greiffenhagen: "Maurice Greiffenhagen",
+    e_k_johnson: "E. K. Johnson",
+    wal_paget: "Walter Paget",
+    w_russell_flint: "Russell Flint",
+    a_c_michael: "A. C. Michael",
+    charles_kerr: "Charles Kerr"
+  }.freeze
 
   def index
     cover_editions = cover_ready_editions
@@ -42,6 +55,8 @@ class HomeController < ApplicationController
   end
 
   def editors_statement
+    @editors_statement_novels = build_editors_statement_novels
+    @editors_statement_illustrators = build_editors_statement_illustrators
   end
 
   private
@@ -190,6 +205,22 @@ class HomeController < ApplicationController
 
     BIOGRAPHY_NOVEL_TITLES.transform_values do |title|
       biography_novels[title]
+    end
+  end
+
+  def build_editors_statement_novels
+    novels = Novel.publicly_visible.where(name: EDITORS_STATEMENT_NOVEL_TITLES.values).index_by(&:name)
+
+    EDITORS_STATEMENT_NOVEL_TITLES.transform_values do |title|
+      novels[title]
+    end
+  end
+
+  def build_editors_statement_illustrators
+    illustrators = Illustrator.publicly_visible.where(name: EDITORS_STATEMENT_ILLUSTRATOR_NAMES.values).index_by(&:name)
+
+    EDITORS_STATEMENT_ILLUSTRATOR_NAMES.transform_values do |name|
+      illustrators[name]
     end
   end
 end

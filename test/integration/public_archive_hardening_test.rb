@@ -117,6 +117,35 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select "a", text: "Treasure Island", count: 0
   end
 
+  test "editor statement links mentioned novels and illustrators into the archive" do
+    king_solomons_mines = Novel.create!(name: "King Solomon's Mines")
+    dawn = Novel.create!(name: "Dawn")
+    she = Novel.create!(name: "She, A History of Adventure")
+    maurice_greiffenhagen = Illustrator.create!(name: "Maurice Greiffenhagen")
+    e_k_johnson = Illustrator.create!(name: "E. K. Johnson")
+    wal_paget = Illustrator.create!(name: "Walter Paget")
+
+    get editors_statement_path
+
+    linked_novel = lambda do |novel, title|
+      escaped_title = Regexp.escape(ERB::Util.html_escape(title))
+      %r{<a[^>]+href="#{Regexp.escape(novel_path(novel))}"[^>]*>\s*<cite class="work-title">#{escaped_title}</cite>\s*</a>}m
+    end
+    linked_illustrator = lambda do |illustrator, label|
+      escaped_label = Regexp.escape(ERB::Util.html_escape(label))
+      %r{<a[^>]+href="#{Regexp.escape(illustrator_path(illustrator))}"[^>]*>#{escaped_label}</a>}m
+    end
+
+    assert_response :success
+    assert_match linked_novel.call(king_solomons_mines, "King Solomon's Mines"), response.body
+    assert_match linked_novel.call(king_solomons_mines, "KSM"), response.body
+    assert_match linked_novel.call(dawn, "Dawn"), response.body
+    assert_match linked_novel.call(she, "She"), response.body
+    assert_match linked_illustrator.call(maurice_greiffenhagen, "Maurice Greiffenhagen"), response.body
+    assert_match linked_illustrator.call(e_k_johnson, "E. K. Johnson"), response.body
+    assert_match linked_illustrator.call(wal_paget, "Wal Paget"), response.body
+  end
+
   test "novel record shows a rotating cover and dust jacket carousel with pause control" do
     novel = Novel.create!(name: "Carousel Novel")
     first = novel.editions.create!(name: "1910 Edition", publication_date: "1910", cover_url: "https://example.com/1910-cover.jpg")
