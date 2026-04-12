@@ -576,25 +576,27 @@ a.ui-button--secondary:focus-visible {
   align-items: center;
   justify-content: center;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .record-cover-slide-link {
   display: flex;
   width: 100%;
   height: 100%;
+  min-height: 0;
   align-items: center;
   justify-content: center;
+  overflow: visible;
 }
 
-.record-cover-slide-image {
+.record-cover-slide .record-cover-slide-image {
   display: block;
-  width: auto;
+  width: 100%;
   max-width: 100%;
-  height: auto;
-  max-height: clamp(260px, 46vw, 520px);
+  height: 100%;
+  max-height: 100%;
   object-fit: contain;
-  object-position: center top;
+  object-position: center center;
   background: hsl(var(--secondary));
 }
 
@@ -695,10 +697,6 @@ a.ui-button--secondary:focus-visible {
 @media (max-width: 780px) {
   .record-cover-carousel-stage {
     min-height: 430px;
-  }
-
-  .record-cover-slide-image {
-    max-height: 320px;
   }
 
   .record-cover-carousel-controls {
@@ -2657,12 +2655,6 @@ a.ui-button--secondary:focus-visible {
   display: block;
 }
 
-.hero-image--carousel .record-cover-slide-image {
-  width: auto;
-  max-width: 100%;
-  height: auto;
-}
-
 .hero-image img {
   width: 100%;
   max-height: 620px;
@@ -3563,12 +3555,6 @@ a.ui-button--secondary:focus-visible {
 
 .illustrator-show-image-frame--carousel {
   padding: 1rem;
-}
-
-.illustrator-show-image-frame--carousel .record-cover-slide-image {
-  width: auto;
-  max-width: 100%;
-  height: auto;
 }
 
 .illustrator-show-image img {

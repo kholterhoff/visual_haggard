@@ -278,12 +278,6 @@
   padding: 1rem;
 }
 
-.illustrator-show-image-frame--carousel .record-cover-slide-image {
-  width: auto;
-  max-width: 100%;
-  height: auto;
-}
-
 .illustrator-show-image img {
   max-height: 560px;
 }
