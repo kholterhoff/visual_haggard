@@ -64,6 +64,25 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     assert illustration.image.attached?
   end
 
+  test "admin illustration form groups editions by alphabetized novel" do
+    alpha_novel = Novel.create!(name: "Alpha Novel")
+    beta_novel = Novel.create!(name: "Beta Novel")
+    alpha_later = Edition.create!(novel: alpha_novel, name: "Second Alpha Edition", publication_date: "1915")
+    alpha_earlier = Edition.create!(novel: alpha_novel, name: "First Alpha Edition", publication_date: "1910")
+    beta_edition = Edition.create!(novel: beta_novel, name: "Beta Edition", publication_date: "1920")
+
+    get "/admin/illustrations/new"
+
+    assert_response :success
+    assert_select %(select#illustration_edition_id optgroup[label="Alpha Novel"]), count: 1
+    assert_select %(select#illustration_edition_id optgroup[label="Beta Novel"]), count: 1
+    assert_select %(select#illustration_edition_id optgroup[label="Alpha Novel"] option[value="#{alpha_earlier.id}"]), text: "First Alpha Edition"
+    assert_select %(select#illustration_edition_id optgroup[label="Alpha Novel"] option[value="#{alpha_later.id}"]), text: "Second Alpha Edition"
+    assert_select %(select#illustration_edition_id optgroup[label="Beta Novel"] option[value="#{beta_edition.id}"]), text: "Beta Edition"
+    assert_operator response.body.index(%(optgroup label="Alpha Novel")), :<, response.body.index(%(optgroup label="Beta Novel"))
+    assert_operator response.body.index(%(value="#{alpha_earlier.id}">First Alpha Edition)), :<, response.body.index(%(value="#{alpha_later.id}">Second Alpha Edition))
+  end
+
   test "admin illustration page shows other illustrations from the same novel" do
     novel = Novel.create!(name: "Grouped Illustration Novel")
     edition_a = Edition.create!(novel:, name: "First Edition", publication_date: "1910")

@@ -12,6 +12,13 @@ class HomeController < ApplicationController
   PAPERBACK_ILLUSTRATOR_IDS = [69, 70, 61, 68].freeze
   BIOGRAPHY_PORTRAIT_EDITION_ID = 111
   BIOGRAPHY_PORTRAIT_NAME = "H. Rider Haggard"
+  BIOGRAPHY_NOVEL_TITLES = {
+    dawn: "Dawn",
+    king_solomons_mines: "King Solomon's Mines",
+    she: "She, A History of Adventure",
+    allan_quatermain: "Allan Quatermain",
+    maiwas_revenge: "Maiwa's Revenge; Or, The War of the Little Hand"
+  }.freeze
 
   def index
     cover_editions = cover_ready_editions
@@ -31,6 +38,7 @@ class HomeController < ApplicationController
     @biography_portrait = edition&.illustrations&.find do |illustration|
       illustration.name == BIOGRAPHY_PORTRAIT_NAME
     end
+    @biography_novels = build_biography_novels
   end
 
   def editors_statement
@@ -174,6 +182,14 @@ class HomeController < ApplicationController
 
     PAPERBACK_ILLUSTRATOR_IDS.filter_map do |illustrator_id|
       illustrators[illustrator_id]
+    end
+  end
+
+  def build_biography_novels
+    biography_novels = Novel.publicly_visible.where(name: BIOGRAPHY_NOVEL_TITLES.values).index_by(&:name)
+
+    BIOGRAPHY_NOVEL_TITLES.transform_values do |title|
+      biography_novels[title]
     end
   end
 end

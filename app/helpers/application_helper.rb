@@ -16,6 +16,8 @@ module ApplicationHelper
     return "".html_safe if content.blank?
 
     normalized_content = normalize_legacy_rich_text(content)
+    return normalized_content if normalized_content_contains_block_html?(normalized_content)
+
     simple_format(normalized_content, {}, sanitize: false)
   end
 
@@ -174,12 +176,63 @@ module ApplicationHelper
 
     normalize_legacy_inline_formatting(fragment)
     rewrite_legacy_internal_urls_in_fragment(fragment)
+    wrap_loose_top_level_inline_content(fragment)
 
     sanitize(
       fragment.to_html,
-      tags: %w[p br em i strong b cite a ul ol li blockquote],
+      tags: %w[p br em i strong b cite a ul ol li blockquote h2 h3 h4],
       attributes: %w[href title target rel]
     )
+  end
+
+  def normalized_content_contains_block_html?(content)
+    content.to_s.match?(%r{<(?:p|br|ul|ol|li|blockquote|h2|h3|h4)\b}i)
+  end
+
+  def wrap_loose_top_level_inline_content(fragment)
+    buffer = []
+
+    fragment.children.to_a.each do |node|
+      if top_level_block_node?(node)
+        flush_loose_top_level_buffer(fragment, buffer, before: node)
+      else
+        buffer << node
+      end
+    end
+
+    flush_loose_top_level_buffer(fragment, buffer)
+  end
+
+  def top_level_block_node?(node)
+    node.element? && %w[p ul ol li blockquote h2 h3 h4].include?(node.name)
+  end
+
+  def flush_loose_top_level_buffer(fragment, buffer, before: nil)
+    nodes = buffer.shift(buffer.length)
+    return if nodes.empty?
+
+    meaningful_nodes = nodes.reject { |node| node.text? && node.text.strip.empty? }
+
+    if meaningful_nodes.empty?
+      nodes.each(&:unlink)
+      return
+    end
+
+    paragraph = Nokogiri::XML::Node.new("p", fragment.document)
+
+    nodes.each do |node|
+      if node.text? && node.text.strip.empty?
+        node.unlink
+      else
+        paragraph.add_child(node.unlink)
+      end
+    end
+
+    if before.present?
+      before.add_previous_sibling(paragraph)
+    else
+      fragment.add_child(paragraph)
+    end
   end
 
   def archive_reference_value(value)

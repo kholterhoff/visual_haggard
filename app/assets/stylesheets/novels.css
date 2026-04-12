@@ -228,6 +228,27 @@
   line-height: 1.85;
 }
 
+.novel-description h2,
+.novel-description h3,
+.novel-description h4 {
+  margin: 2rem 0 0.95rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid hsl(var(--border));
+  font-family: var(--font-ui);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.novel-description h2:first-child,
+.novel-description h3:first-child,
+.novel-description h4:first-child {
+  margin-top: 0;
+}
+
 .novel-description p:last-child {
   margin-bottom: 0;
 }

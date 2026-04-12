@@ -5,6 +5,7 @@
   all_illustrations = visible_illustrations.select do |illustration|
     illustration.display_image_source(style: :original).present?
   end
+  show_related_essays = @novel.blog_posts.any? && !novel_description_includes_further_reading_heading?(@novel.description)
   novel_illustrator_groups = visible_illustrations
     .select(&:illustrator)
     .group_by(&:illustrator)
@@ -66,7 +67,7 @@
           <%= link_to pluralize(visible_editions.size, "edition"), "#edition-archive", class: "meta-chip meta-chip-link" %>
           <%= link_to pluralize(novel_illustrator_groups.size, "illustrator"), "#illustrator-archive", class: "meta-chip meta-chip-link" %>
           <%= link_to pluralize(all_illustrations.size, "illustration"), "#illustration-archive", class: "meta-chip meta-chip-link" %>
-          <% if @novel.blog_posts.any? %>
+          <% if show_related_essays %>
             <%= link_to pluralize(@novel.blog_posts.size, "related essay"), "#related-essays", class: "meta-chip meta-chip-link" %>
           <% end %>
         </div>
@@ -85,7 +86,7 @@
           </div>
         <% end %>
 
-        <% if @novel.blog_posts.any? %>
+        <% if show_related_essays %>
           <div class="further-reading" id="related-essays">
             <p class="page-eyebrow">Further reading</p>
             <ul>

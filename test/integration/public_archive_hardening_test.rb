@@ -89,6 +89,34 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Private Collection"
   end
 
+  test "biography page links referenced novels into the archive" do
+    Novel.create!(name: "Dawn")
+    Novel.create!(name: "King Solomon's Mines")
+    Novel.create!(name: "She, A History of Adventure")
+    Novel.create!(name: "Allan Quatermain")
+    maiwas_revenge = Novel.create!(name: "Maiwa's Revenge; Or, The War of the Little Hand")
+    portrait_edition = maiwas_revenge.editions.create!(id: HomeController::BIOGRAPHY_PORTRAIT_EDITION_ID, name: "Biography Portrait Edition")
+    portrait_edition.illustrations.create!(
+      name: HomeController::BIOGRAPHY_PORTRAIT_NAME,
+      image_url: "https://example.com/biography-portrait.jpg"
+    )
+
+    get biography_path
+
+    internal_novel_link = lambda do |title|
+      escaped_title = Regexp.escape(ERB::Util.html_escape(title))
+      %r{<a[^>]+href="/novels/\d+"[^>]*>\s*<cite class="work-title">#{escaped_title}</cite>\s*</a>}m
+    end
+
+    assert_response :success
+    assert_match internal_novel_link.call("Dawn"), response.body
+    assert_equal 2, response.body.scan(internal_novel_link.call("King Solomon's Mines")).size
+    assert_match internal_novel_link.call("She"), response.body
+    assert_match internal_novel_link.call("Allan Quatermain"), response.body
+    assert_match internal_novel_link.call("Maiwa's Revenge; Or, The War of the Little Hand"), response.body
+    assert_select "a", text: "Treasure Island", count: 0
+  end
+
   test "novel record shows a rotating cover and dust jacket carousel with pause control" do
     novel = Novel.create!(name: "Carousel Novel")
     first = novel.editions.create!(name: "1910 Edition", publication_date: "1910", cover_url: "https://example.com/1910-cover.jpg")
@@ -117,6 +145,65 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select %(a.record-cover-slide-link[href="#{edition_path(second)}"]), count: 1
     assert_select "button.record-cover-carousel-pause", text: "Pause motion"
     assert_select "button.record-cover-carousel-dot", count: 2
+  end
+
+  test "novel record hides generated further reading when description already includes that heading" do
+    novel = Novel.create!(
+      name: "Embedded Further Reading Novel",
+      description: <<~HTML
+        A novel description with its own bibliography.
+        <h4>Further Reading</h4>
+        <p>Embedded source entry.</p>
+      HTML
+    )
+    novel.blog_posts.create!(
+      title: "Template essay link",
+      author: "Archive Editor",
+      content: "A related essay that should not render as a duplicate section."
+    )
+
+    get novel_path(novel)
+
+    assert_response :success
+    assert_includes response.body, "Embedded source entry."
+    assert_select %(a[href="#related-essays"]), count: 0
+    assert_select "#related-essays", count: 0
+    assert_select ".further-reading .page-eyebrow", text: "Further reading", count: 0
+  end
+
+  test "novel record shows generated further reading when description does not include that heading" do
+    novel = Novel.create!(name: "Related Essay Novel", description: "A novel description without a bibliography heading.")
+    novel.blog_posts.create!(
+      title: "Template essay link",
+      author: "Archive Editor",
+      content: "A related essay that should render normally."
+    )
+
+    get novel_path(novel)
+
+    assert_response :success
+    assert_select %(a[href="#related-essays"]), text: "1 related essay"
+    assert_select "#related-essays .page-eyebrow", text: "Further reading"
+    assert_select "#related-essays a", text: "Template essay link"
+  end
+
+  test "novel description preserves embedded bibliography headings" do
+    novel = Novel.create!(
+      name: "Bibliography Heading Novel",
+      description: <<~HTML
+        Intro paragraph.
+
+        <h4>Further Reading</h4>
+        <p>Sample source entry.</p>
+      HTML
+    )
+
+    get novel_path(novel)
+
+    assert_response :success
+    assert_select ".novel-description h4", text: "Further Reading"
+    assert_select ".novel-description h4 + p", text: "Sample source entry."
+    assert_no_match(/<p>Further Reading\s*<br/i, response.body)
   end
 
   test "illustrator record shows a rotating cover and dust jacket carousel with pause control" do
@@ -390,9 +477,11 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     get illustrator_path(illustrator)
 
     assert_response :success
-    assert_select %(a[href="#illustrator-work-archive"]), text: "3 illustrations in the archive"
-    assert_select %(a[href="#illustrator-work-novel-#{novel_a.id}"] cite.work-title), text: "Alpha Novel"
-    assert_select %(a[href="#illustrator-work-novel-#{novel_b.id}"] cite.work-title), text: "Beta Novel"
+    assert_select "h1.page-title", text: "Grouped Illustrator"
+    assert_select %(section#illustrator-work-archive > .section-heading .page-eyebrow), count: 0
+    assert_select %(section#illustrator-work-archive > .section-heading h2), text: "3 Illustrations by Grouped Illustrator"
+    assert_select %(section#illustrator-work-archive .illustrator-work-jumps a[href="#illustrator-work-novel-#{novel_a.id}"] cite.work-title), text: "Alpha Novel"
+    assert_select %(section#illustrator-work-archive .illustrator-work-jumps a[href="#illustrator-work-novel-#{novel_b.id}"] cite.work-title), text: "Beta Novel"
     assert_select %(section#illustrator-work-novel-#{novel_a.id} h3 cite.work-title), text: "Alpha Novel"
     assert_select %(section#illustrator-work-novel-#{novel_b.id} h3 cite.work-title), text: "Beta Novel"
     assert_select %(section#illustrator-work-novel-#{novel_a.id} a.illustrator-work-link[href="#{illustration_path(alpha_first)}"]), count: 1
@@ -415,7 +504,7 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     get illustrator_path(illustrator)
 
     assert_response :success
-    assert_select %(a[href="#illustrator-work-novel-#{novel.id}"] cite.work-title), text: "Maiwa's Revenge"
+    assert_select %(section#illustrator-work-archive .illustrator-work-jumps a[href="#illustrator-work-novel-#{novel.id}"] cite.work-title), text: "Maiwa's Revenge"
     assert_select %(section#illustrator-work-novel-#{novel.id} h3 cite.work-title), text: "Maiwa's Revenge; Or, The War of the Little Hand"
   end
 
@@ -430,6 +519,25 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select ".illustrator-bio em", text: "The Dictionary of British Book Illustrators and Caricaturists 1800-1914"
     assert_no_match(/&lt;span/, response.body)
+  end
+
+  test "illustrator bios preserve embedded further reading headings" do
+    illustrator = Illustrator.create!(
+      name: "Bibliography Illustrator",
+      bio: <<~HTML
+        Biographical note.
+
+        <h4>Further Reading</h4>
+        <p>Sample bibliography entry.</p>
+      HTML
+    )
+
+    get illustrator_path(illustrator)
+
+    assert_response :success
+    assert_select ".illustrator-bio > p", text: "Biographical note."
+    assert_select ".illustrator-bio h4", text: "Further Reading"
+    assert_select ".illustrator-bio h4 + p", text: "Sample bibliography entry."
   end
 
   test "long illustration archives render a back to top control" do

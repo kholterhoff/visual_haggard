@@ -118,6 +118,11 @@
   gap: 1.75rem;
 }
 
+.illustrator-work-jumps {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
 .illustrator-work-group {
   scroll-margin-top: 6.5rem;
 }
@@ -233,6 +238,27 @@
 .illustrator-bio {
   margin-top: 1rem;
   font-size: 1.02rem;
+}
+
+.illustrator-bio h2,
+.illustrator-bio h3,
+.illustrator-bio h4 {
+  margin: 2rem 0 0.95rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid hsl(var(--border));
+  font-family: var(--font-ui);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.illustrator-bio h2:first-child,
+.illustrator-bio h3:first-child,
+.illustrator-bio h4:first-child {
+  margin-top: 0;
 }
 
 .illustrator-bio p:last-child {

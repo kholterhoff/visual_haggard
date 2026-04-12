@@ -56,18 +56,6 @@
         <% else %>
           <p class="illustrator-bio-fallback">No biographical note is currently available for this illustrator.</p>
         <% end %>
-        <div class="meta-chip-row illustrator-meta-row">
-          <% if @illustrations.any? %>
-            <%= link_to "#{pluralize(@illustrations.size, "illustration")} in the archive", "#illustrator-work-archive", class: "meta-chip meta-chip-link" %>
-            <% @illustration_groups.each do |group| %>
-              <%= link_to "##{group[:anchor_id]}", class: "meta-chip meta-chip-link", aria: { label: "#{group[:novel].name}: #{pluralize(group[:illustrations].size, "illustration")}" } do %>
-                <%= novel_work_title(group[:novel], short: true) %>
-              <% end %>
-            <% end %>
-          <% else %>
-            <span class="meta-chip">No illustrations in the archive</span>
-          <% end %>
-        </div>
       </div>
 
       <div class="illustrator-show-image">
@@ -84,9 +72,16 @@
       <section class="surface-panel illustrator-work-section" id="illustrator-work-archive">
         <div class="section-heading">
           <div>
-            <p class="page-eyebrow">Illustration archive</p>
-            <h2>Illustrations by <%= @illustrator.name %></h2>
+            <h2><%= @illustrations.size %> <%= "Illustration".pluralize(@illustrations.size) %> by <%= @illustrator.name %></h2>
           </div>
+        </div>
+
+        <div class="meta-chip-row illustrator-work-jumps">
+          <% @illustration_groups.each do |group| %>
+            <%= link_to "##{group[:anchor_id]}", class: "meta-chip meta-chip-link", aria: { label: "#{group[:novel].name}: #{pluralize(group[:illustrations].size, "illustration")}" } do %>
+              <%= novel_work_title(group[:novel], short: true) %>
+            <% end %>
+          <% end %>
         </div>
 
         <div class="illustrator-work-groups">

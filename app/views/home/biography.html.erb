@@ -19,7 +19,7 @@
                 decoding: "async" %>
             <% end %>
             <figcaption class="biography-portrait-citation">
-              Maurice Greiffenhagen, "H. Rider Haggard," Lithograph, from <cite>Maiwa's Revenge; Or, The War of the Little Hand</cite>, new ed., (Longmans, Green and Co., 1923): Frontispiece.
+              Maurice Greiffenhagen, "H. Rider Haggard," Lithograph, from <%= linked_biography_novel_title(@biography_novels[:maiwas_revenge], fallback: "Maiwa's Revenge; Or, The War of the Little Hand") %>, new ed., (Longmans, Green and Co., 1923): Frontispiece.
             </figcaption>
           </figure>
         <% end %>
@@ -32,8 +32,8 @@
         <p>After returning to England in 1879, Haggard married Mariana Louisa Margitson in 1880. He briefly returned to Africa with his wife but came back to England in 1881 to study law. He was called to the bar in 1884 but never practiced, having already begun his literary career.</p>
 
         <h2>Literary Success</h2>
-        <p>Haggard's first novel, <em>Dawn</em>, was published in 1884, but it was <em>King Solomon's Mines</em> (1885) that brought him international fame. Written in just six weeks on a wager that he could produce a book as exciting as Robert Louis Stevenson's <em>Treasure Island</em>, the novel became an immediate bestseller and established Haggard as a master of the adventure romance genre.</p>
-        <p>His next major success, <em>She</em> (1887), told the story of Ayesha, the immortal queen of a lost African civilization. The novel's blend of adventure, romance, and the supernatural captivated readers and has remained in print continuously since its first publication. Haggard followed this with <em>Allan Quatermain</em> (1887), a sequel to <em>King Solomon's Mines</em>, and numerous other adventure tales set in Africa and other exotic locales.</p>
+        <p>Haggard's first novel, <%= linked_biography_novel_title(@biography_novels[:dawn], fallback: "Dawn") %>, was published in 1884, but it was <%= linked_biography_novel_title(@biography_novels[:king_solomons_mines], fallback: "King Solomon's Mines") %> (1885) that brought him international fame. Written in just six weeks on a wager that he could produce a book as exciting as Robert Louis Stevenson's <em>Treasure Island</em>, the novel became an immediate bestseller and established Haggard as a master of the adventure romance genre.</p>
+        <p>His next major success, <%= linked_biography_novel_title(@biography_novels[:she], fallback: "She", short: true) %> (1887), told the story of Ayesha, the immortal queen of a lost African civilization. The novel's blend of adventure, romance, and the supernatural captivated readers and has remained in print continuously since its first publication. Haggard followed this with <%= linked_biography_novel_title(@biography_novels[:allan_quatermain], fallback: "Allan Quatermain") %> (1887), a sequel to <%= linked_biography_novel_title(@biography_novels[:king_solomons_mines], fallback: "King Solomon's Mines") %>, and numerous other adventure tales set in Africa and other exotic locales.</p>
 
         <h2>Themes and Style</h2>
         <p>Haggard's novels typically featured British protagonists encountering lost civilizations, ancient mysteries, and supernatural phenomena in remote corners of the world. His work reflected both the adventurous spirit and the imperial attitudes of the Victorian era. While his portrayal of indigenous peoples and colonial relationships has been criticized by modern readers, his novels remain important documents of late Victorian popular culture and imagination.</p>

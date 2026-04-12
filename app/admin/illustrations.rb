@@ -120,7 +120,24 @@ ActiveAdmin.register Illustration do
     f.semantic_errors
 
     f.inputs "Illustration details" do
-      f.input :edition, collection: Edition.includes(:novel).order(:id).map { |edition| ["#{edition.novel.name} - #{edition.display_title}", edition.id] }
+      grouped_edition_options = Novel.includes(:editions)
+                                     .to_a
+                                     .sort_by(&:directory_sort_key)
+                                     .filter_map do |novel|
+        editions = novel.editions.to_a.sort_by(&:publication_sort_key)
+        next if editions.empty?
+
+        [
+          novel.name,
+          editions.map { |edition| [edition.display_title, edition.id] }
+        ]
+      end
+
+      f.input :edition_id,
+              as: :select,
+              collection: f.template.grouped_options_for_select(grouped_edition_options, f.object.edition_id),
+              include_blank: false,
+              label: "Edition"
       f.input :illustrator, collection: Illustrator.order(:name)
       f.input :name
       f.input :artist
