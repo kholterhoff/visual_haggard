@@ -1,5 +1,8 @@
-Static export completed at 2026-04-04T03:33:26Z
+Static export completed at 2026-04-12T03:09:33Z
 Host: www.visualhaggard.org
 Request host: 127.0.0.1
-Exported routes: 2848
+Exported routes: 2850
 Custom domain: www.visualhaggard.org
+
+Warnings:
+- Pagefind indexing failed. Install the Pagefind binary or set PAGEFIND_CMD before publishing static search.
