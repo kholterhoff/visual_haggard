@@ -161,6 +161,25 @@ class ArchiveIntegrityTest < ActiveSupport::TestCase
     assert_not_includes entries.map { |entry| entry[:edition].id }, seventh.id
   end
 
+  test "publication date parsing supports plain years, uncertain years, and circa years" do
+    novel = Novel.create!(name: "Timeline Parsing Novel")
+    plain_year = novel.editions.create!(name: "Plain year edition", publication_date: "1978")
+    uncertain_year = novel.editions.create!(name: "Uncertain year edition", publication_date: "1889?")
+    circa_year = novel.editions.create!(name: "Circa year edition", publication_date: "c. 1920")
+    full_date = novel.editions.create!(name: "Full date edition", publication_date: "14 December 1919")
+    undated = novel.editions.create!(name: "Undated edition", publication_date: "n. d.")
+
+    assert_equal({ year: 1978 }, plain_year.send(:publication_date_parts))
+    assert_equal({ year: 1889 }, uncertain_year.send(:publication_date_parts))
+    assert_equal({ year: 1920 }, circa_year.send(:publication_date_parts))
+    assert_equal({ year: 1919, mon: 12, mday: 14 }, full_date.send(:publication_date_parts))
+    assert_equal({}, undated.send(:publication_date_parts))
+
+    assert_equal 1978, plain_year.publication_year_value
+    assert_equal 1920, circa_year.publication_year_value
+    assert_equal [0, 1978, 0, 0, "1978", plain_year.id], plain_year.publication_sort_key
+  end
+
   test "illustrator cover carousel entries prefer relevant cover art and cap at five" do
     illustrator = Illustrator.create!(name: "Carousel Illustrator")
     novel = Novel.create!(name: "Illustrator Cover Novel")

@@ -100,13 +100,25 @@
   margin: 0 0 1.15rem;
 }
 
+.illustration-page .record-figure {
+  display: flex;
+}
+
 .illustration-lightbox {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  flex: 1 1 auto;
   margin: 0;
+  min-height: 100%;
 }
 
 .illustration-lightbox-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: zoom-in;
+  min-height: 0;
 }
 
 .illustration-lightbox-link img {
@@ -114,7 +126,8 @@
 }
 
 .illustration-original-link {
-  margin-top: 0.9rem;
+  margin-top: 0;
+  align-self: end;
   text-align: right;
 }
 

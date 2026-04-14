@@ -151,7 +151,7 @@
     <% end %>
 
     <div class="record-back-link">
-      <%= link_to safe_join([content_tag(:span, safe_join(["Back to".html_safe, "&nbsp;".html_safe]), class: "record-back-label"), work_title(@illustration.novel.name)]), novel_path(@illustration.novel, anchor: "illustration-archive"), class: "ui-button ui-button--secondary" %>
+      <%= link_to safe_join([content_tag(:span, "Back to", class: "record-back-label"), work_title(@illustration.novel.name)]), novel_path(@illustration.novel, anchor: "illustration-archive"), class: "ui-button ui-button--secondary" %>
     </div>
   </div>
 </div>

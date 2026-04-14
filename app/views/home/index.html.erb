@@ -54,7 +54,7 @@
       <article class="surface-panel home-guide-card home-guide-card--archive">
         <p class="page-eyebrow">What is Visual Haggard?</p>
         <h2>Read H. Rider Haggard through images</h2>
-        <p>Visual Haggard is a digital archive of the illustrations that accompanied the fiction of H. Rider Haggard (1856–1925). Across roughly fifty novels, Haggard's texts were lavishly illustrated—often repeatedly, in different editions and by different artists. Illustration was central to the way readers encountered these romances in the nineteenth century, and this archive works to restore that visual dimension for contemporary audiences.</p>
+        <p>Visual Haggard archives illustrations created to accompany the fictions of H. Rider Haggard (1856–1925). Across roughly fifty novels, Haggard's texts were lavishly illustrated, often repeatedly in different editions and by different artists. Illustration has always been central to the way readers encountered Haggard's texts, and this digital archive works to enhance that visual dimension for contemporary audiences.</p>
       </article>
 
       <aside class="home-highlight-card">
@@ -160,10 +160,13 @@
           </div>
 
           <p class="home-section-intro">
-            This archive makes stylistic contrast visible at a glance. <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> brings a lush Pre-Raphaelite sensibility to his illustrations. His romantic figures, theatrical compositions, and richly atmospheric palette give many of Haggard's most famous novels their visual identity. <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %> works at the opposite extreme, stripping scenes down to stark black-and-white symbolist abstraction. Together they show how wide the range of Haggard illustration actually was.
-          </p>
+            Visual Haggard highlights the range of styles that made the late Victorian era such a rich moment in visual culture.
+          </p>  
+          <p class="home-section-intro">  
+            By enabling visitors to view artworks side-by-side, the archive underscores the range of 19th and 20th century illustration. For instance, <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> brings a Pre-Raphaelite sensibility to his illustrations using romantic figures and an atmospheric palette, in contrat with <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %>, who strips scenes down to stark black-and-white symbolist abstraction.
+           </p> 
           <p class="home-section-intro">            
-            Visual Haggard also makes it possible to compare how different artists interpreted the same story. <%= @style_novel.present? ? linked_novel_title(@style_novel) : work_title("King Solomon's Mines") %> alone has been illustrated by eleven different hands—from Victorian wood-engravers to mid-century paperback painters—each reimagining Haggard's Africa using a distinct visual language.
+            The archive also makes it possible to compare how different artists interpreted the same story. <%= @style_novel.present? ? linked_novel_title(@style_novel) : work_title("King Solomon's Mines") %> alone has been illustrated by eleven different hands—from Victorian wood-engravers to mid-century paperback painters—each reimagining Haggard's Africa using a distinct visual language.
           </p>
         </div>
 
@@ -194,16 +197,15 @@
         <div class="section-heading">
           <div>
             <p class="page-eyebrow">Edition timeline</p>
-            <h2>Trace the archive's publication history</h2>
+            <h2>Trace the publication history of Haggard's illustrated fictions</h2>
           </div>
         </div>
 
         <p class="home-section-intro">
-          Scroll through the timeline to trace Haggard's publishing history, from the earliest editions in the archive to late twentieth-century revivals. Each marker links directly to an edition record.
+          Scroll through the timeline to follow Haggard's publishing history, from the earliest editions in the archive to late 20th century revivals. Each marker links directly to an edition record in the archive. Undated editions omitted.
         </p>
 
         <div class="home-timeline-toolbar">
-          <p class="home-timeline-caption">Every dated edition in the archive, grouped by year.</p>
           <div class="home-timeline-controls">
             <button type="button" class="home-timeline-arrow" data-action="timeline-scroller#previous" aria-label="Scroll timeline backward">
               <span aria-hidden="true">&larr;</span>
@@ -251,10 +253,7 @@
 
       <div class="home-periodical-copy">
         <p>
-          Visual Haggard treats periodicals as central, not peripheral. Illustrations circulated through newspapers and journals as powerful commercial and aesthetic objects, yet serial publications were printed on cheap paper, scattered across local collections, and survive far less reliably than bound books.
-        </p>
-        <p>
-          Even when surviving scans are imperfect, these fragile serial appearances can matter more than later book editions — they are harder to locate, easier to lose, and often preserve illustrations that no bound volume reproduces. The archive treats them as essential evidence, not incidental supplements.        
+          Illustrations circulated through the periodical press are powerful commercial and aesthetic objects, yet they survive far less reliably than bound books. Serial publications were intended to be ephemeral. Many were printed on cheap paper and the illustrations commissioned for them appeared only regionally, making them difficult for contemporary archivists to locate. Visual Haggard collects and reproduces as many of these fragile images as possible.
         </p>
       </div>
 
@@ -285,7 +284,7 @@
       </div>
 
       <p class="home-section-intro">
-        The archive tracks Haggard well beyond Victorian book illustration. Later speculative-fiction publishers and paperback houses recast these romances through saturated cover design, cinematic composition, and bold fantasy branding      
+        The archive tracks Haggard well beyond Victorian book illustration. Later speculative-fiction publishers and paperback houses recast these romances through saturated cover design, cinematic composition, and bold fantasy branding.      
       </p>
 
       <div class="home-paperback-grid">
@@ -304,6 +303,9 @@
                   <h3><%= illustrator.name %></h3>
                   <p class="home-paperback-meta"><%= representative_edition.display_title %></p>
                   <p class="home-paperback-submeta"><%= work_title(representative_edition.novel.name) %></p>
+                  <% if representative_edition.publication_citation.present? %>
+                    <p class="home-paperback-citation"><%= representative_edition.publication_citation %></p>
+                  <% end %>
                 </div>
               <% end %>
             <% else %>

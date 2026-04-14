@@ -3,6 +3,7 @@ class Edition < ApplicationRecord
   include SafeUrlFields
 
   LEGACY_S3_ROOT = "https://s3-us-west-2.amazonaws.com/haggard".freeze
+  UNKNOWN_PUBLICATION_DATES = ["Unknown", "None", "NA", "N/A", "n. d.", "n.d."].freeze
   TEST_PLACEHOLDER_NAME = "Illustrator Edition".freeze
   GENERATED_PLACEHOLDER_NAME = "First Edition".freeze
   STRING_MAXIMUM = 255
@@ -218,7 +219,19 @@ class Edition < ApplicationRecord
   def publication_date_parts
     @publication_date_parts ||= begin
       raw_value = publication_date.to_s.strip
-      raw_value.present? ? Date._parse(raw_value, false).slice(:year, :mon, :mday) : {}
+      if raw_value.blank? || UNKNOWN_PUBLICATION_DATES.any? { |value| raw_value.casecmp?(value) }
+        {}
+      else
+        normalized_value = raw_value.sub(/\A(?:circa|c)\.?\s*/i, "").strip
+        parsed_parts = Date._parse(normalized_value, false)
+
+        parsed_year = parsed_parts[:year]
+        year = parsed_year || extract_publication_year(normalized_value)
+        month = parsed_year ? normalize_publication_part(parsed_parts[:mon], 1..12) : nil
+        day = parsed_year ? normalize_publication_part(parsed_parts[:mday], 1..31) : nil
+
+        { year:, mon: month, mday: day }.compact
+      end
     rescue ArgumentError
       {}
     end
@@ -255,5 +268,16 @@ class Edition < ApplicationRecord
 
   def absolute_cover_reference?(value)
     value.to_s.match?(%r{\Ahttps?://}i)
+  end
+
+  def extract_publication_year(value)
+    value.to_s[/\b(1\d{3}|20\d{2})\b/, 1]&.to_i
+  end
+
+  def normalize_publication_part(value, range)
+    integer_value = value.to_i
+    return unless integer_value.in?(range)
+
+    integer_value
   end
 end

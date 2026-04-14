@@ -456,6 +456,20 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     )
   end
 
+  test "homepage timeline includes year-only and circa-dated editions" do
+    novel = Novel.create!(name: "Timeline Visibility Novel")
+    plain_year = novel.editions.create!(name: "Year-only Edition", publication_date: "1978")
+    circa_year = novel.editions.create!(name: "Circa Edition", publication_date: "c. 1978")
+
+    get root_path
+
+    assert_response :success
+    assert_select ".home-timeline-year-label", text: "1978", count: 1
+    assert_select ".home-timeline-year-count", text: "2 editions", count: 1
+    assert_select %(a.home-timeline-marker[href="#{edition_path(plain_year)}"]), count: 1
+    assert_select %(a.home-timeline-marker[href="#{edition_path(circa_year)}"]), count: 1
+  end
+
   test "public pages expose skip link, primary navigation, and labeled search" do
     13.times do |record_index|
       Novel.create!(name: "Paginated Novel #{record_index}")
