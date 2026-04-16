@@ -16,11 +16,10 @@
 <div
   class="edition-page"
   data-pagefind-body
-  <% if @edition.illustrations.size > 12 %>
-    data-controller="back-to-top"
-    data-back-to-top-minimum-items-value="12"
-    data-back-to-top-row-threshold-value="4"
-  <% end %>
+  data-controller="back-to-top"
+  data-back-to-top-minimum-items-value="12"
+  data-back-to-top-row-threshold-value="4"
+  data-back-to-top-scroll-threshold-value="720"
 >
   <%= pagefind_record_data(
     filters: { record_type: "edition" },
@@ -133,16 +132,14 @@
       <%= link_to safe_join([content_tag(:span, "Back to", class: "record-back-label"), work_title(@edition.novel.name)]), novel_path(@edition.novel, anchor: "edition-archive"), class: "ui-button ui-button--secondary" %>
     </div>
 
-    <% if @edition.illustrations.size > 12 %>
-      <button
-        type="button"
-        class="ui-button ui-button--secondary back-to-top-button"
-        data-back-to-top-target="button"
-        data-action="back-to-top#scroll"
-        hidden
-      >
-        Back to top
-      </button>
-    <% end %>
+    <button
+      type="button"
+      class="ui-button ui-button--secondary back-to-top-button"
+      data-back-to-top-target="button"
+      data-action="back-to-top#scroll"
+      hidden
+    >
+      Back to top
+    </button>
   </div>
 </div>

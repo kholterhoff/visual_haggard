@@ -163,7 +163,7 @@
             Visual Haggard highlights the range of styles that made the late Victorian era such a rich moment in visual culture.
           </p>  
           <p class="home-section-intro">  
-            By enabling visitors to view artworks side-by-side, the archive underscores the range of 19th and 20th century illustration. For instance, <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> brings a Pre-Raphaelite sensibility to his illustrations using romantic figures and an atmospheric palette, in contrat with <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %>, who strips scenes down to stark black-and-white symbolist abstraction.
+            By enabling visitors to view artworks side-by-side, the archive underscores the variety of 19th and 20th century illustration. For instance, <%= greiffenhagen.present? ? link_to("Maurice Greiffenhagen", illustrator_path(greiffenhagen)) : "Maurice Greiffenhagen" %> brings a Pre-Raphaelite sensibility to his illustrations using romantic figures and an atmospheric palette, in contrat with <%= horton.present? ? link_to("W.T. Horton", illustrator_path(horton)) : "W.T. Horton" %>, who strips scenes down to stark black-and-white symbolist abstraction.
            </p> 
           <p class="home-section-intro">            
             The archive also makes it possible to compare how different artists interpreted the same story. <%= @style_novel.present? ? linked_novel_title(@style_novel) : work_title("King Solomon's Mines") %> alone has been illustrated by eleven different hands—from Victorian wood-engravers to mid-century paperback painters—each reimagining Haggard's Africa using a distinct visual language.
@@ -261,15 +261,19 @@
         <% @periodical_examples.each do |example| %>
           <% example_image = image_tag example[:image_source], alt: example[:title], class: "home-periodical-image", loading: "lazy", decoding: "async" %>
           <article class="surface-panel home-periodical-card">
-            <%= link_to example_image, example[:path], class: "home-periodical-image-link" %>
-            <div class="home-periodical-card-copy">
-              <p class="home-style-kicker"><%= example[:label] %></p>
-              <h3><%= linked_work_title(example[:title], example[:path]) %></h3>
-              <p class="home-periodical-meta"><%= work_title(example[:subtitle]) %></p>
-              <% if example[:detail].present? %>
-                <p class="home-periodical-detail"><%= example[:detail] %></p>
-              <% end %>
-            </div>
+            <%= link_to example[:path], class: "home-periodical-card-link" do %>
+              <span class="home-periodical-image-link">
+                <%= example_image %>
+              </span>
+              <div class="home-periodical-card-copy">
+                <p class="home-style-kicker"><%= example[:label] %></p>
+                <h3><%= work_title(example[:title]) %></h3>
+                <p class="home-periodical-meta"><%= work_title(example[:subtitle]) %></p>
+                <% if example[:detail].present? %>
+                  <p class="home-periodical-detail"><%= example[:detail] %></p>
+                <% end %>
+              </div>
+            <% end %>
           </article>
         <% end %>
       </div>

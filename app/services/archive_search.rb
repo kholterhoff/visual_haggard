@@ -14,7 +14,7 @@ class ArchiveSearch
   end
 
   def any_results?
-    illustration_count.positive? || novel_count.positive? || edition_count.positive? || illustrator_count.positive?
+    illustration_count.positive? || novel_count.positive? || illustrator_count.positive?
   end
 
   def matching_tags

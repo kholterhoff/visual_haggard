@@ -5,14 +5,15 @@ export default class extends Controller {
   static values = {
     minimumItems: { type: Number, default: 12 },
     rowThreshold: { type: Number, default: 4 },
-    offset: { type: Number, default: 112 }
+    offset: { type: Number, default: 112 },
+    scrollThreshold: Number
   }
 
   connect() {
     this.updateVisibility = this.updateVisibility.bind(this)
     this.onScroll = this.onScroll.bind(this)
 
-    if (!this.shouldEnable()) {
+    if (!this.shouldObserve()) {
       this.hide()
       return
     }
@@ -25,6 +26,11 @@ export default class extends Controller {
   disconnect() {
     window.removeEventListener("scroll", this.onScroll)
     window.removeEventListener("resize", this.updateVisibility)
+
+    if (this.raf) {
+      window.cancelAnimationFrame(this.raf)
+      this.raf = null
+    }
   }
 
   scroll() {
@@ -48,23 +54,35 @@ export default class extends Controller {
   }
 
   updateVisibility() {
-    if (!this.shouldEnable()) {
+    if (!this.shouldObserve()) {
       this.hide()
       return
     }
 
-    const thresholdItem = this.thresholdItem()
-    if (!thresholdItem) {
-      this.hide()
-      return
+    let shouldShow = false
+
+    if (this.shouldUseItemThreshold()) {
+      const thresholdItem = this.thresholdItem()
+
+      if (!thresholdItem) {
+        this.hide()
+        return
+      }
+
+      shouldShow = thresholdItem.getBoundingClientRect().top <= this.offsetValue
+    } else if (this.hasScrollThresholdValue) {
+      shouldShow = window.scrollY >= this.scrollThresholdValue
     }
 
-    const shouldShow = thresholdItem.getBoundingClientRect().top <= this.offsetValue
     this.buttonTarget.classList.toggle("is-visible", shouldShow)
     this.buttonTarget.hidden = !shouldShow
   }
 
-  shouldEnable() {
+  shouldObserve() {
+    return this.hasButtonTarget && (this.shouldUseItemThreshold() || this.hasScrollThresholdValue)
+  }
+
+  shouldUseItemThreshold() {
     return this.hasButtonTarget && this.itemTargets.length > this.minimumItemsValue
   }
 

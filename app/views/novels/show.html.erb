@@ -32,11 +32,10 @@
 <div
   class="novel-page"
   data-pagefind-body
-  <% if all_illustrations.size > 12 %>
-    data-controller="back-to-top"
-    data-back-to-top-minimum-items-value="12"
-    data-back-to-top-row-threshold-value="4"
-  <% end %>
+  data-controller="back-to-top"
+  data-back-to-top-minimum-items-value="12"
+  data-back-to-top-row-threshold-value="4"
+  data-back-to-top-scroll-threshold-value="720"
 >
   <%= pagefind_record_data(
     filters: { record_type: "novel" },
@@ -45,7 +44,8 @@
       title: @novel.name,
       novel_name: @novel.name,
       image: public_asset_url(hero_cover_source),
-      summary: plain_text_excerpt(@novel.description, length: 220)
+      summary: plain_text_excerpt(@novel.description, length: 220),
+      summary_html: search_excerpt_html(@novel.description, length: 220)
     },
     body: [@novel.description, @novel.tag_list.join(" ")]
   ) %>
@@ -214,16 +214,14 @@
       <%= link_to "Back to novels", novels_path, class: "ui-button ui-button--secondary" %>
     </div>
 
-    <% if all_illustrations.size > 12 %>
-      <button
-        type="button"
-        class="ui-button ui-button--secondary back-to-top-button"
-        data-back-to-top-target="button"
-        data-action="back-to-top#scroll"
-        hidden
-      >
-        Back to top
-      </button>
-    <% end %>
+    <button
+      type="button"
+      class="ui-button ui-button--secondary back-to-top-button"
+      data-back-to-top-target="button"
+      data-action="back-to-top#scroll"
+      hidden
+    >
+      Back to top
+    </button>
   </div>
 </div>

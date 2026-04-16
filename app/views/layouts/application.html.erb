@@ -12,6 +12,20 @@
     <%= tag.link rel: "alternate icon", type: "image/x-icon", href: "/favicon.ico?v=#{favicon_version}" %>
     <%= tag.link rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png?v=#{favicon_version}" %>
 
+    <%= javascript_tag nonce: true do %>
+      (function() {
+        var storageKey = "visual-haggard-theme";
+
+        try {
+          var theme = window.localStorage.getItem(storageKey);
+
+          if (theme === "light" || theme === "dark") {
+            document.documentElement.dataset.theme = theme;
+          }
+        } catch (_error) {}
+      })();
+    <% end %>
+
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css", "data-turbo-track": "reload" %>
     <%= yield :head if content_for?(:head) %>
@@ -31,22 +45,47 @@
             <span class="site-brand-name">Visual Haggard</span>
           <% end %>
 
-          <button
-            type="button"
-            class="site-menu-toggle"
-            aria-label="Toggle navigation"
-            aria-expanded="false"
-            aria-controls="site-header-controls"
-            data-mobile-nav-target="button"
-            data-action="mobile-nav#toggle"
-          >
-            <span class="sr-only">Toggle navigation</span>
-            <span class="site-menu-toggle-lines" aria-hidden="true">
-              <span class="site-menu-toggle-line"></span>
-              <span class="site-menu-toggle-line"></span>
-              <span class="site-menu-toggle-line"></span>
-            </span>
-          </button>
+          <div class="site-header-tools">
+            <button
+              type="button"
+              class="site-theme-toggle"
+              aria-label="Switch to dark mode"
+              aria-pressed="false"
+              title="Switch to dark mode"
+              data-controller="theme-toggle"
+              data-action="theme-toggle#toggle"
+            >
+              <span class="sr-only">Toggle light and dark mode</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3V2" />
+                <path d="M17.66 6.34L18.36 5.64" />
+                <path d="M20 12H21" />
+                <path d="M17.66 17.66L18.36 18.36" />
+                <path d="M6.34 17.66L5.64 18.36" />
+                <path d="M3 12H2" />
+                <path d="M6.34 6.34L5.64 5.64" />
+                <path d="M8.35 14.85C7.48 14.08 7 13.02 7 11.83C7 9.16 9.16 7 11.83 7C14.5 7 16.66 9.16 16.66 11.83C16.66 13.02 16.18 14.08 15.31 14.85C14.61 15.46 14.15 16.28 14 17.17H9.66C9.51 16.28 9.05 15.46 8.35 14.85Z" />
+                <path d="M9.5 20H14.16" />
+              </svg>
+            </button>
+
+            <button
+              type="button"
+              class="site-menu-toggle"
+              aria-label="Toggle navigation"
+              aria-expanded="false"
+              aria-controls="site-header-controls"
+              data-mobile-nav-target="button"
+              data-action="mobile-nav#toggle"
+            >
+              <span class="sr-only">Toggle navigation</span>
+              <span class="site-menu-toggle-lines" aria-hidden="true">
+                <span class="site-menu-toggle-line"></span>
+                <span class="site-menu-toggle-line"></span>
+                <span class="site-menu-toggle-line"></span>
+              </span>
+            </button>
+          </div>
 
           <div class="site-header-controls" id="site-header-controls" data-mobile-nav-target="panel">
             <nav class="site-nav" aria-label="Primary">

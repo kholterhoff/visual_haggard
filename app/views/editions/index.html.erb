@@ -1,4 +1,8 @@
-<div class="editions-page">
+<div
+  class="editions-page"
+  data-controller="back-to-top"
+  data-back-to-top-scroll-threshold-value="640"
+>
   <div class="editions-header">
     <h1>Editions</h1>
     <p class="editions-intro">
@@ -42,4 +46,14 @@
       </div>
     <% end %>
   </div>
+
+  <button
+    type="button"
+    class="ui-button ui-button--secondary back-to-top-button"
+    data-back-to-top-target="button"
+    data-action="back-to-top#scroll"
+    hidden
+  >
+    Back to top
+  </button>
 </div>

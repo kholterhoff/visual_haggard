@@ -1,6 +1,10 @@
 <% content_for :title, "Novels" %>
 
-<div class="novels-archive-page">
+<div
+  class="novels-archive-page"
+  data-controller="back-to-top"
+  data-back-to-top-scroll-threshold-value="640"
+>
   <div class="page-shell">
     <section class="page-hero novels-hero">
       <div>
@@ -98,5 +102,15 @@
         <p>No novels found.</p>
       </section>
     <% end %>
+
+    <button
+      type="button"
+      class="ui-button ui-button--secondary back-to-top-button"
+      data-back-to-top-target="button"
+      data-action="back-to-top#scroll"
+      hidden
+    >
+      Back to top
+    </button>
   </div>
 </div>

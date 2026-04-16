@@ -78,17 +78,13 @@
         </button>
       </div>
 
-      <div class="illustration-compare-dialog-grid" data-controller="photoswipe">
+      <div class="illustration-compare-dialog-grid">
         <% compare_illustrations.each do |illustration| %>
           <% image_source = illustration.display_image_source(style: :original) %>
-          <article class="illustration-compare-card">
+          <%= link_to illustration_path(illustration), class: "illustration-compare-card illustration-compare-card--linked" do %>
             <div class="illustration-compare-card-media">
               <% if image_source.present? %>
-                <%= zoomable_image_link image_source,
-                  alt: illustration.name,
-                  link_options: { class: "illustration-compare-card-image-link" } do %>
-                  <%= image_tag image_source, alt: illustration.name, loading: "lazy", decoding: "async" %>
-                <% end %>
+                <%= image_tag image_source, alt: illustration.name, loading: "lazy", decoding: "async" %>
               <% else %>
                 <div class="illustration-compare-card-placeholder">No image</div>
               <% end %>
@@ -101,15 +97,15 @@
 
               <p class="illustration-card-kicker"><%= kicker %></p>
               <h3>
-                <%= link_to illustration.name, illustration_path(illustration), class: "illustration-compare-card-title" %>
+                <span class="illustration-compare-card-title"><%= illustration.name.presence || "Untitled illustration" %></span>
               </h3>
               <p class="illustration-card-meta"><%= illustration.edition.display_title %></p>
-              <p class="illustration-card-meta"><%= illustration.novel.name %></p>
+              <p class="illustration-card-meta"><%= work_title(illustration.novel.name) %></p>
               <% if illustration.page_number.present? %>
                 <p class="illustration-card-meta">Page <%= illustration.page_number %></p>
               <% end %>
             </div>
-          </article>
+          <% end %>
         <% end %>
       </div>
     </div>

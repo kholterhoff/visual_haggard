@@ -146,6 +146,10 @@
   font-weight: normal;
 }
 
+.illustrator-grid-image-link {
+  font-weight: normal;
+}
+
 .illustrator-grid-image-link:hover,
 .illustrator-work-link:hover {
   color: inherit;

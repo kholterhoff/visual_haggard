@@ -68,17 +68,23 @@ class Illustrator < ApplicationRecord
   end
 
   def cover_carousel_entries(style: :original, limit: 5)
-    prioritize_preferred_carousel_editions(editions_for_cover_carousel(style:))
-      .first(limit)
-      .map do |entry|
-        edition = entry[:edition]
-        {
-          illustration: entry[:illustration],
-          edition:,
-          novel: edition.novel,
-          source: entry[:source]
-        }
-      end
+    normalize_carousel_entries(
+      prioritize_preferred_carousel_editions(editions_for_cover_carousel(style:)),
+      limit:
+    )
+  end
+
+  def showcase_carousel_entries(style: :original, limit: 5)
+    cover_entries = cover_carousel_entries(style:, limit:)
+    return cover_entries if cover_entries.any?
+
+    edition_cover_entries = normalize_carousel_entries(
+      prioritize_preferred_carousel_editions(editions_for_edition_cover_fallback(style:)),
+      limit:
+    )
+    return edition_cover_entries if edition_cover_entries.any?
+
+    normalize_carousel_entries(illustrations_for_carousel_fallback(style:), limit:)
   end
 
   def directory_last_name
@@ -170,7 +176,68 @@ class Illustrator < ApplicationRecord
           edition:,
           illustration: cover_illustration,
           source: cover_source,
+          entry_type: :cover,
           priority: cover_carousel_priority_for(edition, illustrations, cover_illustration, style:),
+          supporting_illustration_count: supporting_illustration_count_for_carousel(illustrations, style:)
+        }
+      end
+      .sort_by do |entry|
+        [
+          entry[:priority],
+          -entry[:supporting_illustration_count],
+          entry[:edition].publication_sort_key,
+          entry[:edition].id,
+          entry[:illustration].id
+        ]
+      end
+  end
+
+  def editions_for_edition_cover_fallback(style:)
+    illustrations_grouped_by_edition
+      .filter_map do |edition, illustrations|
+        next if periodical_edition_for_carousel?(edition)
+
+        representative_illustration = representative_illustration_for_carousel_fallback(illustrations, style:)
+        next if representative_illustration.blank?
+
+        cover_source = representative_cover_source_for(edition, style:)
+        next if cover_source.blank?
+
+        {
+          edition:,
+          illustration: representative_illustration,
+          source: cover_source,
+          entry_type: :edition_cover,
+          priority: edition_title_priority_for_carousel(edition),
+          supporting_illustration_count: supporting_illustration_count_for_carousel(illustrations, style:)
+        }
+      end
+      .sort_by do |entry|
+        [
+          entry[:priority],
+          -entry[:supporting_illustration_count],
+          entry[:edition].publication_sort_key,
+          entry[:edition].id,
+          entry[:illustration].id
+        ]
+      end
+  end
+
+  def illustrations_for_carousel_fallback(style:)
+    illustrations_grouped_by_edition
+      .filter_map do |edition, illustrations|
+        representative_illustration = representative_illustration_for_carousel_fallback(illustrations, style:)
+        next if representative_illustration.blank?
+
+        source = representative_image_source_for(representative_illustration, style:)
+        next if source.blank?
+
+        {
+          edition:,
+          illustration: representative_illustration,
+          source: source,
+          entry_type: :illustration,
+          priority: illustration_fallback_priority(representative_illustration),
           supporting_illustration_count: supporting_illustration_count_for_carousel(illustrations, style:)
         }
       end
@@ -267,6 +334,19 @@ class Illustrator < ApplicationRecord
     supporting_illustrations_for_carousel(illustrations, style:).size
   end
 
+  def representative_illustration_for_carousel_fallback(illustrations, style:)
+    supporting_illustrations_for_carousel(illustrations, style:)
+      .min_by { |illustration| [illustration_fallback_priority(illustration), illustration.id] }
+  end
+
+  def illustration_fallback_priority(illustration)
+    page_marker = illustration.page_number.to_s
+    return 0 if page_marker.match?(/frontispiece/i)
+    return 1 if illustration.cover_related?
+
+    2
+  end
+
   def cover_carousel_priority_for(edition, illustrations, cover_illustration, style:)
     return 0 if matches_edition_cover?(cover_illustration, style:) || cover_illustration.cover_related?
     return 1 + edition_title_priority_for_carousel(edition) if edition_cover_fallback_for_carousel?(edition, illustrations, style:)
@@ -314,5 +394,20 @@ class Illustrator < ApplicationRecord
     end
 
     edition.resolved_cover_url(style:)
+  end
+
+  def normalize_carousel_entries(entries, limit:)
+    entries
+      .first(limit)
+      .map do |entry|
+        edition = entry[:edition]
+        {
+          illustration: entry[:illustration],
+          edition:,
+          novel: edition.novel,
+          source: entry[:source],
+          entry_type: entry[:entry_type] || :cover
+        }
+      end
   end
 end

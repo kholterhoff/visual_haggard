@@ -23,6 +23,115 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select %(a[href="#{illustration_path(illustration)}"])
   end
 
+  test "search fallback preserves italicized titles in novel excerpts" do
+    novel = Novel.create!(
+      name: "Excerpt Formatting Novel",
+      description: <<~HTML
+        <cite class="work-title">Excerpt Formatting Novel</cite> continues the Allan Quatermain cycle alongside <cite class="work-title">Marie</cite> and <cite class="work-title">Finished</cite>.
+      HTML
+    )
+    novel.editions.create!(name: "Excerpt Edition")
+
+    get search_path, params: { search: "cycle" }
+
+    assert_response :success
+    assert_select %(a.search-card[href="#{novel_path(novel)}"] .search-card-excerpt cite.work-title), text: "Excerpt Formatting Novel"
+    assert_select %(a.search-card[href="#{novel_path(novel)}"] .search-card-excerpt cite.work-title), text: "Marie"
+    assert_select %(a.search-card[href="#{novel_path(novel)}"] .search-card-excerpt cite.work-title), text: "Finished"
+  end
+
+  test "search shows only illustration novel and illustrator result groups" do
+    novel = Novel.create!(name: "Elephant Novel", description: "An elephant story from the archive.")
+    edition = novel.editions.create!(name: "Elephant Edition", publisher: "Elephant Press")
+    illustrator = Illustrator.create!(name: "Elephant Artist", bio: "An illustrator known for elephant studies.")
+    edition.illustrations.create!(
+      name: "Elephant plate",
+      illustrator: illustrator,
+      image_url: "https://example.com/elephant-plate.jpg",
+      description: "An elephant crossing a river."
+    )
+
+    get search_path, params: { search: "elephant" }
+
+    assert_response :success
+    assert_select ".search-summary", count: 0
+    assert_select "#search-editions", count: 0
+    assert_select "#pagefind-search-editions", count: 0
+    assert_select ".search-hero-panel h2", text: "elephant"
+    assert_select ".search-hero-panel p", text: /Move directly to the type of text/
+    assert_select %(.search-hero-panel a.meta-chip[href="#search-illustrations"])
+    assert_select %(.search-hero-panel a.meta-chip[href="#search-novels"])
+    assert_select %(.search-hero-panel a.meta-chip[href="#search-illustrators"])
+    assert_select %(.search-hero-panel a.meta-chip[href="#search-editions"]), count: 0
+    assert_select "#search-illustrators .search-card-grid.search-card-grid--illustrators"
+    assert_select %(#search-illustrators a.search-card.search-card--illustrator[href="#{illustrator_path(illustrator)}"])
+    assert_select "#search-illustrators .search-list-item", count: 0
+  end
+
+  test "illustration search results default to novel tabs when multiple groupings are available" do
+    first_novel = Novel.create!(name: "First Elephant Novel", description: "An elephant adventure.")
+    first_edition = first_novel.editions.create!(name: "First Elephant Edition")
+    first_illustrator = Illustrator.create!(name: "Alice Elephant")
+    first_edition.illustrations.create!(
+      name: "First elephant scene",
+      illustrator: first_illustrator,
+      image_url: "https://example.com/first-elephant.jpg",
+      description: "An elephant crossing the river."
+    )
+
+    second_novel = Novel.create!(name: "Second Elephant Novel", description: "Another elephant adventure.")
+    second_edition = second_novel.editions.create!(name: "Second Elephant Edition")
+    second_illustrator = Illustrator.create!(name: "Beatrice Elephant")
+    second_edition.illustrations.create!(
+      name: "Second elephant scene",
+      illustrator: second_illustrator,
+      image_url: "https://example.com/second-elephant.jpg",
+      description: "An elephant at the temple gate."
+    )
+
+    get search_path, params: { search: "elephant" }
+
+    assert_response :success
+    assert_select "#search-illustrations button.search-group-tab", text: "By novel"
+    assert_select "#search-illustrations button.search-group-tab", text: "By edition"
+    assert_select "#search-illustrations button.search-group-tab", text: "By illustrator"
+    assert_select "#search-illustrations button.search-group-tab.is-active", text: "By novel"
+    assert_select "#search-illustrations-novel-panel[hidden]", count: 0
+    assert_select "#search-illustrations-edition-panel[hidden]", count: 1
+    assert_select "#search-illustrations-illustrator-panel[hidden]", count: 1
+  end
+
+  test "illustration search hides redundant grouping tabs" do
+    novel = Novel.create!(name: "Single Novel Search", description: "A woman appears in this archive.")
+    first_edition = novel.editions.create!(name: "Single Novel Edition One")
+    second_edition = novel.editions.create!(name: "Single Novel Edition Two")
+    first_illustrator = Illustrator.create!(name: "First Woman Illustrator")
+    second_illustrator = Illustrator.create!(name: "Second Woman Illustrator")
+
+    first_edition.illustrations.create!(
+      name: "Woman scene one",
+      illustrator: first_illustrator,
+      image_url: "https://example.com/woman-scene-one.jpg",
+      description: "A woman at the doorway."
+    )
+    second_edition.illustrations.create!(
+      name: "Woman scene two",
+      illustrator: second_illustrator,
+      image_url: "https://example.com/woman-scene-two.jpg",
+      description: "A woman on the hillside."
+    )
+
+    get search_path, params: { search: "woman" }
+
+    assert_response :success
+    assert_select "#search-illustrations button.search-group-tab", text: "By novel", count: 0
+    assert_select "#search-illustrations button.search-group-tab", text: "By edition"
+    assert_select "#search-illustrations button.search-group-tab", text: "By illustrator"
+    assert_select "#search-illustrations button.search-group-tab.is-active", text: "By edition"
+    assert_select "#search-illustrations-edition-panel[hidden]", count: 0
+    assert_select "#search-illustrations-illustrator-panel[hidden]", count: 1
+  end
+
   test "public record pages expose pagefind metadata for static search" do
     novel = Novel.create!(name: "Pagefind Novel", description: "Novel description", tag_list: "elephant")
     edition = novel.editions.create!(
@@ -262,7 +371,7 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     get illustrator_path(illustrator)
 
     assert_response :success
-    assert_select %(div.record-cover-carousel-rotator[aria-label="Cover and dust jacket carousel for Carousel Illustrator"])
+    assert_select %(div.record-cover-carousel-rotator[aria-label="Illustrated works carousel for Carousel Illustrator"])
     assert_select ".record-cover-slide", count: 2
     assert_select ".record-cover-slide-title", text: "1910 Edition"
     assert_select ".record-cover-slide-title", text: "1911 Edition"
@@ -271,6 +380,27 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select %(a.record-cover-slide-link[href="#{edition_path(second)}"]), count: 1
     assert_select "button.record-cover-carousel-pause", text: "Pause motion"
     assert_select "button.record-cover-carousel-dot", count: 2
+  end
+
+  test "illustrator record falls back to regular illustrations when no covers are available" do
+    illustrator = Illustrator.create!(name: "Fallback Carousel Illustrator")
+    novel = Novel.create!(name: "Fallback Carousel Novel")
+    edition = novel.editions.create!(name: "Fallback Carousel Edition", publication_date: "1912")
+    illustration = edition.illustrations.create!(
+      name: "Fallback scene",
+      illustrator:,
+      page_number: "Frontispiece",
+      image_url: "https://example.com/fallback-scene.jpg"
+    )
+
+    get illustrator_path(illustrator)
+
+    assert_response :success
+    assert_select %(div.record-cover-carousel-rotator[aria-label="Illustrated works carousel for Fallback Carousel Illustrator"])
+    assert_select ".record-cover-slide-title", text: "Fallback scene"
+    assert_select ".record-cover-slide-eyebrow", text: "Frontispiece"
+    assert_select %(a.record-cover-slide-link[href="#{illustration_path(illustration)}"]), count: 1
+    assert_select ".record-cover-carousel-empty", count: 0
   end
 
   test "illustration page lists other variant images when grouped" do
@@ -304,8 +434,8 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select "section.illustration-identical-images .illustration-card-meta", text: "1915 edition"
     assert_select "section.illustration-identical-images .illustration-card", count: 1
     assert_select "section.illustration-identical-images dialog.illustration-compare-dialog", count: 1
-    assert_select %(section.illustration-identical-images dialog a.illustration-compare-card-title[href="#{illustration_path(current)}"]), text: "Current plate"
-    assert_select %(section.illustration-identical-images dialog a.illustration-compare-card-title[href="#{illustration_path(identical)}"]), text: "Second plate"
+    assert_select %(section.illustration-identical-images dialog a.illustration-compare-card--linked[href="#{illustration_path(current)}"] .illustration-compare-card-title), text: "Current plate"
+    assert_select %(section.illustration-identical-images dialog a.illustration-compare-card--linked[href="#{illustration_path(identical)}"] .illustration-compare-card-title), text: "Second plate"
   end
 
   test "illustration page lists other illustrations of this scene" do
@@ -342,9 +472,9 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select "section.illustration-text-moment-group .illustration-card-title-link", text: "Variant plate", count: 0
     assert_operator response.body.index("Other variants in the archive"), :<, response.body.index("Other illustrations of this scene")
     assert_select "section.illustration-text-moment-group dialog.illustration-compare-dialog h2", text: "Compare Illustrations of This Scene"
-    assert_select %(section.illustration-text-moment-group dialog a.illustration-compare-card-title[href="#{illustration_path(current)}"]), text: "Current plate"
-    assert_select %(section.illustration-text-moment-group dialog a.illustration-compare-card-title[href="#{illustration_path(same_moment)}"]), text: "Same scene plate"
-    assert_select %(section.illustration-text-moment-group dialog a.illustration-compare-card-title[href="#{illustration_path(variant)}"]), count: 0
+    assert_select %(section.illustration-text-moment-group dialog a.illustration-compare-card--linked[href="#{illustration_path(current)}"] .illustration-compare-card-title), text: "Current plate"
+    assert_select %(section.illustration-text-moment-group dialog a.illustration-compare-card--linked[href="#{illustration_path(same_moment)}"] .illustration-compare-card-title), text: "Same scene plate"
+    assert_select %(section.illustration-text-moment-group dialog a.illustration-compare-card--linked[href="#{illustration_path(variant)}"] .illustration-compare-card-title), count: 0
   end
 
   test "illustration cards appear only in variants when an illustration is both a variant and the same scene" do

@@ -2,6 +2,8 @@ require "cgi"
 
 module ApplicationHelper
   LEGACY_INTERNAL_HOSTS = %w[visualhaggard.org www.visualhaggard.org].freeze
+  SEARCH_EXCERPT_INLINE_TAGS = %w[cite em i strong b].freeze
+  SEARCH_EXCERPT_BLOCK_TAGS = %w[p br ul ol li blockquote h2 h3 h4 div].freeze
 
   def primary_nav_link_to(name, path, **options)
     current = current_page?(path)
@@ -24,10 +26,34 @@ module ApplicationHelper
   def plain_text_excerpt(content, length: 180)
     return if content.blank?
 
-    text = strip_tags(content.to_s).squish
+    text = Nokogiri::HTML::DocumentFragment.parse(CGI.unescapeHTML(content.to_s)).text.squish
     return if text.blank?
 
-    truncate(text, length:)
+    truncate(text, length:, escape: false)
+  end
+
+  def search_excerpt_html(content, length: 180)
+    return if content.blank?
+
+    fragment = Nokogiri::HTML::DocumentFragment.parse(normalize_legacy_rich_text(content))
+    excerpt = Nokogiri::HTML::DocumentFragment.parse("")
+    state = {
+      remaining: length,
+      started: false,
+      last_space: true,
+      truncated: false
+    }
+
+    fragment.children.each do |node|
+      append_search_excerpt_node(node, excerpt, state)
+      break if state[:remaining] <= 0
+    end
+
+    trim_trailing_search_excerpt_whitespace(excerpt)
+    return if excerpt.children.empty?
+
+    excerpt.add_child(Nokogiri::XML::Text.new("...", excerpt.document)) if state[:truncated]
+    excerpt.to_html.html_safe
   end
 
   def rewrite_legacy_internal_urls(html)
@@ -83,7 +109,7 @@ module ApplicationHelper
     end
 
     Array(body).flatten.each do |value|
-      normalized = normalize_pagefind_value(value)
+      normalized = normalize_pagefind_body(value)
       next if normalized.blank?
 
       fragments << content_tag(:span, normalized, class: "sr-only")
@@ -250,7 +276,100 @@ module ApplicationHelper
   end
 
   def normalize_pagefind_value(value)
-    Array(value).flatten.compact.map(&:to_s).join(" ").squish.presence
+    Array(value).flatten.compact.map { |entry| CGI.unescapeHTML(entry.to_s) }.join(" ").squish.presence
+  end
+
+  def normalize_pagefind_body(value)
+    normalized = normalize_pagefind_value(value)
+    return if normalized.blank?
+
+    Nokogiri::HTML::DocumentFragment.parse(normalized).text.squish.presence
+  end
+
+  def append_search_excerpt_node(node, parent, state)
+    return if state[:remaining] <= 0
+
+    if node.text?
+      append_search_excerpt_text(node.text, parent, state)
+      return
+    end
+
+    return unless node.element?
+
+    if search_excerpt_block_tag?(node.name) && state[:started]
+      append_search_excerpt_text(" ", parent, state)
+    end
+
+    if search_excerpt_inline_tag?(node.name)
+      child = Nokogiri::XML::Node.new(node.name, parent.document)
+      if node.name == "cite"
+        child["class"] = "work-title"
+      end
+
+      node.children.each do |nested|
+        append_search_excerpt_node(nested, child, state)
+        break if state[:remaining] <= 0
+      end
+
+      trim_trailing_search_excerpt_whitespace(child)
+      parent.add_child(child) if child.children.any?
+    else
+      node.children.each do |nested|
+        append_search_excerpt_node(nested, parent, state)
+        break if state[:remaining] <= 0
+      end
+    end
+
+    if search_excerpt_block_tag?(node.name) && state[:started]
+      append_search_excerpt_text(" ", parent, state)
+    end
+  end
+
+  def append_search_excerpt_text(text, parent, state)
+    normalized = text.to_s.gsub(/\s+/, " ")
+    normalized = normalized.lstrip if state[:last_space]
+    return if normalized.blank?
+
+    excerpt = if normalized.length > state[:remaining]
+      state[:truncated] = true
+      search_excerpt_boundary(normalized, state[:remaining])
+    else
+      normalized
+    end
+
+    excerpt = excerpt.rstrip if state[:truncated]
+    return if excerpt.blank?
+
+    parent.add_child(Nokogiri::XML::Text.new(excerpt, parent.document))
+    state[:remaining] -= excerpt.length
+    state[:started] = true
+    state[:last_space] = excerpt.end_with?(" ")
+  end
+
+  def search_excerpt_boundary(text, remaining)
+    return text if text.length <= remaining
+    return text[0, remaining] if remaining <= 12
+
+    boundary = text.rindex(" ", remaining)
+    boundary = nil if boundary.to_i < (remaining * 0.55)
+
+    (boundary ? text[0...boundary] : text[0, remaining]).to_s
+  end
+
+  def search_excerpt_inline_tag?(name)
+    SEARCH_EXCERPT_INLINE_TAGS.include?(name.to_s.downcase)
+  end
+
+  def search_excerpt_block_tag?(name)
+    SEARCH_EXCERPT_BLOCK_TAGS.include?(name.to_s.downcase)
+  end
+
+  def trim_trailing_search_excerpt_whitespace(fragment)
+    last_text_node = fragment.children.reverse.find(&:text?)
+    return unless last_text_node
+
+    last_text_node.content = last_text_node.text.rstrip
+    last_text_node.remove if last_text_node.text.empty?
   end
 
   def to_relative_url(value)

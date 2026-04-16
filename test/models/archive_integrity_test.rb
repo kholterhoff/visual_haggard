@@ -131,6 +131,60 @@ class ArchiveIntegrityTest < ActiveSupport::TestCase
     assert_empty entries
   end
 
+  test "illustrator showcase carousel falls back to book edition covers when no cover art is identified" do
+    illustrator = Illustrator.create!(name: "Edition Fallback Illustrator")
+    novel = Novel.create!(name: "Edition Fallback Novel")
+    edition = novel.editions.create!(
+      name: "Authorized Edition",
+      publication_date: "1911",
+      cover_url: "https://example.com/authorized-cover.jpg"
+    )
+    illustration = edition.illustrations.create!(
+      name: "Interior scene",
+      illustrator:,
+      page_number: "Facing page 18",
+      image_url: "https://example.com/interior-scene.jpg"
+    )
+
+    assert_empty illustrator.cover_carousel_entries
+
+    entries = illustrator.showcase_carousel_entries
+
+    assert_equal 1, entries.size
+    assert_equal :edition_cover, entries.first[:entry_type]
+    assert_equal illustration.id, entries.first[:illustration].id
+    assert_equal edition.id, entries.first[:edition].id
+    assert_equal "https://example.com/authorized-cover.jpg", entries.first[:source]
+  end
+
+  test "illustrator showcase carousel falls back to regular illustrations when no covers exist" do
+    illustrator = Illustrator.create!(name: "Illustration Fallback Illustrator")
+    novel = Novel.create!(name: "Illustration Fallback Novel")
+    first_edition = novel.editions.create!(name: "1910 Edition", publication_date: "1910")
+    second_edition = novel.editions.create!(name: "1911 Edition", publication_date: "1911")
+    first_illustration = first_edition.illustrations.create!(
+      name: "Frontispiece scene",
+      illustrator:,
+      page_number: "Frontispiece",
+      image_url: "https://example.com/frontispiece-scene.jpg"
+    )
+    second_edition.illustrations.create!(
+      name: "Interior scene",
+      illustrator:,
+      page_number: "Facing page 12",
+      image_url: "https://example.com/interior-scene.jpg"
+    )
+
+    assert_empty illustrator.cover_carousel_entries
+
+    entries = illustrator.showcase_carousel_entries
+
+    assert_equal 2, entries.size
+    assert_equal [:illustration, :illustration], entries.map { |entry| entry[:entry_type] }
+    assert_equal first_illustration.id, entries.first[:illustration].id
+    assert_equal "https://example.com/frontispiece-scene.jpg", entries.first[:source]
+  end
+
   test "novel cover carousel entries use cover and dust jacket sources and cap at five" do
     novel = Novel.create!(name: "Carousel Novel")
     first = novel.editions.create!(name: "1910 Edition", publication_date: "1910", cover_url: "https://example.com/1910-cover.jpg")
@@ -178,6 +232,53 @@ class ArchiveIntegrityTest < ActiveSupport::TestCase
     assert_equal 1978, plain_year.publication_year_value
     assert_equal 1920, circa_year.publication_year_value
     assert_equal [0, 1978, 0, 0, "1978", plain_year.id], plain_year.publication_sort_key
+  end
+
+  test "plain text excerpts and pagefind metadata decode legacy html entities" do
+    helpers = ApplicationController.helpers
+
+    excerpt = helpers.plain_text_excerpt(
+      '<p>In the Allan Quatermain adventure &quot;Hunter Quatermain&#39;s Story,&quot; Haggard&#39;s hunter recounts a tragic expedition.</p>',
+      length: 200
+    )
+
+    assert_equal(
+      'In the Allan Quatermain adventure "Hunter Quatermain\'s Story," Haggard\'s hunter recounts a tragic expedition.',
+      excerpt
+    )
+
+    fragment = Nokogiri::HTML.fragment(
+      helpers.pagefind_record_data(
+        meta: {
+          summary: 'Allan&#39;s Wife tells how Quatermain met Stella &amp; Thomas Carson.',
+          summary_html: helpers.search_excerpt_html(
+            '<p><cite class="work-title">Allan&#39;s Wife</cite> tells how Quatermain met <cite class="work-title">Stella</cite> &amp; Thomas Carson.</p>',
+            length: 120
+          )
+        },
+        filters: { record_type: "novel" }
+      )
+    )
+
+    assert_equal "Allan's Wife tells how Quatermain met Stella & Thomas Carson.", fragment.at_css('[data-pagefind-meta="summary"]').text
+    assert_equal '<cite class="work-title">Allan\'s Wife</cite> tells how Quatermain met <cite class="work-title">Stella</cite> & Thomas Carson.', fragment.at_css('[data-pagefind-meta="summary_html"]').text
+    assert_equal "novel", fragment.at_css('[data-pagefind-filter="record_type"]').text
+  end
+
+  test "search excerpt html preserves inline work titles" do
+    helpers = ApplicationController.helpers
+
+    excerpt = helpers.search_excerpt_html(
+      <<~HTML,
+        <p><cite class="work-title">Child of Storm</cite> is an Allan Quatermain adventure and the second novel in the trilogy including <cite class="work-title">Marie</cite> (1912) and <cite class="work-title">Finished</cite> (1917).</p>
+      HTML
+      length: 120
+    )
+
+    fragment = Nokogiri::HTML.fragment(excerpt)
+
+    assert_equal ["Child of Storm", "Marie", "Finished"], fragment.css("cite.work-title").map(&:text)
+    assert_includes fragment.text, "Allan Quatermain adventure"
   end
 
   test "illustrator cover carousel entries prefer relevant cover art and cap at five" do

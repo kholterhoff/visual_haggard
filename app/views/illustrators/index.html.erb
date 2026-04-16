@@ -61,20 +61,18 @@
         </div>
       </div>
 
-        <div class="illustrator-grid" data-controller="photoswipe">
+        <div class="illustrator-grid">
         <% @illustrators.each do |illustrator| %>
           <% preview_image = illustrator.representative_grid_image_source(style: :original) %>
           <article class="illustrator-grid-card">
-            <div class="illustrator-grid-image-link">
+            <%= link_to illustrator_path(illustrator), class: "illustrator-grid-image-link" do %>
               <div class="illustrator-grid-image-frame">
                 <% if preview_image.present? %>
-                  <%= zoomable_image_link preview_image, link_options: { class: "illustrator-zoom-link" } do %>
-                    <%= image_tag preview_image,
-                      alt: "Representative work by #{illustrator.name}",
-                      class: "illustrator-grid-image",
-                      loading: "lazy",
-                      decoding: "async" %>
-                  <% end %>
+                  <%= image_tag preview_image,
+                    alt: "Representative work by #{illustrator.name}",
+                    class: "illustrator-grid-image",
+                    loading: "lazy",
+                    decoding: "async" %>
                 <% else %>
                   <div class="illustrator-grid-placeholder">No image available</div>
                 <% end %>
@@ -82,9 +80,9 @@
 
               <div class="illustrator-grid-copy">
                 <p class="illustrator-card-kicker">Illustrator</p>
-                <h3><%= link_to illustrator.name, illustrator_path(illustrator) %></h3>
+                <h3><%= illustrator.name %></h3>
               </div>
-            </div>
+            <% end %>
           </article>
         <% end %>
       </div>

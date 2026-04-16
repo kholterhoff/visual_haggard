@@ -1,6 +1,10 @@
 <% content_for :title, "Editor's Statement" %>
 
-<div class="prose-page editor-statement-page">
+<div
+  class="prose-page editor-statement-page"
+  data-controller="back-to-top"
+  data-back-to-top-scroll-threshold-value="720"
+>
   <div class="prose-shell">
     <article class="prose-article">
       <header class="prose-header">
@@ -12,5 +16,15 @@
         <%= render "editors_statement_content" %>
       </div>
     </article>
+
+    <button
+      type="button"
+      class="ui-button ui-button--secondary back-to-top-button"
+      data-back-to-top-target="button"
+      data-action="back-to-top#scroll"
+      hidden
+    >
+      Back to top
+    </button>
   </div>
 </div>

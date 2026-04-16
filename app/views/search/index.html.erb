@@ -8,18 +8,25 @@
   data-pagefind-search-query-value="<%= current_query %>"
 >
   <div class="sr-only" data-pagefind-search-target="announcer" aria-live="polite" aria-atomic="true"></div>
-  <div class="page-shell">
+  <div
+    class="page-shell"
+    data-controller="back-to-top"
+    data-back-to-top-scroll-threshold-value="640"
+  >
     <header class="page-hero search-hero">
       <div>
         <p class="page-eyebrow">Archive search</p>
-        <h1 class="page-title">Search illustrations, novels, editions, illustrators, and motif tags.</h1>
-        <p class="page-lead">Use the archive-wide search to connect keywords like <em>elephant</em>, <em>woman</em>, or <em>ship</em> to images, books, and artists.</p>
+        <h1 class="page-title">Search illustration titles, illustration content, novels, and illustrators.</h1>
+        <p class="page-lead">Use the archive-wide search to connect keywords like <em>Allan Quatermain</em>, <em>sword</em>, or <em>shipwreck</em> to novels, specific illustrations, and artists.</p>
+      </div>
 
+      <aside class="search-hero-panel">
         <% if current_query.present? %>
-          <p class="search-summary">Results for <strong><%= current_query %></strong></p>
-
+          <p class="search-hero-label">Current query</p>
+          <h2><%= current_query %></h2>
+          <p>Move directly to the type of text you wish to see associated with your keyword or phrase.</p>
           <div
-            class="meta-chip-row search-result-jumps <%= "is-hidden" unless @search.illustrations.any? || @search.novels.any? || @search.editions.any? %>"
+            class="meta-chip-row search-result-jumps <%= "is-hidden" unless @search.illustrations.any? || @search.novels.any? || @search.illustrators.any? %>"
             aria-label="Jump to search result sections"
             data-pagefind-search-target="jumpChips"
           >
@@ -29,28 +36,19 @@
             <% if @search.novels.any? %>
               <%= link_to pluralize(@search.novel_count, "novel"), "#search-novels", class: "meta-chip meta-chip-link" %>
             <% end %>
-            <% if @search.editions.any? %>
-              <%= link_to pluralize(@search.edition_count, "edition"), "#search-editions", class: "meta-chip meta-chip-link" %>
+            <% if @search.illustrators.any? %>
+              <%= link_to pluralize(@search.illustrator_count, "illustrator"), "#search-illustrators", class: "meta-chip meta-chip-link" %>
             <% end %>
           </div>
         <% else %>
+          <p class="search-hero-label">How it works</p>
+          <h2>Search from the top bar</h2>
+          <p>Enter a motif, title, illustrator, or keyword. The results page pulls together records across the whole archive.</p>
           <div
             class="meta-chip-row search-result-jumps is-hidden"
             aria-label="Jump to search result sections"
             data-pagefind-search-target="jumpChips"
           ></div>
-        <% end %>
-      </div>
-
-      <aside class="search-hero-panel">
-        <% if current_query.present? %>
-          <p class="search-hero-label">Current query</p>
-          <h2><%= current_query %></h2>
-          <p>Results are grouped by archive type so you can move directly from a motif or keyword to novels, editions, or individual illustrations.</p>
-        <% else %>
-          <p class="search-hero-label">How it works</p>
-          <h2>Search from the top bar</h2>
-          <p>Enter a motif, title, illustrator, or keyword. The results page pulls together records across the whole archive.</p>
         <% end %>
       </aside>
     </header>
@@ -104,30 +102,7 @@
         </div>
       </section>
 
-      <section class="search-section surface-panel" id="pagefind-search-editions" data-pagefind-search-target="editionsSection" hidden>
-        <div class="section-heading search-section-heading">
-          <div>
-            <p class="page-eyebrow">Results</p>
-            <h2>Editions</h2>
-          </div>
-          <p><span data-pagefind-search-target="editionsCount">0</span> matches</p>
-        </div>
-
-        <div class="search-list" data-pagefind-search-target="editionsResults"></div>
-
-        <div class="search-pagination" data-pagefind-search-target="editionsMore" hidden>
-          <button
-            type="button"
-            class="ui-button ui-button--secondary search-load-more"
-            data-action="pagefind-search#loadMore"
-            data-pagefind-search-type-param="editions"
-          >
-            Load more editions
-          </button>
-        </div>
-      </section>
-
-      <section class="search-section surface-panel" data-pagefind-search-target="illustratorsSection" hidden>
+      <section class="search-section surface-panel" id="pagefind-search-illustrators" data-pagefind-search-target="illustratorsSection" hidden>
         <div class="section-heading search-section-heading">
           <div>
             <p class="page-eyebrow">Results</p>
@@ -136,7 +111,7 @@
           <p><span data-pagefind-search-target="illustratorsCount">0</span> matches</p>
         </div>
 
-        <div class="search-list" data-pagefind-search-target="illustratorsResults"></div>
+        <div class="search-card-grid search-card-grid--illustrators" data-pagefind-search-target="illustratorsResults"></div>
 
         <div class="search-pagination" data-pagefind-search-target="illustratorsMore" hidden>
           <button
@@ -154,7 +129,7 @@
     <div class="search-fallback" data-pagefind-search-target="fallback">
       <% if @search.blank? %>
         <section class="empty-state search-empty-state">
-          <p>Enter a search term in the header search bar to browse illustrations, novels, illustrators, and archive tags.</p>
+          <p>Enter a search term in the header search bar to browse illustration titles, illustration content, novels, and illustrators.</p>
         </section>
       <% elsif !@search.any_results? %>
         <section class="empty-state search-empty-state">
@@ -171,33 +146,9 @@
               <p><%= number_with_delimiter(@search.illustration_count) %> matches</p>
             </div>
 
-            <div class="search-card-grid search-card-grid--illustrations" data-controller="photoswipe">
-              <% @search.illustrations.each do |illustration| %>
-                <% edition = illustration.edition %>
-                <% novel = edition&.novel %>
-                <% next if edition.blank? || novel.blank? %>
-                <% preview_image = illustration.display_image_source(style: :original) %>
-                <article class="search-card search-card--illustration">
-                  <% if preview_image.present? %>
-                    <div class="search-card-image-frame">
-                      <%= zoomable_image_link preview_image, link_options: { class: "search-card-image-link" } do %>
-                        <%= image_tag preview_image, alt: illustration.name, class: "search-card-image", loading: "lazy", decoding: "async" %>
-                      <% end %>
-                    </div>
-                  <% end %>
-                  <div class="search-card-body">
-                    <p class="search-card-kicker">Illustration</p>
-                    <h3><%= link_to illustration.name.presence || "Untitled illustration", illustration_path(illustration) %></h3>
-                    <p><strong><%= work_title(novel.name) %></strong></p>
-                    <% if illustration.illustrator&.name.present? %>
-                      <p><%= illustration.illustrator.name %></p>
-                    <% elsif illustration.artist.present? %>
-                      <p><%= illustration.artist %></p>
-                    <% end %>
-                  </div>
-                </article>
-              <% end %>
-            </div>
+            <%= render "search/illustration_results_grouping",
+              illustrations: @search.illustrations,
+              dom_id_prefix: "search-illustrations" %>
 
             <div class="search-pagination">
               <%= paginate @search.illustrations, params: { search: @search.query } %>
@@ -227,35 +178,8 @@
                   <div class="search-card-body">
                     <p class="search-card-kicker">Novel</p>
                     <h3><%= work_title(novel.name) %></h3>
-                    <% if (excerpt = plain_text_excerpt(novel.description, length: 180)).present? %>
-                      <p><%= excerpt %></p>
-                    <% end %>
-                  </div>
-                <% end %>
-              <% end %>
-            </div>
-          </section>
-        <% end %>
-
-        <% if @search.editions.any? %>
-          <section class="search-section surface-panel" id="search-editions">
-            <div class="section-heading search-section-heading">
-              <div>
-                <p class="page-eyebrow">Results</p>
-                <h2>Editions</h2>
-              </div>
-              <p><%= number_with_delimiter(@search.edition_count) %> matches</p>
-            </div>
-
-            <div class="search-list">
-              <% @search.editions.each do |edition| %>
-                <%= link_to edition_path(edition), class: "search-list-item" do %>
-                  <div>
-                    <p class="search-card-kicker">Edition</p>
-                    <h3><%= edition.display_title %></h3>
-                    <p><strong><%= work_title(edition.novel.name) %></strong></p>
-                    <% if (citation = edition.publication_citation) %>
-                      <p><%= citation %></p>
+                    <% if (excerpt = search_excerpt_html(novel.description, length: 180)).present? %>
+                      <p class="search-card-excerpt"><%= excerpt %></p>
                     <% end %>
                   </div>
                 <% end %>
@@ -265,7 +189,7 @@
         <% end %>
 
         <% if @search.illustrators.any? %>
-          <section class="search-section surface-panel">
+          <section class="search-section surface-panel" id="search-illustrators">
             <div class="section-heading search-section-heading">
               <div>
                 <p class="page-eyebrow">Results</p>
@@ -274,14 +198,14 @@
               <p><%= number_with_delimiter(@search.illustrator_count) %> matches</p>
             </div>
 
-            <div class="search-list">
+            <div class="search-card-grid search-card-grid--illustrators">
               <% @search.illustrators.each do |illustrator| %>
-                <%= link_to illustrator_path(illustrator), class: "search-list-item" do %>
-                  <div>
+                <%= link_to illustrator_path(illustrator), class: "search-card search-card--illustrator" do %>
+                  <div class="search-card-body">
                     <p class="search-card-kicker">Illustrator</p>
                     <h3><%= illustrator.name %></h3>
-                    <% if (excerpt = plain_text_excerpt(illustrator.bio, length: 180)).present? %>
-                      <p><%= excerpt %></p>
+                    <% if (excerpt = search_excerpt_html(illustrator.bio, length: 180)).present? %>
+                      <p class="search-card-excerpt"><%= excerpt %></p>
                     <% end %>
                   </div>
                 <% end %>
@@ -291,5 +215,15 @@
         <% end %>
       <% end %>
     </div>
+
+    <button
+      type="button"
+      class="ui-button ui-button--secondary back-to-top-button"
+      data-back-to-top-target="button"
+      data-action="back-to-top#scroll"
+      hidden
+    >
+      Back to top
+    </button>
   </div>
 </div>

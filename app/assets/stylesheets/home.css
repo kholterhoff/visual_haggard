@@ -422,7 +422,7 @@
 
 .home-feature-arrow:hover {
   background: hsl(var(--secondary));
-  color: #fff;
+  color: hsl(var(--foreground));
 }
 
 .home-feature-pause {
@@ -448,7 +448,7 @@
 .home-feature-pause:hover,
 .home-feature-pause:focus-visible {
   background: hsl(var(--secondary));
-  color: #000;
+  color: hsl(var(--foreground));
 }
 
 .home-section-intro {
@@ -1035,14 +1035,18 @@
   box-shadow: 0 18px 42px hsl(236 70% 4% / 0.18);
 }
 
+.home-periodical-card-link,
 .home-paperback-card-link {
   display: flex;
   flex-direction: column;
   min-height: 100%;
   color: inherit;
+  font-weight: normal;
   text-decoration: none;
 }
 
+.home-periodical-card-link:hover,
+.home-periodical-card-link:focus-visible,
 .home-paperback-card-link:hover,
 .home-paperback-card-link:focus-visible {
   color: inherit;
@@ -1067,6 +1071,172 @@
 .home-paperback-image {
   aspect-ratio: 5 / 7;
   object-fit: cover;
+}
+
+:root[data-theme="dark"] .home-timeline-panel {
+  border-color: hsl(220 18% 24%);
+  background:
+    radial-gradient(circle at top left, hsl(203 48% 24% / 0.34), transparent 28%),
+    radial-gradient(circle at bottom right, hsl(34 58% 24% / 0.24), transparent 34%),
+    linear-gradient(135deg, hsl(222 22% 15%) 0%, hsl(220 20% 13%) 44%, hsl(222 22% 11%) 100%);
+  box-shadow: 0 18px 42px hsl(220 42% 3% / 0.3);
+}
+
+:root[data-theme="dark"] .home-timeline-caption {
+  color: hsl(var(--muted-foreground));
+}
+
+:root[data-theme="dark"] .home-timeline-arrow {
+  border-color: hsl(220 16% 28%);
+  background: linear-gradient(180deg, hsl(220 18% 19%), hsl(220 18% 15%) 100%);
+  color: hsl(var(--foreground));
+  box-shadow: 0 10px 24px hsl(220 42% 3% / 0.26);
+}
+
+:root[data-theme="dark"] .home-timeline-arrow:hover {
+  color: hsl(var(--primary-foreground));
+}
+
+:root[data-theme="dark"] .home-timeline-track::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, hsl(203 48% 44%), hsl(257 38% 54%));
+}
+
+:root[data-theme="dark"] .home-timeline-year {
+  border-color: hsl(220 16% 26%);
+  background: linear-gradient(180deg, hsl(220 18% 18% / 0.96), hsl(220 18% 15%) 100%);
+  box-shadow: 0 10px 26px hsl(220 42% 3% / 0.24);
+}
+
+:root[data-theme="dark"] .home-timeline-year-count {
+  color: hsl(var(--muted-foreground));
+}
+
+:root[data-theme="dark"] .home-timeline-marker {
+  border-color: hsl(220 18% 20% / 0.92);
+  box-shadow: 0 4px 14px hsl(210 68% 6% / 0.42);
+}
+
+:root[data-theme="dark"] .home-timeline-tooltip {
+  border-color: hsl(220 16% 28%);
+  background: linear-gradient(180deg, hsl(220 18% 18%), hsl(220 18% 15%) 100%);
+  box-shadow: 0 18px 36px hsl(220 42% 3% / 0.36);
+}
+
+:root[data-theme="dark"] .home-timeline-tooltip::after {
+  border-right-color: hsl(220 16% 28%);
+  border-bottom-color: hsl(220 16% 28%);
+  background: hsl(220 18% 16%);
+}
+
+:root[data-theme="dark"] .home-timeline-tooltip span {
+  color: hsl(var(--muted-foreground));
+}
+
+:root[data-theme="dark"] .home-paperback-card {
+  background: linear-gradient(180deg, hsl(220 22% 17%), hsl(220 24% 14%) 100%);
+  box-shadow: 0 18px 42px hsl(236 70% 4% / 0.28);
+}
+
+:root[data-theme="dark"] .home-paperback-section .home-paperback-card-copy .home-style-kicker {
+  color: hsl(35 34% 72%);
+}
+
+:root[data-theme="dark"] .home-paperback-section .home-paperback-meta {
+  color: hsl(215 18% 76%);
+}
+
+:root[data-theme="dark"] .home-paperback-section .home-paperback-submeta,
+:root[data-theme="dark"] .home-paperback-section .home-paperback-citation {
+  color: hsl(215 15% 68%);
+}
+
+:root[data-theme="dark"] .home-paperback-card-link:hover .home-paperback-card-copy h3,
+:root[data-theme="dark"] .home-paperback-card-link:focus-visible .home-paperback-card-copy h3 {
+  color: hsl(36 58% 80%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .home-timeline-panel {
+    border-color: hsl(220 18% 24%);
+    background:
+      radial-gradient(circle at top left, hsl(203 48% 24% / 0.34), transparent 28%),
+      radial-gradient(circle at bottom right, hsl(34 58% 24% / 0.24), transparent 34%),
+      linear-gradient(135deg, hsl(222 22% 15%) 0%, hsl(220 20% 13%) 44%, hsl(222 22% 11%) 100%);
+    box-shadow: 0 18px 42px hsl(220 42% 3% / 0.3);
+  }
+
+  :root:not([data-theme]) .home-timeline-caption {
+    color: hsl(var(--muted-foreground));
+  }
+
+  :root:not([data-theme]) .home-timeline-arrow {
+    border-color: hsl(220 16% 28%);
+    background: linear-gradient(180deg, hsl(220 18% 19%), hsl(220 18% 15%) 100%);
+    color: hsl(var(--foreground));
+    box-shadow: 0 10px 24px hsl(220 42% 3% / 0.26);
+  }
+
+  :root:not([data-theme]) .home-timeline-arrow:hover {
+    color: hsl(var(--primary-foreground));
+  }
+
+  :root:not([data-theme]) .home-timeline-track::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, hsl(203 48% 44%), hsl(257 38% 54%));
+  }
+
+  :root:not([data-theme]) .home-timeline-year {
+    border-color: hsl(220 16% 26%);
+    background: linear-gradient(180deg, hsl(220 18% 18% / 0.96), hsl(220 18% 15%) 100%);
+    box-shadow: 0 10px 26px hsl(220 42% 3% / 0.24);
+  }
+
+  :root:not([data-theme]) .home-timeline-year-count {
+    color: hsl(var(--muted-foreground));
+  }
+
+  :root:not([data-theme]) .home-timeline-marker {
+    border-color: hsl(220 18% 20% / 0.92);
+    box-shadow: 0 4px 14px hsl(210 68% 6% / 0.42);
+  }
+
+  :root:not([data-theme]) .home-timeline-tooltip {
+    border-color: hsl(220 16% 28%);
+    background: linear-gradient(180deg, hsl(220 18% 18%), hsl(220 18% 15%) 100%);
+    box-shadow: 0 18px 36px hsl(220 42% 3% / 0.36);
+  }
+
+  :root:not([data-theme]) .home-timeline-tooltip::after {
+    border-right-color: hsl(220 16% 28%);
+    border-bottom-color: hsl(220 16% 28%);
+    background: hsl(220 18% 16%);
+  }
+
+  :root:not([data-theme]) .home-timeline-tooltip span {
+    color: hsl(var(--muted-foreground));
+  }
+
+  :root:not([data-theme]) .home-paperback-card {
+    background: linear-gradient(180deg, hsl(220 22% 17%), hsl(220 24% 14%) 100%);
+    box-shadow: 0 18px 42px hsl(236 70% 4% / 0.28);
+  }
+
+  :root:not([data-theme]) .home-paperback-section .home-paperback-card-copy .home-style-kicker {
+    color: hsl(35 34% 72%);
+  }
+
+  :root:not([data-theme]) .home-paperback-section .home-paperback-meta {
+    color: hsl(215 18% 76%);
+  }
+
+  :root:not([data-theme]) .home-paperback-section .home-paperback-submeta,
+  :root:not([data-theme]) .home-paperback-section .home-paperback-citation {
+    color: hsl(215 15% 68%);
+  }
+
+  :root:not([data-theme]) .home-paperback-card-link:hover .home-paperback-card-copy h3,
+  :root:not([data-theme]) .home-paperback-card-link:focus-visible .home-paperback-card-copy h3 {
+    color: hsl(36 58% 80%);
+  }
 }
 
 @media (max-width: 1080px) {

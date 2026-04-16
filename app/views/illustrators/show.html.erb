@@ -1,24 +1,69 @@
 <% content_for :title, @illustrator.name %>
 <%
-  cover_entries = @illustrator.cover_carousel_entries(style: :original, limit: 5)
-  hero_image = cover_entries.first&.dig(:source) || @illustrator.representative_image_source(style: :original)
-  illustrator_cover_carousel_entries = cover_entries.map do |entry|
+  carousel_entries = @illustrator.showcase_carousel_entries(style: :original, limit: 5)
+  hero_image = carousel_entries.first&.dig(:source) || @illustrator.representative_image_source(style: :original)
+  illustrator_cover_carousel_entries = carousel_entries.map do |entry|
     illustration = entry[:illustration]
     edition = entry[:edition]
     novel = entry[:novel]
+    entry_type = entry[:entry_type]
     meta_parts = [
       work_title(novel.name),
       edition.publication_citation.presence
     ].compact
 
+    title =
+      case entry_type
+      when :illustration
+        illustration&.name.presence || "Untitled illustration"
+      else
+        edition.display_title
+      end
+
+    eyebrow =
+      case entry_type
+      when :illustration
+        illustration&.page_number.presence || "Illustration"
+      when :edition_cover
+        "Edition cover"
+      else
+        illustration&.cover_related? ? illustration.page_number.presence || "Cover art" : "Cover art"
+      end
+
+    path =
+      case entry_type
+      when :illustration
+        illustration_path(illustration)
+      else
+        edition_path(edition)
+      end
+
+    alt =
+      case entry_type
+      when :illustration
+        illustration&.name.presence || "#{@illustrator.name} illustration from #{novel.name}"
+      when :edition_cover
+        "#{novel.name} edition cover"
+      else
+        "#{@illustrator.name} cover art for #{novel.name}"
+      end
+
+    dot_label =
+      case entry_type
+      when :illustration
+        "#{novel.short_title}, #{illustration&.name.presence || "illustration"}"
+      else
+        "#{novel.short_title}, #{edition.display_title}"
+      end
+
     {
       source: entry[:source],
-      path: edition_path(edition),
-      alt: "#{@illustrator.name} cover art for #{novel.name}",
-      eyebrow: illustration&.cover_related? ? illustration.page_number.presence || "Cover art" : "Cover art",
-      title: edition.display_title,
+      path: path,
+      alt: alt,
+      eyebrow: eyebrow,
+      title: title,
       meta: safe_join(meta_parts, " &middot; ".html_safe),
-      dot_label: "#{novel.short_title}, #{edition.display_title}"
+      dot_label: dot_label
     }
   end
 %>
@@ -26,11 +71,10 @@
 <div
   class="illustrator-show-page"
   data-pagefind-body
-  <% if @illustrations.size > 12 %>
-    data-controller="back-to-top"
-    data-back-to-top-minimum-items-value="12"
-    data-back-to-top-row-threshold-value="4"
-  <% end %>
+  data-controller="back-to-top"
+  data-back-to-top-minimum-items-value="12"
+  data-back-to-top-row-threshold-value="4"
+  data-back-to-top-scroll-threshold-value="720"
 >
   <%= pagefind_record_data(
     filters: { record_type: "illustrator" },
@@ -39,7 +83,8 @@
       title: @illustrator.name,
       illustrator_name: @illustrator.name,
       image: public_asset_url(hero_image),
-      summary: plain_text_excerpt(@illustrator.bio, length: 220)
+      summary: plain_text_excerpt(@illustrator.bio, length: 220),
+      summary_html: search_excerpt_html(@illustrator.bio, length: 220)
     },
     body: [@illustrator.bio]
   ) %>
@@ -62,8 +107,8 @@
         <div class="illustrator-show-image-frame illustrator-show-image-frame--carousel">
           <%= render "shared/archive_cover_carousel",
             entries: illustrator_cover_carousel_entries,
-            aria_label: "Cover and dust jacket carousel for #{@illustrator.name}",
-            empty_message: "No cover or dust jacket is currently available for this illustrator." %>
+            aria_label: "Illustrated works carousel for #{@illustrator.name}",
+            empty_message: "No cover or illustration is currently available for this illustrator." %>
         </div>
       </div>
     </section>
@@ -130,16 +175,14 @@
       </section>
     <% end %>
 
-    <% if @illustrations.size > 12 %>
-      <button
-        type="button"
-        class="ui-button ui-button--secondary back-to-top-button"
-        data-back-to-top-target="button"
-        data-action="back-to-top#scroll"
-        hidden
-      >
-        Back to top
-      </button>
-    <% end %>
+    <button
+      type="button"
+      class="ui-button ui-button--secondary back-to-top-button"
+      data-back-to-top-target="button"
+      data-action="back-to-top#scroll"
+      hidden
+    >
+      Back to top
+    </button>
   </div>
 </div>

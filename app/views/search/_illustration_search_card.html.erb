@@ -1,0 +1,24 @@
+<%
+  edition = illustration.edition
+  novel = edition&.novel
+  preview_image = illustration.display_image_source(style: :original)
+  illustrator_name = illustration.illustrator&.name.presence || illustration.artist
+%>
+<%= link_to illustration_path(illustration), class: "search-card search-card--illustration" do %>
+  <% if preview_image.present? %>
+    <div class="search-card-image-frame">
+      <%= image_tag preview_image, alt: illustration.name, class: "search-card-image", loading: "lazy", decoding: "async" %>
+    </div>
+  <% end %>
+  <div class="search-card-body">
+    <p class="search-card-kicker">Illustration</p>
+    <h3><%= illustration.name.presence || "Untitled illustration" %></h3>
+    <p><strong><%= work_title(novel.name) %></strong></p>
+    <% if illustrator_name.present? %>
+      <p><%= illustrator_name %></p>
+    <% end %>
+    <% if edition&.publication_citation.present? %>
+      <p class="search-card-citation"><%= edition.publication_citation %></p>
+    <% end %>
+  </div>
+<% end %>

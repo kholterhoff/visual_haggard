@@ -1,0 +1,76 @@
+<% 
+  grouping_data = search_illustration_groupings(illustrations)
+  visible_groupings = grouping_data[:visible_groupings]
+  default_grouping = grouping_data[:default_grouping]
+  rendered_groupings = visible_groupings.presence || [default_grouping]
+  show_tabs = visible_groupings.many?
+%>
+
+<div class="search-illustration-browser" data-search-illustration-grouping data-active-grouping="<%= default_grouping %>">
+  <% if show_tabs %>
+    <div class="search-group-tabs" role="tablist" aria-label="Group illustration results">
+      <% visible_groupings.each do |grouping| %>
+        <% active = grouping == default_grouping %>
+        <% tab_id = "#{dom_id_prefix}-#{grouping}-tab" %>
+        <% panel_id = "#{dom_id_prefix}-#{grouping}-panel" %>
+        <button
+          type="button"
+          class="search-group-tab <%= "is-active" if active %>"
+          id="<%= tab_id %>"
+          role="tab"
+          aria-selected="<%= active %>"
+          aria-controls="<%= panel_id %>"
+          tabindex="<%= active ? 0 : -1 %>"
+          data-action="pagefind-search#switchIllustrationGrouping"
+          data-pagefind-search-grouping-param="<%= grouping %>"
+          data-search-illustration-tab="<%= grouping %>"
+        >
+          <%= search_illustration_grouping_tab_label(grouping) %>
+        </button>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% rendered_groupings.each do |grouping| %>
+    <% active = grouping == default_grouping %>
+    <% tab_id = "#{dom_id_prefix}-#{grouping}-tab" %>
+    <% panel_id = "#{dom_id_prefix}-#{grouping}-panel" %>
+    <% groups = grouping_data.dig(:groups, grouping) %>
+    <% next if groups.blank? %>
+
+    <div
+      class="search-illustration-group-panel"
+      id="<%= panel_id %>"
+      role="tabpanel"
+      <%= show_tabs ? %(aria-labelledby="#{tab_id}").html_safe : %(aria-label="Illustration results grouped #{search_illustration_grouping_tab_label(grouping).downcase}").html_safe %>
+      data-search-illustration-panel="<%= grouping %>"
+      <%= "hidden" unless active %>
+    >
+      <% groups.each do |group| %>
+        <section class="search-illustration-group">
+          <div class="section-heading search-illustration-group-heading">
+            <div>
+              <p class="page-eyebrow"><%= search_illustration_grouping_eyebrow(grouping) %></p>
+              <% case grouping %>
+              <% when :novel %>
+                <h3>Illustrations from <%= work_title(group[:novel].name) %></h3>
+              <% when :edition %>
+                <h3><%= group[:title] %></h3>
+                <p class="search-illustration-group-meta"><%= work_title(group[:novel].name) %></p>
+              <% when :illustrator %>
+                <h3>Illustrations by <%= group[:title] %></h3>
+              <% end %>
+            </div>
+            <p class="search-illustration-group-count"><%= pluralize(group[:illustrations].size, "illustration") %></p>
+          </div>
+
+          <div class="search-card-grid search-card-grid--illustrations">
+            <% group[:illustrations].each do |illustration| %>
+              <%= render "search/illustration_search_card", illustration: illustration %>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+    </div>
+  <% end %>
+</div>

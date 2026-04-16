@@ -19,16 +19,14 @@
 
     <% if @illustrations.any? %>
       <section class="surface-panel illustrations-grid-panel">
-        <div class="illustrations-grid-page" data-controller="photoswipe">
+        <div class="illustrations-grid-page">
           <% @illustrations.each do |illustration| %>
             <% image_source = illustration.display_image_source(style: :original) %>
-            <article class="illustration-card">
+            <%= link_to illustration_path(illustration), class: "illustration-card illustration-card--linked" do %>
               <% if image_source.present? %>
-                <%= zoomable_image_link image_source, link_options: { class: "illustration-card-image-link" } do %>
-                  <div class="illustration-card-image-frame">
-                    <%= image_tag image_source, alt: illustration.name, loading: "lazy", decoding: "async" %>
-                  </div>
-                <% end %>
+                <div class="illustration-card-image-frame">
+                  <%= image_tag image_source, alt: illustration.name, loading: "lazy", decoding: "async" %>
+                </div>
               <% else %>
                 <div class="illustration-card-image-frame">
                   <div class="illustration-card-placeholder">No image</div>
@@ -37,11 +35,11 @@
 
               <div class="illustration-card-body">
                 <p class="illustration-card-kicker">Illustration</p>
-                <h2><%= link_to illustration.name, illustration_path(illustration), class: "illustration-card-title-link" %></h2>
-                <p class="illustration-card-meta"><%= link_to illustration.edition.name, edition_path(illustration.edition) %></p>
-                <p class="illustration-card-meta"><%= linked_novel_title(illustration.novel) %></p>
+                <h2><span class="illustration-card-title-link"><%= illustration.name.presence || "Untitled illustration" %></span></h2>
+                <p class="illustration-card-meta"><%= illustration.edition.display_title %></p>
+                <p class="illustration-card-meta"><%= work_title(illustration.novel.name) %></p>
               </div>
-            </article>
+            <% end %>
           <% end %>
         </div>
       </section>
