@@ -7,6 +7,10 @@ class Edition < ApplicationRecord
   TEST_PLACEHOLDER_NAME = "Illustrator Edition".freeze
   GENERATED_PLACEHOLDER_NAME = "First Edition".freeze
   STRING_MAXIMUM = 255
+  CONTAINER_TYPES = {
+    "book" => "Book",
+    "periodical" => "Periodical"
+  }.freeze
 
   belongs_to :novel
   has_many :illustrations, dependent: :destroy
@@ -18,8 +22,10 @@ class Edition < ApplicationRecord
   validates :name, presence: true, length: { maximum: STRING_MAXIMUM }
   validates :publisher, :publication_date, :publication_city, :source, :long_name,
             length: { maximum: STRING_MAXIMUM }, allow_blank: true
+  validates :container_title, length: { maximum: STRING_MAXIMUM }, allow_blank: true
   validates :cover_url, :cover_thumbnail_url,
             length: { maximum: STRING_MAXIMUM }, allow_blank: true
+  validates :container_type, inclusion: { in: CONTAINER_TYPES.keys }, allow_blank: true
   validates_http_url_or_legacy_reference :cover_url, :cover_thumbnail_url
 
   include PgSearch::Model
@@ -78,7 +84,19 @@ class Edition < ApplicationRecord
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[created_at id name novel_id publication_city publication_date publisher source updated_at]
+    %w[
+      container_title
+      container_type
+      created_at
+      id
+      name
+      novel_id
+      publication_city
+      publication_date
+      publisher
+      source
+      updated_at
+    ]
   end
 
   def legacy_cover_reference
@@ -144,6 +162,10 @@ class Edition < ApplicationRecord
     end
 
     details.presence
+  end
+
+  def container_type_label
+    CONTAINER_TYPES[container_type]
   end
 
   def publication_year_value

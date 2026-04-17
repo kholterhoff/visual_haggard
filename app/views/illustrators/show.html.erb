@@ -8,7 +8,7 @@
     novel = entry[:novel]
     entry_type = entry[:entry_type]
     meta_parts = [
-      work_title(novel.name),
+      novel_work_title(novel),
       edition.publication_citation.presence
     ].compact
 
@@ -17,7 +17,7 @@
       when :illustration
         illustration&.name.presence || "Untitled illustration"
       else
-        edition.display_title
+        formatted_edition_title(edition)
       end
 
     eyebrow =
@@ -51,9 +51,9 @@
     dot_label =
       case entry_type
       when :illustration
-        "#{novel.short_title}, #{illustration&.name.presence || "illustration"}"
+        "#{novel.display_title_text(short: true)}, #{illustration&.name.presence || "illustration"}"
       else
-        "#{novel.short_title}, #{edition.display_title}"
+        "#{novel.display_title_text(short: true)}, #{edition.display_title}"
       end
 
     {
@@ -134,8 +134,8 @@
             <section class="illustrator-work-group" id="<%= group[:anchor_id] %>">
               <div class="section-heading illustrator-work-group-heading">
                 <div>
-                  <p class="page-eyebrow">Novel</p>
-                  <h3>Illustrations from <%= work_title(group[:novel].name) %></h3>
+                  <p class="page-eyebrow"><%= group[:novel].record_label %></p>
+                  <h3>Illustrations from <%= novel_work_title(group[:novel]) %></h3>
                 </div>
               </div>
 
@@ -160,9 +160,9 @@
                       <div class="illustrator-work-copy">
                         <p class="illustrator-card-kicker">Illustration</p>
                         <h4><span class="illustrator-work-title"><%= illustration.name.presence || "Untitled illustration" %></span></h4>
-                        <p><strong><%= work_title(novel.name) %></strong></p>
+                        <p><strong><%= novel_work_title(novel) %></strong></p>
                         <% if edition_label.present? %>
-                          <p><%= edition_label %></p>
+                          <p><%= formatted_edition_label(edition_label) %></p>
                         <% end %>
                       </div>
                     <% end %>

@@ -8,7 +8,7 @@ class NovelsController < ApplicationController
       ]
     ).order(:name).page(params[:page]).per(Novel::ARCHIVE_PAGE_SIZE)
 
-    @novel_directory = Novel.publicly_visible.select(:id, :name).to_a.sort_by(&:directory_sort_key)
+    @novel_directory = Novel.publicly_visible.select(:id, :name, :work_type).to_a.sort_by(&:directory_sort_key)
     @novel_groups = @novel_directory.group_by(&:directory_letter)
   end
 

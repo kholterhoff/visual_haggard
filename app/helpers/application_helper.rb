@@ -125,8 +125,23 @@ module ApplicationHelper
     content_tag(:cite, title.to_s, class: classes.presence)
   end
 
+  def plain_title(title, class_name: nil)
+    classes = [class_name].compact.join(" ")
+    content_tag(:span, title.to_s, class: classes.presence)
+  end
+
+  def quoted_title(title, class_name: nil)
+    plain_title(%("#{title}"), class_name:)
+  end
+
   def novel_work_title(novel, short: false, class_name: nil)
-    work_title(short ? novel.short_title : novel.long_title, class_name:)
+    title = short ? novel.short_title : novel.long_title
+    novel.short_story? ? quoted_title(title, class_name:) : work_title(title, class_name:)
+  end
+
+  def novel_reference_title(novel, short: false, class_name: nil)
+    title = short ? novel.short_title : novel.long_title
+    novel.short_story? ? quoted_title(title, class_name:) : work_title(title, class_name:)
   end
 
   def linked_work_title(title, path, **options)
@@ -134,12 +149,47 @@ module ApplicationHelper
   end
 
   def linked_novel_title(novel, short: false, **options)
-    linked_work_title(short ? novel.short_title : novel.long_title, novel_path(novel), **options)
+    link_to novel_work_title(novel, short:), novel_path(novel), options
+  end
+
+  def linked_novel_reference_title(novel, short: false, **options)
+    link_to novel_reference_title(novel, short:), novel_path(novel), options
+  end
+
+  def novel_title_text(novel, short: false)
+    return "" if novel.blank?
+
+    novel.display_title_text(short:)
+  end
+
+  def formatted_edition_label(label, class_name: nil)
+    normalized = label.to_s.strip
+    fragments =
+      if normalized.blank?
+        [""]
+      else
+        build_formatted_edition_label_fragments(normalized)
+      end
+
+    markup = safe_join(fragments)
+    return markup if class_name.blank?
+
+    content_tag(:span, markup, class: class_name)
+  end
+
+  def formatted_edition_title(edition, class_name: nil)
+    formatted_edition_label(edition&.display_title, class_name:)
+  end
+
+  def linked_edition_title(edition, **options)
+    link_to formatted_edition_title(edition), edition_path(edition), options
   end
 
   def display_illustration_title(illustration, class_name: nil)
     title = illustration&.name.presence || "Untitled illustration"
-    return work_title(title, class_name:) if illustration_title_matches_novel?(illustration, title)
+    if illustration_title_matches_novel?(illustration, title)
+      return illustration.novel.short_story? ? quoted_title(title, class_name:) : work_title(title, class_name:)
+    end
 
     content_tag(:span, title, class: class_name.presence)
   end
@@ -167,10 +217,10 @@ module ApplicationHelper
   end
 
   def style_edition_citation(edition)
-    fragments = ["Cover. ".html_safe, work_title(edition.novel.name), ". ".html_safe]
+    fragments = ["Cover. ".html_safe, novel_reference_title(edition.novel), ". ".html_safe]
 
-    if (edition_label = archive_reference_value(edition.display_title)).present?
-      fragments << edition_label
+    if archive_reference_value(edition.display_title).present?
+      fragments << formatted_edition_title(edition)
       fragments << ". ".html_safe
     end
 
@@ -288,6 +338,116 @@ module ApplicationHelper
                       .uniq
 
     candidate_titles.any? { |candidate| candidate.casecmp?(normalized_title) }
+  end
+
+  def build_formatted_edition_label_fragments(label)
+    if (from_match = label.match(/\A(?<prefix>.*?\bfrom\s+)(?<work_title>.+)\z/i))
+      matched_work_title = matched_edition_work_title(from_match[:work_title])
+      if matched_work_title.present?
+        return [
+          from_match[:prefix],
+          work_title(from_match[:work_title])
+        ]
+      end
+    end
+
+    if (leading_work_title = leading_edition_work_title(label)).present?
+      suffix = label.delete_prefix(leading_work_title)
+      return [
+        work_title(leading_work_title),
+        suffix
+      ]
+    end
+
+    [label]
+  end
+
+  def matched_edition_work_title(label)
+    normalized = label.to_s.strip
+    return if normalized.blank?
+
+    edition_work_title_candidates.find { |candidate| candidate.casecmp?(normalized) }
+  end
+
+  def leading_edition_work_title(label)
+    normalized = label.to_s.strip
+    return if normalized.blank?
+
+    edition_work_title_candidates.find do |candidate|
+      next false unless normalized[0, candidate.length].to_s.casecmp?(candidate)
+      trailing_character = normalized[candidate.length]
+      next false unless trailing_character.nil? || trailing_character.match?(/[,:;\(\[\-]/)
+
+      edition_title_suffix_looks_bibliographic?(normalized.delete_prefix(candidate))
+    end
+  end
+
+  def edition_work_title_candidates
+    @edition_work_title_candidates ||= begin
+      novel_titles = Novel.publicly_visible.find_each.flat_map do |novel|
+        long_title = novel.long_title
+        bracketed_titles = long_title.to_s.scan(/\[([^\]]+)\]/).flatten
+
+        [long_title, novel.short_title, *bracketed_titles]
+      end
+      anthology_titles = Edition.publicly_visible.pluck(:name).filter_map do |name|
+        title = name.to_s.strip[/\bfrom\s+(.+)\z/i, 1]&.strip
+        title if edition_from_clause_looks_like_work_title?(title)
+      end
+      container_titles = Edition.publicly_visible.pluck(:container_title)
+      periodical_titles = Edition.publicly_visible.pluck(:name).filter_map do |name|
+        edition_name_periodical_title(name)
+      end
+
+      (novel_titles + anthology_titles + container_titles + periodical_titles)
+        .map { |title| title.to_s.strip.presence }
+        .compact
+        .uniq
+        .sort_by { |title| -title.length }
+    end
+  end
+
+  def edition_name_periodical_title(label)
+    normalized = label.to_s.strip
+    return if normalized.blank?
+
+    match = normalized.match(/\A(?<title>.+?),\s*(?<details>.+)\z/)
+    return unless match
+
+    title = match[:title].to_s.strip
+    details = match[:details].to_s.strip
+    return if title.blank? || details.blank?
+    return unless edition_title_suffix_looks_periodical?(details)
+
+    title
+  end
+
+  def edition_from_clause_looks_like_work_title?(title)
+    normalized = title.to_s.strip
+    return false if normalized.blank?
+    return false unless normalized.match?(/\A[A-Z"]/)
+
+    normalized.match?(/[;:,]/) || normalized.match?(/\b(?:a|an|and|of|or|the|other)\b/i)
+  end
+
+  def edition_title_suffix_looks_bibliographic?(suffix)
+    normalized = suffix.to_s.strip
+    return true if normalized.blank?
+
+    normalized = normalized.sub(/\A[,:;\-\)\]]+\s*/, "")
+    return false if normalized.blank?
+
+    normalized.match?(/\d/) ||
+      normalized.match?(/\b(?:edition|issue|vol\.?|volume|no\.?|number|reprint|printing|paperback|hardcover|softcover|dust\s+jacket|wrapper|cover|copy|copyright|thus|series)\b/i)
+  end
+
+  def edition_title_suffix_looks_periodical?(suffix)
+    normalized = suffix.to_s.strip
+    return false if normalized.blank?
+
+    normalized.match?(/\b(?:vol\.?|volume|no\.?|number|issue)\b/i) ||
+      normalized.match?(/\A(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i) ||
+      normalized.match?(/\A\d{1,2}\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i)
   end
 
   def append_pagefind_tag(fragments, data_key, name, value)

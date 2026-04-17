@@ -73,24 +73,29 @@
       <aside class="record-meta">
         <dl>
           <dt>Edition</dt>
-          <dd><%= @edition.display_title %></dd>
+          <dd><%= formatted_edition_title(@edition) %></dd>
 
-          <dt>Novel</dt>
-          <dd><%= linked_novel_title(@edition.novel) %></dd>
+          <dt><%= @edition.novel.record_label %></dt>
+          <dd><%= linked_novel_reference_title(@edition.novel) %></dd>
+
+          <% if @edition.novel.short_story? && @edition.container_title.present? && @edition.container_type_label.present? %>
+            <dt><%= @edition.container_type_label %></dt>
+            <dd><%= work_title(@edition.container_title) %></dd>
+          <% end %>
 
           <% if @edition.publisher.present? && @edition.publisher != "Unknown" %>
             <dt>Published by</dt>
             <dd><%= @edition.publisher %></dd>
           <% end %>
 
-          <% if @edition.publication_date.present? && @edition.publication_date != "Unknown" %>
-            <dt>Published</dt>
-            <dd><%= @edition.publication_date %></dd>
-          <% end %>
-
           <% if @edition.publication_city.present? && @edition.publication_city != "Unknown" %>
             <dt>Publication City</dt>
             <dd><%= @edition.publication_city %></dd>
+          <% end %>
+
+          <% if @edition.publication_date.present? && @edition.publication_date != "Unknown" %>
+            <dt>Published</dt>
+            <dd><%= @edition.publication_date %></dd>
           <% end %>
 
           <% if @edition.source.present? && @edition.source != "Unknown" %>
@@ -129,7 +134,7 @@
     <% end %>
 
     <div class="record-back-link">
-      <%= link_to safe_join([content_tag(:span, "Back to", class: "record-back-label"), work_title(@edition.novel.name)]), novel_path(@edition.novel, anchor: "edition-archive"), class: "ui-button ui-button--secondary" %>
+      <%= link_to safe_join([content_tag(:span, "Back to", class: "record-back-label"), novel_work_title(@edition.novel)]), novel_path(@edition.novel, anchor: "edition-archive"), class: "ui-button ui-button--secondary" %>
     </div>
 
     <button

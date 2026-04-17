@@ -6,6 +6,7 @@ class Novel < ApplicationRecord
   PLACEHOLDER_NAME = "Illustrator Novel".freeze
   STRING_MAXIMUM = 255
   DESCRIPTION_MAXIMUM = 100_000
+  WORK_TYPES = %w[novel short_story].freeze
   SHORT_TITLE_OVERRIDES = {
     "Allan and the Holy Flower [The Holy Flower]" => "Allan and the Holy Flower",
     "Benita [The Spirit of Bambatse]" => "Benita",
@@ -27,6 +28,7 @@ class Novel < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: STRING_MAXIMUM }
   validates :description, length: { maximum: DESCRIPTION_MAXIMUM }, allow_blank: true
+  validates :work_type, inclusion: { in: WORK_TYPES }
 
   include PgSearch::Model
   pg_search_scope :search_by_name_and_description,
@@ -40,7 +42,7 @@ class Novel < ApplicationRecord
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[created_at description id name updated_at]
+    %w[created_at description id name updated_at work_type]
   end
 
   def visible_editions
@@ -116,6 +118,21 @@ class Novel < ApplicationRecord
 
   def short_title
     SHORT_TITLE_OVERRIDES.fetch(long_title, long_title)
+  end
+
+  def short_story?
+    return false unless has_attribute?(:work_type)
+
+    self[:work_type] == "short_story"
+  end
+
+  def record_label
+    short_story? ? "Short story" : "Novel"
+  end
+
+  def display_title_text(short: false)
+    title = short ? short_title : long_title
+    short_story? ? %("#{title}") : title
   end
 
   def directory_title

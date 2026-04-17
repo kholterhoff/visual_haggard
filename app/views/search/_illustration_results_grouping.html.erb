@@ -50,13 +50,13 @@
         <section class="search-illustration-group">
           <div class="section-heading search-illustration-group-heading">
             <div>
-              <p class="page-eyebrow"><%= search_illustration_grouping_eyebrow(grouping) %></p>
+              <p class="page-eyebrow"><%= grouping == :novel ? group[:novel].record_label : search_illustration_grouping_eyebrow(grouping) %></p>
               <% case grouping %>
               <% when :novel %>
-                <h3>Illustrations from <%= work_title(group[:novel].name) %></h3>
+                <h3>Illustrations from <%= novel_work_title(group[:novel]) %></h3>
               <% when :edition %>
-                <h3><%= group[:title] %></h3>
-                <p class="search-illustration-group-meta"><%= work_title(group[:novel].name) %></p>
+                <h3><%= formatted_edition_label(group[:title]) %></h3>
+                <p class="search-illustration-group-meta"><%= novel_work_title(group[:novel]) %></p>
               <% when :illustrator %>
                 <h3>Illustrations by <%= group[:title] %></h3>
               <% end %>

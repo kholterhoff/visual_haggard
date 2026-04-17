@@ -49,6 +49,7 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
           name: "Frontispiece",
           page_number: "Frontispiece",
           description: "An uploaded test illustration.",
+          editor_notes: "A curator's note for the illustration record.",
           tag_list: "elephant, woman",
           image: uploaded_image
         }
@@ -61,6 +62,7 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     assert_equal edition, illustration.edition
     assert_equal illustrator, illustration.illustrator
     assert_equal ["elephant", "woman"], illustration.tag_list.sort
+    assert_equal "A curator's note for the illustration record.", illustration.editor_notes
     assert illustration.image.attached?
   end
 
@@ -123,14 +125,17 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     assert_select %(a[href="/admin/illustrations/#{variant_match.id}"]), text: "Variant match"
     assert_select %(a[href="/admin/illustrations/#{same_scene_match.id}"]), text: "'It's gold, lad,' I said, 'or I'm a Dutchman.'"
     assert_select %(a[href="/admin/illustrations/#{other_plate.id}"]), text: "Other plate"
-    assert_includes response.body, "All illustrations default to"
+    assert_includes response.body, "Illustrations already grouped with this record are preselected as"
+    assert_select ".admin-illustration-group-summary a", text: "Variant match"
+    assert_select ".admin-illustration-group-summary a", text: "'It's gold, lad,' I said, 'or I'm a Dutchman.'"
     assert_select %(input[type="radio"][name="text_moment_grouping[#{variant_match.id}]"][value="different"][checked="checked"]), count: 1
     assert_select %(input[type="radio"][name="identical_grouping[#{same_scene_match.id}]"][value="different"][checked="checked"]), count: 1
-    assert_select %(input[type="radio"][name="identical_grouping[#{variant_match.id}]"][value="different"][checked="checked"]), count: 1
-    assert_select %(input[type="radio"][name="text_moment_grouping[#{same_scene_match.id}]"][value="different"][checked="checked"]), count: 1
+    assert_select %(input[type="radio"][name="identical_grouping[#{variant_match.id}]"][value="same"][checked="checked"]), count: 1
+    assert_select %(input[type="radio"][name="text_moment_grouping[#{same_scene_match.id}]"][value="same"][checked="checked"]), count: 1
     assert_select %(input[type="radio"][name="identical_grouping[#{other_plate.id}]"][value="different"][checked="checked"]), count: 1
     assert_select %(input[type="radio"][name="text_moment_grouping[#{other_plate.id}]"][value="different"][checked="checked"]), count: 1
-    assert_select %(input[type="radio"][value="same"][checked="checked"]), count: 0
+    assert_select ".admin-illustration-sibling-status--variant", text: "Currently grouped: same variant image"
+    assert_select ".admin-illustration-sibling-status--scene", text: "Currently grouped: same scene"
     assert_no_match(/Outside plate/, response.body)
   end
 

@@ -513,6 +513,27 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select "section.illustration-text-moment-group", count: 0
   end
 
+  test "illustration record renders optional editor notes below description" do
+    novel = Novel.create!(name: "Editorial Illustration Novel")
+    edition = novel.editions.create!(name: "Editorial Illustration Edition")
+    illustration = edition.illustrations.create!(
+      name: "Annotated plate",
+      image_url: "https://example.com/annotated-plate.jpg",
+      description: "The public description appears first.",
+      editor_notes: "The editor's notes appear after the description."
+    )
+
+    get illustration_path(illustration)
+
+    assert_response :success
+    assert_select ".record-meta dt", text: "Description"
+    assert_select ".record-meta dd", text: /The public description appears first\./
+    assert_select ".record-meta dt", text: "Editor's Notes"
+    assert_select ".record-meta dd", text: /The editor's notes appear after the description\./
+    dt_texts = css_select(".record-meta dt").map { |node| node.text.squish }
+    assert_operator dt_texts.index("Description"), :<, dt_texts.index("Editor's Notes")
+  end
+
   test "illustration page hides grouping sections when no group is assigned" do
     novel = Novel.create!(name: "Ungrouped Novel")
     edition = novel.editions.create!(name: "Ungrouped Edition")
@@ -781,5 +802,127 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     get search_path, params: { search: "Italicized" }
     assert_response :success
     assert_select "#search-novels h3 cite.work-title", text: "Italicized Novel"
+  end
+
+  test "public views italicize anthology titles embedded in edition labels" do
+    anthology_novel = Novel.create!(name: "Allan's Wife")
+    anthology_edition = anthology_novel.editions.create!(name: "Allan's Wife And Other Tales, 1st UK Edition")
+    story_novel = Novel.create!(name: "Hunter Quatermain's Story")
+    story_edition = story_novel.editions.create!(name: "\"Hunter Quatermain's Story\" from Allan's Wife And Other Tales")
+    illustration = story_edition.illustrations.create!(name: "Camp scene", image_url: "https://example.com/camp-scene.jpg")
+
+    get edition_path(story_edition)
+    assert_response :success
+    assert_select ".record-meta dd cite.work-title", text: "Allan's Wife And Other Tales"
+    assert_select ".record-meta dd", text: /Hunter Quatermain's Story/
+    assert_select ".record-meta dd", text: /from Allan's Wife And Other Tales/
+
+    get edition_path(anthology_edition)
+    assert_response :success
+    assert_select ".record-meta dd cite.work-title", text: "Allan's Wife And Other Tales"
+    assert_select ".record-meta dd", text: /1st UK Edition/
+
+    get novel_path(anthology_novel)
+    assert_response :success
+    assert_select ".edition-info h3 cite.work-title", text: "Allan's Wife And Other Tales"
+
+    get illustration_path(illustration)
+    assert_response :success
+    assert_select ".record-breadcrumbs cite.work-title", text: "Allan's Wife And Other Tales"
+  end
+
+  test "public views italicize periodical titles embedded in edition labels" do
+    novel = Novel.create!(name: "Cleopatra")
+    edition = novel.editions.create!(
+      name: "Illustrated London News, vol. XCIV no. 2594",
+      publisher: "Ingram Brothers",
+      publication_city: "London",
+      publication_date: "5 January 1889"
+    )
+    illustration = edition.illustrations.create!(
+      name: "No, never!",
+      image_url: "https://example.com/illustrated-london-news-plate.jpg"
+    )
+
+    get illustration_path(illustration)
+    assert_response :success
+    assert_select ".record-meta dt", text: "Edition"
+    assert_select ".record-meta dd a cite.work-title", text: "Illustrated London News"
+    assert_select ".record-meta dd a", text: /vol\. XCIV no\. 2594/
+
+    get edition_path(edition)
+    assert_response :success
+    assert_select ".record-meta dt", text: "Edition"
+    assert_select ".record-meta dd cite.work-title", text: "Illustrated London News"
+    assert_select ".record-meta dd", text: /vol\. XCIV no\. 2594/
+
+    get novel_path(novel)
+    assert_response :success
+    assert_select ".edition-info h3 cite.work-title", text: "Illustrated London News"
+    assert_select ".edition-info h3", text: /vol\. XCIV no\. 2594/
+  end
+
+  test "public views italicize alternate titles embedded in edition labels" do
+    novel = Novel.create!(name: "Benita [The Spirit of Bambatse]")
+    edition = novel.editions.create!(
+      name: "The Spirit of Bambatse, 1st US edition",
+      publisher: "Longmans, Green, and Co.",
+      publication_city: "New York",
+      publication_date: "1906"
+    )
+
+    get edition_path(edition)
+    assert_response :success
+    assert_select ".record-meta dt", text: "Edition"
+    assert_select ".record-meta dd cite.work-title", text: "The Spirit of Bambatse"
+    assert_select ".record-meta dd", text: /1st US edition/
+
+    get novel_path(novel)
+    assert_response :success
+    assert_select ".edition-info h3 cite.work-title", text: "The Spirit of Bambatse"
+    assert_select ".edition-info h3", text: /1st US edition/
+  end
+
+  test "public views distinguish short stories from novels and show host publications" do
+    short_story = Novel.create!(name: "Magepa the Buck", work_type: "short_story")
+    edition = short_story.editions.create!(
+      name: "1st UK edition",
+      container_title: "Princess Mary's Gift Book",
+      container_type: "book",
+      publisher: "Hodder and Stoughton",
+      publication_city: "London",
+      publication_date: "1914"
+    )
+    illustration = edition.illustrations.create!(
+      name: "Magepa the Buck",
+      image_url: "https://example.com/magepa.jpg"
+    )
+
+    get novel_path(short_story)
+    assert_response :success
+    assert_select ".page-eyebrow", text: "Short story record"
+    assert_select "h1.page-title span", text: "\"Magepa the Buck\""
+    assert_select %[span[data-pagefind-meta="work_type"]], text: "short_story"
+    assert_select %[span[data-pagefind-meta="record_label"]], text: "Short story"
+
+    get edition_path(edition)
+    assert_response :success
+    assert_select ".record-meta dt", text: "Short story"
+    assert_select ".record-meta dd a span", text: "\"Magepa the Buck\""
+    assert_select ".record-meta dt", text: "Book"
+    assert_select ".record-meta dd cite.work-title", text: "Princess Mary's Gift Book"
+
+    get illustration_path(illustration)
+    assert_response :success
+    assert_select ".record-meta dt", text: "Short story"
+    assert_select ".record-meta dt", text: "Book"
+    assert_select ".record-breadcrumbs a span", text: "\"Magepa the Buck\""
+    assert_select %[span[data-pagefind-meta="novel_work_type"]], text: "short_story"
+    assert_select %[span[data-pagefind-meta="novel_record_label"]], text: "Short story"
+
+    get search_path, params: { search: "Magepa" }
+    assert_response :success
+    assert_select "#search-novels .search-card-kicker", text: "Short story"
+    assert_select "#search-novels h3 span", text: "\"Magepa the Buck\""
   end
 end

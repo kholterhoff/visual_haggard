@@ -27,7 +27,7 @@ class Illustration < ApplicationRecord
   validates :identical_image_group, :text_moment_group, length: { maximum: STRING_MAXIMUM }, allow_blank: true
   validates :image_url, :image_thumbnail_url, :google_book_link, :gutenberg_link, :internet_archive_link,
             length: { maximum: STRING_MAXIMUM }, allow_blank: true
-  validates :description, length: { maximum: DESCRIPTION_MAXIMUM }, allow_blank: true
+  validates :description, :editor_notes, length: { maximum: DESCRIPTION_MAXIMUM }, allow_blank: true
   validates_http_url_or_legacy_reference :image_url, :image_thumbnail_url
   validates_http_url :google_book_link, :gutenberg_link, :internet_archive_link
 
@@ -83,18 +83,18 @@ class Illustration < ApplicationRecord
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[artist created_at description edition_id id illustrator_id name page_number updated_at]
+    %w[artist created_at description edition_id editor_notes id illustrator_id name page_number updated_at]
   end
 
   include PgSearch::Model
   pg_search_scope :search_by_name_and_description,
-    against: [:name, :description, :artist],
+    against: [:name, :description, :editor_notes, :artist],
     using: {
       tsearch: { prefix: true }
     }
 
   pg_search_scope :search_all,
-    against: [:name, :description, :artist, :page_number],
+    against: [:name, :description, :editor_notes, :artist, :page_number],
     associated_against: {
       edition: [:name, :publisher],
       illustrator: [:name]
@@ -163,11 +163,25 @@ class Illustration < ApplicationRecord
     scope.where(identical_image_group: identical_image_group).where.not(id: id)
   end
 
+  def identical_image_grouped_with?(other_illustration)
+    return false unless self.class.identical_image_group_supported?
+    return false if other_illustration.blank? || identical_image_group.blank?
+
+    identical_image_group == other_illustration.identical_image_group
+  end
+
   def other_text_moment_illustrations(scope = Illustration.all)
     return scope.none unless self.class.text_moment_group_supported?
     return scope.none if text_moment_group.blank?
 
     scope.where(text_moment_group: text_moment_group).where.not(id: id)
+  end
+
+  def text_moment_grouped_with?(other_illustration)
+    return false unless self.class.text_moment_group_supported?
+    return false if other_illustration.blank? || text_moment_group.blank?
+
+    text_moment_group == other_illustration.text_moment_group
   end
 
   def other_illustrations_from_novel

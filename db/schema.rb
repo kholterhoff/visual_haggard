@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_03_30_103000) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_17_213000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -98,6 +98,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_30_103000) do
     t.string "image_content_type", limit: 255
     t.integer "image_file_size"
     t.datetime "image_updated_at", precision: nil
+    t.string "container_title"
+    t.string "container_type"
     t.index ["novel_id"], name: "index_editions_on_novel_id"
   end
 
@@ -125,6 +127,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_30_103000) do
     t.integer "illustrator_id"
     t.string "identical_image_group"
     t.string "text_moment_group"
+    t.text "editor_notes"
     t.index ["edition_id"], name: "index_illustrations_on_edition_id"
     t.index ["identical_image_group"], name: "index_illustrations_on_identical_image_group"
     t.index ["illustrator_id"], name: "index_illustrations_on_illustrator_id"
@@ -143,6 +146,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_30_103000) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.text "description"
+    t.string "work_type", default: "novel", null: false
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|

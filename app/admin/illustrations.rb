@@ -4,6 +4,7 @@ ActiveAdmin.register Illustration do
                 :image_url,
                 :image_thumbnail_url,
                 :description,
+                :editor_notes,
                 :edition_id,
                 :illustrator_id,
                 :page_number,
@@ -59,11 +60,50 @@ ActiveAdmin.register Illustration do
       row :illustrator
       row :page_number
       row :description
+      row("Editor's Notes") { |illustration| illustration.editor_notes }
       row :tag_list
       row :image_url
       row :image_thumbnail_url
       row :identical_image_group if Illustration.identical_image_group_supported?
+      row("Grouped variant images") do |illustration|
+        related_illustrations = illustration.other_illustrations_from_novel.includes(:edition).order(:id)
+        members = illustration.other_identical_illustrations(related_illustrations).to_a
+
+        if members.any?
+          safe_join(members.map do |member|
+            details = [member.edition.display_title, member.page_number.presence].compact.join(" | ")
+
+            content_tag(:div, class: "admin-illustration-group-summary") do
+              safe_join([
+                link_to(member.name, admin_illustration_path(member)),
+                content_tag(:div, details, class: "admin-illustration-group-summary-meta")
+              ])
+            end
+          end)
+        else
+          content_tag(:span, "No grouped variant images yet.", class: "empty")
+        end
+      end if Illustration.identical_image_group_supported?
       row :text_moment_group if Illustration.text_moment_group_supported?
+      row("Grouped scene images") do |illustration|
+        related_illustrations = illustration.other_illustrations_from_novel.includes(:edition).order(:id)
+        members = illustration.other_text_moment_illustrations(related_illustrations).to_a
+
+        if members.any?
+          safe_join(members.map do |member|
+            details = [member.edition.display_title, member.page_number.presence].compact.join(" | ")
+
+            content_tag(:div, class: "admin-illustration-group-summary") do
+              safe_join([
+                link_to(member.name, admin_illustration_path(member)),
+                content_tag(:div, details, class: "admin-illustration-group-summary-meta")
+              ])
+            end
+          end)
+        else
+          content_tag(:span, "No grouped scene images yet.", class: "empty")
+        end
+      end if Illustration.text_moment_group_supported?
       row :google_book_link
       row :gutenberg_link
       row :internet_archive_link
@@ -143,6 +183,7 @@ ActiveAdmin.register Illustration do
       f.input :artist
       f.input :page_number
       f.input :description, input_html: { rows: 8 }
+      f.input :editor_notes, label: "Editor's Notes", input_html: { rows: 8 }
       f.input :tag_list,
               input_html: { value: f.object.tag_list.join(", ") },
               hint: "Comma-separated keywords used by archive search."

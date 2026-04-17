@@ -180,8 +180,8 @@
                     </div>
                   <% end %>
                   <div class="search-card-body">
-                    <p class="search-card-kicker">Novel</p>
-                    <h3><%= work_title(novel.name) %></h3>
+                    <p class="search-card-kicker"><%= novel.record_label %></p>
+                    <h3><%= novel_work_title(novel) %></h3>
                     <% if (excerpt = search_excerpt_html(novel.description, length: 180)).present? %>
                       <p class="search-card-excerpt"><%= excerpt %></p>
                     <% end %>

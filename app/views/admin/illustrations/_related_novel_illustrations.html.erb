@@ -1,12 +1,14 @@
 <% if illustrations.any? %>
   <%= form_with url: update_sibling_groupings_admin_illustration_path(current_illustration), method: :patch, local: true, class: "admin-illustration-sibling-form" do %>
     <p class="admin-illustration-sibling-instructions">
-      All illustrations default to <strong>different</strong>. Select the illustrations that show the <strong>same variant image</strong> and/or the <strong>same scene</strong>, then save.
+      Illustrations already grouped with this record are preselected as <strong>same</strong>. Adjust the selections for <strong>variant image</strong> and/or <strong>scene</strong>, then save.
     </p>
 
     <div class="admin-illustration-sibling-grid">
       <% illustrations.each do |illustration| %>
         <% image_source = illustration.display_image_source(style: :original) %>
+        <% same_variant = supports_variant_grouping && current_illustration.identical_image_grouped_with?(illustration) %>
+        <% same_scene = supports_text_moment_grouping && current_illustration.text_moment_grouped_with?(illustration) %>
         <article class="admin-illustration-sibling-card">
           <%= link_to admin_illustration_path(illustration), class: "admin-illustration-sibling-thumb" do %>
             <% if image_source.present? %>
@@ -17,10 +19,21 @@
           <% end %>
 
           <div class="admin-illustration-sibling-body">
-            <p class="admin-illustration-sibling-meta"><%= illustration.edition.display_title %></p>
+            <p class="admin-illustration-sibling-meta"><%= formatted_edition_title(illustration.edition) %></p>
             <h3><%= link_to illustration.name, admin_illustration_path(illustration) %></h3>
             <% if illustration.page_number.present? %>
               <p class="admin-illustration-sibling-meta">Page <%= illustration.page_number %></p>
+            <% end %>
+
+            <% if same_variant || same_scene %>
+              <div class="admin-illustration-sibling-statuses">
+                <% if same_variant %>
+                  <p class="admin-illustration-sibling-status admin-illustration-sibling-status--variant">Currently grouped: same variant image</p>
+                <% end %>
+                <% if same_scene %>
+                  <p class="admin-illustration-sibling-status admin-illustration-sibling-status--scene">Currently grouped: same scene</p>
+                <% end %>
+              </div>
             <% end %>
           </div>
 
@@ -28,11 +41,11 @@
             <fieldset class="admin-illustration-sibling-radios">
               <legend>Variant image</legend>
               <label>
-                <%= radio_button_tag "identical_grouping[#{illustration.id}]", "same", false %>
+                <%= radio_button_tag "identical_grouping[#{illustration.id}]", "same", same_variant %>
                 Same variant image
               </label>
               <label>
-                <%= radio_button_tag "identical_grouping[#{illustration.id}]", "different", true %>
+                <%= radio_button_tag "identical_grouping[#{illustration.id}]", "different", !same_variant %>
                 Different variant image
               </label>
             </fieldset>
@@ -42,11 +55,11 @@
             <fieldset class="admin-illustration-sibling-radios">
               <legend>Scene</legend>
               <label>
-                <%= radio_button_tag "text_moment_grouping[#{illustration.id}]", "same", false %>
+                <%= radio_button_tag "text_moment_grouping[#{illustration.id}]", "same", same_scene %>
                 Same Scene
               </label>
               <label>
-                <%= radio_button_tag "text_moment_grouping[#{illustration.id}]", "different", true %>
+                <%= radio_button_tag "text_moment_grouping[#{illustration.id}]", "different", !same_scene %>
                 Different Scene
               </label>
             </fieldset>

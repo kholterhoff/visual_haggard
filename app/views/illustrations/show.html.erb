@@ -12,14 +12,17 @@
       record_type: "illustration",
       title: @illustration.name,
       novel_name: @illustration.novel.name,
+      novel_work_type: @illustration.novel.work_type,
+      novel_record_label: @illustration.novel.record_label,
       edition_title: edition.display_title,
       illustrator_name: illustration_artist,
       image: public_asset_url(original_source),
-      summary: plain_text_excerpt(@illustration.description, length: 220),
+      summary: plain_text_excerpt(@illustration.description.presence || @illustration.editor_notes, length: 220),
       publication_citation: edition.publication_citation
     },
     body: [
       @illustration.description,
+      @illustration.editor_notes,
       @illustration.tag_list.join(" "),
       illustration_artist,
       @illustration.page_number,
@@ -39,7 +42,7 @@
         /
         <%= linked_novel_title(@illustration.novel) %>
         /
-        <%= link_to edition.display_title, edition_path(edition) %>
+        <%= linked_edition_title(edition) %>
         /
         Illustration
       </p>
@@ -78,11 +81,16 @@
           <dt>Title</dt>
           <dd><%= display_illustration_title(@illustration) %></dd>
 
-          <dt>Novel</dt>
-          <dd><%= linked_novel_title(@illustration.novel) %></dd>
+          <dt><%= @illustration.novel.record_label %></dt>
+          <dd><%= linked_novel_reference_title(@illustration.novel) %></dd>
+
+          <% if @illustration.novel.short_story? && edition.container_title.present? && edition.container_type_label.present? %>
+            <dt><%= edition.container_type_label %></dt>
+            <dd><%= work_title(edition.container_title) %></dd>
+          <% end %>
 
           <dt>Edition</dt>
-          <dd><%= link_to edition.display_title, edition_path(edition) %></dd>
+          <dd><%= linked_edition_title(edition) %></dd>
 
           <% if edition.publication_city.present? && edition.publication_city != "Unknown" %>
             <dt>Publication City</dt>
@@ -112,6 +120,11 @@
           <% if @illustration.description.present? %>
             <dt>Description</dt>
             <dd><%= normalized_simple_format(@illustration.description) %></dd>
+          <% end %>
+
+          <% if @illustration.editor_notes.present? %>
+            <dt>Editor's Notes</dt>
+            <dd><%= normalized_simple_format(@illustration.editor_notes) %></dd>
           <% end %>
 
           <% if @illustration.internet_archive_link.present? %>
@@ -151,7 +164,7 @@
     <% end %>
 
     <div class="record-back-link">
-      <%= link_to safe_join([content_tag(:span, "Back to", class: "record-back-label"), work_title(@illustration.novel.name)]), novel_path(@illustration.novel, anchor: "illustration-archive"), class: "ui-button ui-button--secondary" %>
+      <%= link_to safe_join([content_tag(:span, "Back to", class: "record-back-label"), novel_work_title(@illustration.novel)]), novel_path(@illustration.novel, anchor: "illustration-archive"), class: "ui-button ui-button--secondary" %>
     </div>
   </div>
 </div>

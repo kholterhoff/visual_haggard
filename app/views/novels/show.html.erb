@@ -1,4 +1,4 @@
-<% content_for :title, @novel.name %>
+<% content_for :title, novel_title_text(@novel) %>
 <%
   visible_editions = @novel.visible_editions.to_a.sort_by(&:publication_sort_key)
   visible_illustrations = visible_editions.flat_map(&:illustrations)
@@ -22,7 +22,7 @@
       path: edition_path(edition),
       alt: "#{@novel.name} - #{edition.display_title}",
       eyebrow: cover_label,
-      title: edition.display_title,
+      title: formatted_edition_title(edition),
       meta: edition.publication_citation.presence || "Edition record",
       dot_label: "#{edition.display_title} cover"
     }
@@ -41,8 +41,10 @@
     filters: { record_type: "novel" },
     meta: {
       record_type: "novel",
-      title: @novel.name,
+      title: novel_title_text(@novel),
       novel_name: @novel.name,
+      work_type: @novel.work_type,
+      record_label: @novel.record_label,
       image: public_asset_url(hero_cover_source),
       summary: plain_text_excerpt(@novel.description, length: 220),
       summary_html: search_excerpt_html(@novel.description, length: 220)
@@ -56,12 +58,12 @@
         <%= render "shared/archive_cover_carousel",
           entries: novel_cover_carousel_entries,
           aria_label: "Cover and dust jacket carousel for #{@novel.name}",
-          empty_message: "No cover or dust jacket is currently available for this novel." %>
+          empty_message: "No cover or dust jacket is currently available for this work." %>
       </div>
 
       <div class="hero-content">
-        <p class="page-eyebrow">Novel record</p>
-        <h1 class="page-title novel-title"><%= work_title(@novel.name) %></h1>
+        <p class="page-eyebrow"><%= @novel.record_label %> record</p>
+        <h1 class="page-title novel-title"><%= novel_work_title(@novel) %></h1>
 
         <div class="meta-chip-row novel-meta-row">
           <%= link_to pluralize(visible_editions.size, "edition"), "#edition-archive", class: "meta-chip meta-chip-link" %>
@@ -109,7 +111,7 @@
         <div class="section-heading">
           <div>
             <p class="page-eyebrow">Edition archive</p>
-            <h2>Editions of <%= work_title(@novel.name) %></h2>
+            <h2>Editions of <%= novel_work_title(@novel) %></h2>
           </div>
         </div>
 
@@ -131,7 +133,7 @@
                 </div>
                 <div class="edition-info">
                   <p class="edition-label">Edition</p>
-                  <h3><%= edition.display_title %></h3>
+                  <h3><%= formatted_edition_title(edition) %></h3>
                   <% if (citation = edition.publication_citation) %>
                     <p class="edition-details"><%= citation %></p>
                   <% end %>
@@ -148,7 +150,7 @@
         <div class="section-heading">
           <div>
             <p class="page-eyebrow">Illustrator archive</p>
-            <h2>Illustrators of <%= work_title(@novel.name) %></h2>
+            <h2>Illustrators of <%= novel_work_title(@novel) %></h2>
           </div>
         </div>
 
@@ -185,7 +187,7 @@
         <div class="section-heading">
           <div>
             <p class="page-eyebrow">Illustration archive</p>
-            <h2>Illustrations from <%= work_title(@novel.name) %></h2>
+            <h2>Illustrations from <%= novel_work_title(@novel) %></h2>
           </div>
         </div>
 

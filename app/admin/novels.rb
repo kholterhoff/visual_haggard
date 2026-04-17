@@ -1,5 +1,5 @@
 ActiveAdmin.register Novel do
-  permit_params :name, :description, :tag_list
+  permit_params :name, :work_type, :description, :tag_list
 
   includes :editions, :illustrations
   remove_filter :base_tags
@@ -14,6 +14,7 @@ ActiveAdmin.register Novel do
     selectable_column
     id_column
     column :name
+    column :work_type
     column("Editions") { |novel| novel.editions.size }
     column("Illustrations") { |novel| novel.illustrations.size }
     column :created_at
@@ -24,6 +25,7 @@ ActiveAdmin.register Novel do
     attributes_table do
       row :id
       row :name
+      row :work_type
       row :description
       row :tag_list
       row("Editions") { |novel| novel.editions.size }
@@ -38,6 +40,10 @@ ActiveAdmin.register Novel do
 
     f.inputs do
       f.input :name
+      f.input :work_type,
+              as: :select,
+              collection: Novel::WORK_TYPES.map { |value| [value.humanize, value] },
+              include_blank: false
       f.input :description, input_html: { rows: 12 }
       f.input :tag_list,
               input_html: { value: f.object.tag_list.join(", ") },

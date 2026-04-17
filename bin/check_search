@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+cd "$ROOT_DIR"
+
+echo "Checking search JavaScript syntax..."
+/bin/zsh -lc "
+  if ! command -v node >/dev/null 2>&1; then
+    echo 'Node is required to verify search JavaScript syntax.' >&2
+    exit 1
+  fi
+
+  node --check '$ROOT_DIR/app/javascript/controllers/pagefind_search_controller.js'
+"
+
+echo "Running search regression tests..."
+/bin/zsh -lc "
+  export PATH=\"\$HOME/.rbenv/bin:\$PATH\"
+
+  if command -v rbenv >/dev/null 2>&1; then
+    eval \"\$(rbenv init - zsh)\"
+  fi
+
+  cd '$ROOT_DIR'
+  bin/rails test test/integration/search_regression_test.rb
+"
+
+echo "Search checks passed."

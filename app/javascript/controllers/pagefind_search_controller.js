@@ -393,10 +393,11 @@ export default class extends Controller {
   renderIllustration(record) {
     const title = this.metaValue(record, "title") || "Untitled illustration"
     const novelName = this.metaValue(record, "novel_name")
+    const novelWorkType = this.metaValue(record, "novel_work_type")
     const illustratorName = this.metaValue(record, "illustrator_name")
     const publicationCitation = this.metaValue(record, "publication_citation")
     const image = this.metaValue(record, "image")
-    const renderedTitle = novelName && title === novelName ? this.renderWorkTitle(title) : this.escapeHtml(title)
+    const renderedTitle = novelName && title === novelName ? this.renderNarrativeTitle(title, novelWorkType) : this.escapeHtml(title)
 
     return `
       <a class="search-card search-card--illustration" href="${this.escapeAttribute(record.url)}">
@@ -404,7 +405,7 @@ export default class extends Controller {
         <div class="search-card-body">
           <p class="search-card-kicker">Illustration</p>
           <h3>${renderedTitle}</h3>
-          ${novelName ? `<p><strong>${this.renderWorkTitle(novelName)}</strong></p>` : ""}
+          ${novelName ? `<p><strong>${this.renderNarrativeTitle(novelName, novelWorkType)}</strong></p>` : ""}
           ${illustratorName ? `<p>${this.escapeHtml(illustratorName)}</p>` : ""}
           ${publicationCitation ? `<p class="search-card-citation">${this.escapeHtml(publicationCitation)}</p>` : ""}
         </div>
@@ -437,12 +438,14 @@ export default class extends Controller {
 
     records.forEach((record) => {
       const novelName = this.metaValue(record, "novel_name") || "Unknown novel"
+      const novelWorkType = this.metaValue(record, "novel_work_type")
+      const novelRecordLabel = this.metaValue(record, "novel_record_label") || "Novel"
       const editionTitle = this.metaValue(record, "edition_title") || "Untitled edition"
       const illustratorName = this.metaValue(record, "illustrator_name") || "Unknown illustrator"
       const publicationCitation = this.metaValue(record, "publication_citation")
 
-      this.pushIllustrationGroup(groupMaps.novel, `novel:${novelName}`, { novelName }, record)
-      this.pushIllustrationGroup(groupMaps.edition, `edition:${novelName}:${editionTitle}:${publicationCitation}`, { title: editionTitle, novelName }, record)
+      this.pushIllustrationGroup(groupMaps.novel, `novel:${novelName}`, { novelName, novelWorkType, novelRecordLabel }, record)
+      this.pushIllustrationGroup(groupMaps.edition, `edition:${novelName}:${editionTitle}:${publicationCitation}`, { title: editionTitle, novelName, novelWorkType }, record)
       this.pushIllustrationGroup(groupMaps.illustrator, `illustrator:${illustratorName}`, { title: illustratorName }, record)
     })
 
@@ -525,6 +528,7 @@ export default class extends Controller {
 
   renderIllustrationGroup(grouping, group) {
     const config = ILLUSTRATION_GROUPING_CONFIG[grouping]
+    const eyebrow = grouping === "novel" ? (group.novelRecordLabel || "Novel") : config.eyebrow
     const groupHeading = this.renderIllustrationGroupHeading(grouping, group)
     const groupMeta = this.renderIllustrationGroupMeta(grouping, group)
 
@@ -532,7 +536,7 @@ export default class extends Controller {
       <section class="search-illustration-group">
         <div class="section-heading search-illustration-group-heading">
           <div>
-            <p class="page-eyebrow">${this.escapeHtml(config.eyebrow)}</p>
+            <p class="page-eyebrow">${this.escapeHtml(eyebrow)}</p>
             ${groupHeading}
             ${groupMeta}
           </div>
@@ -550,9 +554,9 @@ export default class extends Controller {
   renderIllustrationGroupHeading(grouping, group) {
     switch (grouping) {
       case "novel":
-        return `<h3>Illustrations from ${this.renderWorkTitle(group.novelName)}</h3>`
+        return `<h3>Illustrations from ${this.renderNarrativeTitle(group.novelName, group.novelWorkType)}</h3>`
       case "edition":
-        return `<h3>${this.escapeHtml(group.title)}</h3>`
+        return `<h3>${this.renderEditionLabel(group.title)}</h3>`
       case "illustrator":
         return `<h3>Illustrations by ${this.escapeHtml(group.title)}</h3>`
       default:
@@ -563,7 +567,7 @@ export default class extends Controller {
   renderIllustrationGroupMeta(grouping, group) {
     if (grouping !== "edition" || !group.novelName) return ""
 
-    return `<p class="search-illustration-group-meta">${this.renderWorkTitle(group.novelName)}</p>`
+    return `<p class="search-illustration-group-meta">${this.renderNarrativeTitle(group.novelName, group.novelWorkType)}</p>`
   }
 
   applyIllustrationGrouping(root, grouping) {
@@ -585,8 +589,84 @@ export default class extends Controller {
     return `<cite class="work-title">${this.escapeHtml(value)}</cite>`
   }
 
+  renderNarrativeTitle(value, workType) {
+    if (workType === "short_story") {
+      return `<span>"${this.escapeHtml(value)}"</span>`
+    }
+
+    return this.renderWorkTitle(value)
+  }
+
+  renderEditionLabel(value) {
+    const label = (value || "").trim()
+    if (!label) return this.escapeHtml(value || "")
+
+    const fromMatch = label.match(/^(.*?\bfrom\s+)(.+)$/i)
+    if (fromMatch && this.looksLikeEditionWorkTitle(fromMatch[2])) {
+      return `${this.escapeHtml(fromMatch[1])}${this.renderWorkTitle(fromMatch[2].trim())}`
+    }
+
+    const leadingMatch = label.match(/^(.+?),\s*(.+)$/)
+    if (
+      leadingMatch &&
+      this.looksLikeEditionLeadingTitle(leadingMatch[1]) &&
+      this.looksLikeEditionBibliographicSuffix(leadingMatch[2])
+    ) {
+      const title = leadingMatch[1].trim()
+      return `${this.renderWorkTitle(title)}${this.escapeHtml(label.slice(title.length))}`
+    }
+
+    return this.escapeHtml(label)
+  }
+
+  looksLikeEditionWorkTitle(value) {
+    const normalized = (value || "").trim()
+    if (!normalized) return false
+
+    return /[;:,]/.test(normalized) ||
+      /\b(?:a|an|and|of|or|the|other)\b/i.test(normalized) ||
+      this.looksLikePeriodicalTitle(normalized)
+  }
+
+  looksLikeEditionLeadingTitle(value) {
+    const normalized = (value || "").trim()
+    if (!normalized) return false
+    if (/^(?:\d|c\.)/i.test(normalized)) return false
+    if (/\b(?:edition|vol\.?|volume|no\.?|number|issue|reprint|printing|paperback|hardcover|softcover|cover|copy|series)\b/i.test(normalized)) return false
+
+    return this.looksLikeEditionWorkTitle(normalized) ||
+      (/[A-Z]/.test(normalized) && normalized.split(/\s+/).length <= 8)
+  }
+
+  looksLikeEditionBibliographicSuffix(value) {
+    const normalized = (value || "").trim()
+    if (!normalized) return false
+
+    return /\d/.test(normalized) ||
+      /\b(?:edition|issue|vol\.?|volume|no\.?|number|reprint|printing|paperback|hardcover|softcover|dust\s+jacket|wrapper|cover|copy|copyright|thus|series)\b/i.test(normalized) ||
+      this.looksLikePeriodicalSuffix(normalized)
+  }
+
+  looksLikePeriodicalTitle(value) {
+    const normalized = (value || "").trim()
+    if (!normalized) return false
+
+    return /\b(?:news|magazine|weekly|journal|review|times|graphic|gazette|chronicle|illustrated)\b/i.test(normalized)
+  }
+
+  looksLikePeriodicalSuffix(value) {
+    const normalized = (value || "").trim()
+    if (!normalized) return false
+
+    return /\b(?:vol\.?|volume|no\.?|number|issue)\b/i.test(normalized) ||
+      /^(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i.test(normalized) ||
+      /^\d{1,2}\s+(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/i.test(normalized)
+  }
+
   renderNovel(record) {
     const title = this.metaValue(record, "novel_name") || this.metaValue(record, "title") || "Untitled novel"
+    const workType = this.metaValue(record, "work_type")
+    const recordLabel = this.metaValue(record, "record_label") || "Novel"
     const image = this.metaValue(record, "image")
     const summaryHtml = this.metaValue(record, "summary_html")
     const summary = this.metaValue(record, "summary")
@@ -595,8 +675,8 @@ export default class extends Controller {
       <a class="search-card" href="${this.escapeAttribute(record.url)}">
         ${this.renderImage(image, title)}
         <div class="search-card-body">
-          <p class="search-card-kicker">Novel</p>
-          <h3>${this.renderWorkTitle(title)}</h3>
+          <p class="search-card-kicker">${this.escapeHtml(recordLabel)}</p>
+          <h3>${this.renderNarrativeTitle(title, workType)}</h3>
           ${this.renderFormattedExcerpt(summaryHtml, summary)}
         </div>
       </a>

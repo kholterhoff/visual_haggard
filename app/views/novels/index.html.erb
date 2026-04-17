@@ -10,7 +10,7 @@
       <div>
         <p class="page-eyebrow">Novels</p>
         <h1 class="page-title">Explore Haggard's fiction through its illustrated editions.</h1>
-        <p class="page-lead">Each novel page brings together its editions, cover art, and illustrations in one place.</p>
+        <p class="page-lead">Each work page brings together its editions, cover art, and illustrations in one place.</p>
 
         <div class="meta-chip-row novels-hero-meta">
           <% if @novel_groups.any? %>
@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <div class="novel-directory-jump" aria-label="Alphabetical novel navigation">
+        <div class="novel-directory-jump" aria-label="Alphabetical title navigation">
           <% @novel_groups.keys.sort.each do |letter| %>
             <% anchor = letter.match?(/[A-Z]/) ? letter.downcase : "other" %>
             <%= link_to letter, "#novel-letter-#{anchor}", class: "novel-letter-jump" %>
@@ -63,7 +63,7 @@
         <div class="section-heading">
           <div>
             <p class="page-eyebrow">Archive browse</p>
-            <h2>Browse all novels</h2>
+            <h2>Browse all works</h2>
           </div>
         </div>
 
@@ -85,8 +85,8 @@
                 </div>
 
                 <div class="novel-grid-copy">
-                  <p class="novel-grid-label">Novel</p>
-                  <h2><%= work_title(novel.name) %></h2>
+                  <p class="novel-grid-label"><%= novel.record_label %></p>
+                  <h2><%= novel_work_title(novel) %></h2>
                 </div>
               <% end %>
             </article>
@@ -99,7 +99,7 @@
       </section>
     <% else %>
       <section class="empty-state novels-empty">
-        <p>No novels found.</p>
+        <p>No works found.</p>
       </section>
     <% end %>
 

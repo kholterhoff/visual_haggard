@@ -5,6 +5,8 @@ ActiveAdmin.register Edition do
                 :publication_date,
                 :publication_city,
                 :source,
+                :container_title,
+                :container_type,
                 :cover_url,
                 :cover_thumbnail_url,
                 :long_name,
@@ -35,6 +37,8 @@ ActiveAdmin.register Edition do
       row :publication_date
       row :publication_city
       row :source
+      row :container_title
+      row(:container_type) { |edition| edition.container_type_label }
       row :cover_url
       row :cover_thumbnail_url
       row("Cover source") { |edition| edition.display_cover_source(style: :original) }
@@ -61,6 +65,11 @@ ActiveAdmin.register Edition do
       f.input :publication_date
       f.input :publication_city
       f.input :source
+      f.input :container_title, hint: "Optional containing book or periodical title for short stories."
+      f.input :container_type,
+              as: :select,
+              collection: Edition::CONTAINER_TYPES.map { |value, label| [label, value] },
+              include_blank: true
     end
 
     f.inputs "Cover image" do

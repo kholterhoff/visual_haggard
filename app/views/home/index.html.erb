@@ -104,7 +104,7 @@
             <div class="home-feature-slide-copy">
               <p class="home-feature-label">Edition</p>
               <h3 class="home-feature-novel-title"><%= linked_novel_title(edition.novel) %></h3>
-              <p class="home-feature-edition-title"><%= link_to edition.display_title, edition_path(edition) %></p>
+              <p class="home-feature-edition-title"><%= linked_edition_title(edition) %></p>
               <p class="home-feature-description">
                 <%= edition.publication_citation.presence || "Follow this edition into its novel record, related illustrations, and bibliographic context." %>
               </p>
@@ -130,7 +130,7 @@
                   data-rotator-target="dot"
                   data-action="rotator#select"
                   data-rotator-index-param="<%= index %>"
-                  aria-label="Show <%= edition.novel.name %>, <%= edition.display_title %>"
+                  aria-label="Show <%= novel_title_text(edition.novel) %>, <%= edition.display_title %>"
                 ></button>
               <% end %>
             </div>
@@ -224,17 +224,17 @@
               <div class="home-timeline-stem"></div>
               <div class="home-timeline-markers">
                 <% group[:editions].each do |edition| %>
-                  <% marker_label = "#{edition.novel.name} — #{edition.display_title}" %>
+                  <% marker_label = "#{novel_title_text(edition.novel)} — #{edition.display_title}" %>
                   <% tooltip_content = content_tag(:span, class: "home-timeline-tooltip", "aria-hidden": "true") do
                     safe_join([
-                      content_tag(:strong, work_title(edition.novel.name)),
-                      content_tag(:span, edition.display_title)
+                      content_tag(:strong, novel_work_title(edition.novel)),
+                      content_tag(:span, formatted_edition_title(edition))
                     ])
                   end %>
                   <%= link_to safe_join([content_tag(:span, marker_label, class: "sr-only"), tooltip_content]),
                     edition_path(edition),
                     class: "home-timeline-marker",
-                    "aria-label": "#{edition.novel.name}, #{edition.display_title}" %>
+                    "aria-label": "#{novel_title_text(edition.novel)}, #{edition.display_title}" %>
                 <% end %>
               </div>
             </section>
@@ -305,8 +305,8 @@
                 <div class="home-paperback-card-copy">
                   <p class="home-style-kicker">Illustrator</p>
                   <h3><%= illustrator.name %></h3>
-                  <p class="home-paperback-meta"><%= representative_edition.display_title %></p>
-                  <p class="home-paperback-submeta"><%= work_title(representative_edition.novel.name) %></p>
+                  <p class="home-paperback-meta"><%= formatted_edition_title(representative_edition) %></p>
+                  <p class="home-paperback-submeta"><%= novel_work_title(representative_edition.novel) %></p>
                   <% if representative_edition.publication_citation.present? %>
                     <p class="home-paperback-citation"><%= representative_edition.publication_citation %></p>
                   <% end %>
