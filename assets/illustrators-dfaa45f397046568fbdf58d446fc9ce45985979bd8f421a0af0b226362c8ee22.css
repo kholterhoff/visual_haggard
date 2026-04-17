@@ -1,0 +1,317 @@
+.illustrators-page,
+.illustrator-show-page {
+  padding-bottom: 1rem;
+}
+
+.illustrators-hero,
+.illustrator-show-hero {
+  margin-bottom: 1.5rem;
+}
+
+.illustrator-directory,
+.illustrator-grid-panel,
+.illustrator-work-section {
+  padding: 1.5rem;
+}
+
+.illustrator-directory {
+  margin-bottom: 1.5rem;
+}
+
+#illustrator-directory,
+#illustrator-archive-browse,
+#illustrator-work-archive {
+  scroll-margin-top: 6rem;
+}
+
+.illustrator-directory-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.illustrator-letter-jump {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  background: hsl(var(--card));
+  color: hsl(var(--muted-foreground));
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.illustrator-letter-jump:hover {
+  color: hsl(var(--foreground));
+  background: hsl(var(--secondary));
+}
+
+.illustrator-directory-groups {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.illustrator-directory-group {
+  scroll-margin-top: 6.5rem;
+  padding: 1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background: hsl(var(--card));
+}
+
+.illustrator-directory-group-header {
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.illustrator-directory-group-header h3 {
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+}
+
+.illustrator-directory-links {
+  display: grid;
+  gap: 0.55rem;
+  font-size: 1rem;
+}
+
+.illustrator-link {
+  display: grid;
+  gap: 0.08rem;
+  color: hsl(var(--foreground));
+}
+
+.illustrator-link:hover {
+  color: hsl(var(--muted-foreground));
+}
+
+.illustrator-link-last-name {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.illustrator-link-full-name {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.illustrator-grid,
+.illustrator-work-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.illustrator-work-groups {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.illustrator-work-jumps {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.illustrator-work-group {
+  scroll-margin-top: 6.5rem;
+}
+
+.illustrator-work-group-heading {
+  margin-bottom: 1rem;
+}
+
+.illustrator-grid-image-link,
+.illustrator-work-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  background: hsl(var(--card));
+}
+
+.illustrator-work-link {
+  font-weight: normal;
+}
+
+.illustrator-grid-image-link {
+  font-weight: normal;
+}
+
+.illustrator-grid-image-link:hover,
+.illustrator-work-link:hover {
+  color: inherit;
+}
+
+.illustrator-grid-image-frame,
+.illustrator-work-image-frame,
+.illustrator-show-image-frame {
+  padding: 1rem;
+  background: linear-gradient(180deg, hsl(var(--secondary)), hsl(var(--card)) 100%);
+}
+
+.illustrator-grid-image,
+.illustrator-work-image,
+.illustrator-show-image img,
+.illustrator-grid-placeholder {
+  width: 100%;
+  background: hsl(var(--secondary));
+}
+
+.illustrator-grid-image,
+.illustrator-work-image,
+.illustrator-show-image img {
+  object-fit: contain;
+  object-position: center top;
+}
+
+.illustrator-grid-image {
+  height: 280px;
+}
+
+.illustrator-work-image {
+  height: 240px;
+}
+
+.illustrator-grid-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+  padding: 1rem;
+}
+
+.illustrator-grid-copy,
+.illustrator-work-copy {
+  padding: 1rem 1rem 1.15rem;
+}
+
+.illustrator-card-kicker {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.illustrator-grid-copy h3,
+.illustrator-work-copy h3,
+.illustrator-work-copy h4 {
+  margin: 0.55rem 0 0.75rem;
+  font-size: 1.28rem;
+  letter-spacing: -0.03em;
+}
+
+.illustrator-work-copy p,
+.illustrator-bio,
+.illustrator-bio-fallback {
+  color: hsl(var(--muted-foreground));
+  line-height: 1.75;
+}
+
+.illustrator-work-copy p {
+  margin: 0.2rem 0 0;
+}
+
+.illustrator-show-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 1.5rem;
+  align-items: start;
+  padding: 1.5rem;
+}
+
+.illustrator-bio {
+  margin-top: 1rem;
+  font-size: 1.02rem;
+}
+
+.illustrator-bio h2,
+.illustrator-bio h3,
+.illustrator-bio h4 {
+  margin: 2rem 0 0.95rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid hsl(var(--border));
+  font-family: var(--font-ui);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+}
+
+.illustrator-bio h2:first-child,
+.illustrator-bio h3:first-child,
+.illustrator-bio h4:first-child {
+  margin-top: 0;
+}
+
+.illustrator-bio p:last-child {
+  margin-bottom: 0;
+}
+
+.illustrator-meta-row {
+  margin-top: 1rem;
+}
+
+.illustrator-show-image-frame {
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+}
+
+.illustrator-show-image-frame--carousel {
+  padding: 1rem;
+}
+
+.illustrator-show-image img {
+  max-height: 560px;
+}
+
+@media (max-width: 1080px) {
+  .illustrator-directory-groups,
+  .illustrator-grid,
+  .illustrator-work-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .illustrator-show-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 780px) {
+  .illustrator-directory,
+  .illustrator-grid-panel,
+  .illustrator-work-section,
+  .illustrator-show-hero {
+    padding: 1rem;
+  }
+
+  .illustrator-directory-groups,
+  .illustrator-grid,
+  .illustrator-work-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .illustrator-grid-image,
+  .illustrator-work-image {
+    height: 260px;
+  }
+}
