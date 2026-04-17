@@ -185,6 +185,12 @@ export default class extends Controller {
     this.setBusy(false)
     this.hideAllSections()
 
+    if (this.query && this.hasQuerySpecificFallback()) {
+      this.showFallbackResults()
+      this.announce(`Showing server-rendered results for ${this.query}.`)
+      return
+    }
+
     if (this.query) {
       this.activateShell()
       this.showStatus("Search is temporarily unavailable right now. Rebuild the Pagefind index before publishing the archive.")
@@ -193,6 +199,10 @@ export default class extends Controller {
     }
 
     this.showFallbackResults()
+  }
+
+  hasQuerySpecificFallback() {
+    return this.fallbackTarget.dataset.fallbackQueryRendered === "true"
   }
 
   refresh() {
