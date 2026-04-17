@@ -408,7 +408,12 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
   test "illustration page lists other variant images when grouped" do
     novel = Novel.create!(name: "Grouped Illustration Novel")
     edition_a = novel.editions.create!(name: "1910 edition", publication_date: "1910")
-    edition_b = novel.editions.create!(name: "1915 edition", publication_date: "1915")
+    edition_b = novel.editions.create!(
+      name: "1915 edition",
+      publication_city: "London",
+      publisher: "Longmans",
+      publication_date: "1915"
+    )
     current = edition_a.illustrations.create!(
       name: "Current plate",
       image_url: "https://example.com/current.jpg",
@@ -435,10 +440,12 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select "section.illustration-identical-images .illustration-card-title-link", text: "Second plate"
     assert_select "section.illustration-identical-images .illustration-card-meta", text: "1915 edition"
     assert_select "section.illustration-identical-images .illustration-card-meta cite.work-title", text: "Grouped Illustration Novel"
+    assert_select "section.illustration-identical-images .illustration-card-citation", text: "London: Longmans, 1915."
     assert_select "section.illustration-identical-images .illustration-card", count: 1
     assert_select "section.illustration-identical-images dialog.illustration-compare-dialog", count: 1
     assert_select %(section.illustration-identical-images dialog a.illustration-compare-card--linked[href="#{illustration_path(current)}"] .illustration-compare-card-title), text: "Current plate"
     assert_select %(section.illustration-identical-images dialog a.illustration-compare-card--linked[href="#{illustration_path(identical)}"] .illustration-compare-card-title), text: "Second plate"
+    assert_select %(section.illustration-identical-images dialog a.illustration-compare-card--linked[href="#{illustration_path(identical)}"] .illustration-card-citation), text: "London: Longmans, 1915."
   end
 
   test "illustration page lists other illustrations of this scene" do

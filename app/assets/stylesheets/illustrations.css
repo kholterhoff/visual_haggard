@@ -87,6 +87,12 @@
   line-height: 1.65;
 }
 
+.illustration-card-citation {
+  margin: 0.3rem 0 0;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.65;
+}
+
 .illustration-record-title,
 .edition-record-title {
   font-size: clamp(1.95rem, 4vw, 3.2rem);
