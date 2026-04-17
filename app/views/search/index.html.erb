@@ -65,7 +65,7 @@
           <p><span data-pagefind-search-target="illustrationsCount">0</span> matches</p>
         </div>
 
-        <div class="search-card-grid search-card-grid--illustrations" data-pagefind-search-target="illustrationsResults"></div>
+        <div class="search-illustration-results" data-pagefind-search-target="illustrationsResults"></div>
 
         <div class="search-pagination" data-pagefind-search-target="illustrationsMore" hidden>
           <button
@@ -126,7 +126,11 @@
       </section>
     </div>
 
-    <div class="search-fallback" data-pagefind-search-target="fallback">
+    <div
+      class="search-fallback"
+      data-pagefind-search-target="fallback"
+      data-fallback-query-rendered="<%= @search.present? %>"
+    >
       <% if @search.blank? %>
         <section class="empty-state search-empty-state">
           <p>Enter a search term in the header search bar to browse illustration titles, illustration content, novels, and illustrators.</p>

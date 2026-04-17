@@ -92,6 +92,10 @@
   margin-top: 1rem;
 }
 
+.search-illustration-results {
+  width: 100%;
+}
+
 .search-group-tabs {
   display: flex;
   flex-wrap: wrap;

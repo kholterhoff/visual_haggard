@@ -16,8 +16,10 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select %(div.search-page[data-controller="pagefind-search"][data-pagefind-ignore="all"])
-    assert_select %(div[data-pagefind-search-target="fallback"])
+    assert_select %(div[data-pagefind-search-target="fallback"][data-fallback-query-rendered="true"])
     assert_select %(div[data-pagefind-search-target="announcer"][aria-live="polite"])
+    assert_select %(div.search-illustration-results[data-pagefind-search-target="illustrationsResults"])
+    assert_select %(div.search-card-grid.search-card-grid--illustrations[data-pagefind-search-target="illustrationsResults"]), count: 0
     assert_includes response.body, illustration.name
     assert_select %(a[href="#search-illustrations"])
     assert_select %(a[href="#{illustration_path(illustration)}"])
