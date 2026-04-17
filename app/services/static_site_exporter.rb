@@ -10,6 +10,7 @@ class StaticSiteExporter
   DEFAULT_HOST = "www.visualhaggard.org".freeze
   DEFAULT_REQUEST_HOST = "127.0.0.1".freeze
   DEFAULT_PAGEFIND_COMMAND = "pagefind".freeze
+  DEFAULT_NPX_PAGEFIND_COMMAND = "npx --yes pagefind".freeze
   PUBLIC_ROOT_FILES = %w[
     404.html
     favicon.svg
@@ -30,7 +31,7 @@ class StaticSiteExporter
     copy_public_assets: true,
     run_pagefind: true,
     cleanup_compiled_assets: true,
-    pagefind_command: ENV.fetch("PAGEFIND_CMD", DEFAULT_PAGEFIND_COMMAND),
+    pagefind_command: nil,
     custom_domain: nil,
     out: $stdout
   )
@@ -41,11 +42,22 @@ class StaticSiteExporter
     @copy_public_assets = copy_public_assets
     @run_pagefind = run_pagefind
     @cleanup_compiled_assets = cleanup_compiled_assets
-    @pagefind_command = pagefind_command
+    @pagefind_command = pagefind_command.presence || self.class.default_pagefind_command
     @custom_domain = custom_domain.to_s.strip.presence
     @out = out
     @warnings = []
     @asset_replacements = {}
+  end
+
+  def self.default_pagefind_command
+    executable_on_path?("npx") ? DEFAULT_NPX_PAGEFIND_COMMAND : DEFAULT_PAGEFIND_COMMAND
+  end
+
+  def self.executable_on_path?(command)
+    ENV.fetch("PATH", "").split(File::PATH_SEPARATOR).any? do |directory|
+      path = File.join(directory, command)
+      File.executable?(path) && !File.directory?(path)
+    end
   end
 
   def export!

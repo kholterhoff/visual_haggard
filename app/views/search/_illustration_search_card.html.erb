@@ -12,7 +12,7 @@
   <% end %>
   <div class="search-card-body">
     <p class="search-card-kicker">Illustration</p>
-    <h3><%= illustration.name.presence || "Untitled illustration" %></h3>
+    <h3><%= display_illustration_title(illustration) %></h3>
     <p><strong><%= work_title(novel.name) %></strong></p>
     <% if illustrator_name.present? %>
       <p><%= illustrator_name %></p>

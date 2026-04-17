@@ -137,6 +137,13 @@ module ApplicationHelper
     linked_work_title(short ? novel.short_title : novel.long_title, novel_path(novel), **options)
   end
 
+  def display_illustration_title(illustration, class_name: nil)
+    title = illustration&.name.presence || "Untitled illustration"
+    return work_title(title, class_name:) if illustration_title_matches_novel?(illustration, title)
+
+    content_tag(:span, title, class: class_name.presence)
+  end
+
   def condensed_edition_label(edition, novel: nil)
     label = edition&.display_title.to_s.strip
     return if label.blank?
@@ -266,6 +273,21 @@ module ApplicationHelper
     return if normalized.blank? || %w[Unknown None].include?(normalized)
 
     normalized
+  end
+
+  def illustration_title_matches_novel?(illustration, title = nil)
+    return false if illustration.blank? || illustration.novel.blank?
+
+    normalized_title = (title || illustration.name).to_s.strip
+    return false if normalized_title.blank?
+
+    bracketed_titles = illustration.novel.long_title.to_s.scan(/\[([^\]]+)\]/).flatten
+    candidate_titles = [illustration.novel.name, illustration.novel.short_title, illustration.novel.long_title, *bracketed_titles]
+                      .map { |value| value.to_s.strip.presence }
+                      .compact
+                      .uniq
+
+    candidate_titles.any? { |candidate| candidate.casecmp?(normalized_title) }
   end
 
   def append_pagefind_tag(fragments, data_key, name, value)

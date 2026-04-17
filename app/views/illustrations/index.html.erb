@@ -35,7 +35,7 @@
 
               <div class="illustration-card-body">
                 <p class="illustration-card-kicker">Illustration</p>
-                <h2><span class="illustration-card-title-link"><%= illustration.name.presence || "Untitled illustration" %></span></h2>
+                <h2><%= display_illustration_title(illustration, class_name: "illustration-card-title-link") %></h2>
                 <p class="illustration-card-meta"><%= illustration.edition.display_title %></p>
                 <p class="illustration-card-meta"><%= work_title(illustration.novel.name) %></p>
               </div>

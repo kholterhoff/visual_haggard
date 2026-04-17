@@ -8,6 +8,7 @@ WORKTREE_PATH="${PAGES_WORKTREE:-${ROOT_DIR%/*}/visual_haggard_pages}"
 STATIC_HOST_VALUE="${STATIC_HOST:-www.visualhaggard.org}"
 CUSTOM_DOMAIN_VALUE="${CUSTOM_DOMAIN:-www.visualhaggard.org}"
 RUN_EXPORT="${RUN_EXPORT:-true}"
+PAGEFIND_CMD_VALUE="${PAGEFIND_CMD:-npx --yes pagefind}"
 COMMIT_MESSAGE="${PAGES_COMMIT_MESSAGE:-Publish archive update $(date -u +%Y-%m-%dT%H:%M:%SZ)}"
 
 cd "$ROOT_DIR"
@@ -28,11 +29,17 @@ if ! git remote get-url "$REMOTE" >/dev/null 2>&1; then
 fi
 
 if [[ "$RUN_EXPORT" == "true" ]]; then
-  CUSTOM_DOMAIN="$CUSTOM_DOMAIN_VALUE" STATIC_HOST="$STATIC_HOST_VALUE" bin/rails static:export
+  CUSTOM_DOMAIN="$CUSTOM_DOMAIN_VALUE" STATIC_HOST="$STATIC_HOST_VALUE" PAGEFIND_CMD="$PAGEFIND_CMD_VALUE" bin/rails static:export
 fi
 
 if [[ ! -d "$ROOT_DIR/dist" ]]; then
   echo "Static export output was not found at $ROOT_DIR/dist." >&2
+  exit 1
+fi
+
+REPORT_PATH="$ROOT_DIR/dist/static_export_report.txt"
+if [[ -f "$REPORT_PATH" ]] && grep -Eq "Pagefind indexing failed|Pagefind binary not found" "$REPORT_PATH"; then
+  echo "Pagefind indexing failed during static export; aborting publish so archive search is not deployed in a broken state." >&2
   exit 1
 fi
 

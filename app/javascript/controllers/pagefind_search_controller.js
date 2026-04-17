@@ -92,7 +92,7 @@ export default class extends Controller {
 
     const pagefindAvailable = await this.pagefindIndexAvailable()
     if (!pagefindAvailable) {
-      this.showFallbackResults()
+      this.showUnavailableState()
       return
     }
 
@@ -179,6 +179,20 @@ export default class extends Controller {
     this.hideAllSections()
     this.hideStatus()
     this.setBusy(false)
+  }
+
+  showUnavailableState() {
+    this.setBusy(false)
+    this.hideAllSections()
+
+    if (this.query) {
+      this.activateShell()
+      this.showStatus("Search is temporarily unavailable right now. Rebuild the Pagefind index before publishing the archive.")
+      this.announce("Search is temporarily unavailable right now.")
+      return
+    }
+
+    this.showFallbackResults()
   }
 
   refresh() {
@@ -372,13 +386,14 @@ export default class extends Controller {
     const illustratorName = this.metaValue(record, "illustrator_name")
     const publicationCitation = this.metaValue(record, "publication_citation")
     const image = this.metaValue(record, "image")
+    const renderedTitle = novelName && title === novelName ? this.renderWorkTitle(title) : this.escapeHtml(title)
 
     return `
       <a class="search-card search-card--illustration" href="${this.escapeAttribute(record.url)}">
         ${this.renderImage(image, title)}
         <div class="search-card-body">
           <p class="search-card-kicker">Illustration</p>
-          <h3>${this.escapeHtml(title)}</h3>
+          <h3>${renderedTitle}</h3>
           ${novelName ? `<p><strong>${this.renderWorkTitle(novelName)}</strong></p>` : ""}
           ${illustratorName ? `<p>${this.escapeHtml(illustratorName)}</p>` : ""}
           ${publicationCitation ? `<p class="search-card-citation">${this.escapeHtml(publicationCitation)}</p>` : ""}

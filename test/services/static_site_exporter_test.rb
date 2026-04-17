@@ -2,6 +2,36 @@ require "test_helper"
 require "tmpdir"
 
 class StaticSiteExporterTest < ActiveSupport::TestCase
+  test "defaults to npx pagefind when npx is available" do
+    npx_directory = ENV.fetch("PATH", "").split(File::PATH_SEPARATOR).find do |directory|
+      File.executable?(File.join(directory, "npx"))
+    end
+
+    skip "npx is not available on PATH in this environment" unless npx_directory
+
+    with_modified_path(npx_directory) do
+      exporter = StaticSiteExporter.new(
+        output_root: Pathname("/tmp/visual_haggard_dist"),
+        precompile_assets: false,
+        copy_public_assets: false
+      )
+
+      assert_equal "npx --yes pagefind", exporter.instance_variable_get(:@pagefind_command)
+    end
+  end
+
+  test "falls back to the pagefind binary when npx is unavailable" do
+    with_modified_path("/definitely/missing") do
+      exporter = StaticSiteExporter.new(
+        output_root: Pathname("/tmp/visual_haggard_dist"),
+        precompile_assets: false,
+        copy_public_assets: false
+      )
+
+      assert_equal "pagefind", exporter.instance_variable_get(:@pagefind_command)
+    end
+  end
+
   test "maps root and paginated novel paths to static files" do
     exporter = StaticSiteExporter.new(
       output_root: Pathname("/tmp/visual_haggard_dist"),
@@ -93,5 +123,13 @@ class StaticSiteExporterTest < ActiveSupport::TestCase
 
   def assert_path_exists(pathname)
     assert pathname.exist?, "Expected #{pathname} to exist"
+  end
+
+  def with_modified_path(path)
+    original_path = ENV["PATH"]
+    ENV["PATH"] = path
+    yield
+  ensure
+    ENV["PATH"] = original_path
   end
 end

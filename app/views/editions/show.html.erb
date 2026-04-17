@@ -120,7 +120,7 @@
               <% end %>
 
               <div class="record-gallery-card-copy">
-                <span><%= illustration.name.presence || "Untitled illustration" %></span>
+                <%= display_illustration_title(illustration) %>
               </div>
             <% end %>
           <% end %>
