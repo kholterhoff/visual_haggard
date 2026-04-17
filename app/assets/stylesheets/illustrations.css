@@ -24,11 +24,6 @@
   text-decoration: none;
 }
 
-.illustration-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
-}
-
 .illustration-card-image-link {
   display: block;
 }
@@ -223,8 +218,6 @@
 .illustration-compare-card--linked:hover,
 .illustration-compare-card--linked:focus-visible {
   color: inherit;
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
 }
 
 .illustration-compare-card-media {

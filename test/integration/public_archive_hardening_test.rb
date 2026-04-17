@@ -432,6 +432,7 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select %(section.illustration-identical-images a.illustration-card--linked[href="#{illustration_path(identical)}"]), count: 1
     assert_select "section.illustration-identical-images .illustration-card-title-link", text: "Second plate"
     assert_select "section.illustration-identical-images .illustration-card-meta", text: "1915 edition"
+    assert_select "section.illustration-identical-images .illustration-card-meta cite.work-title", text: "Grouped Illustration Novel"
     assert_select "section.illustration-identical-images .illustration-card", count: 1
     assert_select "section.illustration-identical-images dialog.illustration-compare-dialog", count: 1
     assert_select %(section.illustration-identical-images dialog a.illustration-compare-card--linked[href="#{illustration_path(current)}"] .illustration-compare-card-title), text: "Current plate"
@@ -469,6 +470,7 @@ class PublicArchiveHardeningTest < ActionDispatch::IntegrationTest
     assert_select "section.illustration-text-moment-group button.illustration-compare-trigger", text: "Compare Illustrations"
     assert_select %(section.illustration-text-moment-group a.illustration-card--linked[href="#{illustration_path(same_moment)}"]), count: 1
     assert_select "section.illustration-text-moment-group .illustration-card-title-link", text: "Same scene plate"
+    assert_select "section.illustration-text-moment-group .illustration-card-meta cite.work-title", text: "Text Moment Novel"
     assert_select "section.illustration-text-moment-group .illustration-card-title-link", text: "Variant plate", count: 0
     assert_operator response.body.index("Other variants in the archive"), :<, response.body.index("Other illustrations of this scene")
     assert_select "section.illustration-text-moment-group dialog.illustration-compare-dialog h2", text: "Compare Illustrations of This Scene"

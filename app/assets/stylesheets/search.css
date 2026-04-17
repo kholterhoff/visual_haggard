@@ -200,13 +200,6 @@
   text-decoration: none;
 }
 
-.search-card:hover,
-.search-list-item:hover {
-  color: inherit;
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
-}
-
 .search-card-image-frame {
   padding: 1rem;
   background: linear-gradient(180deg, hsl(var(--secondary)), hsl(var(--card)) 100%);

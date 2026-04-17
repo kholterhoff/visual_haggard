@@ -46,7 +46,7 @@
           <p class="illustration-card-kicker"><%= kicker %></p>
           <h2><span class="illustration-card-title-link"><%= illustration.name %></span></h2>
           <p class="illustration-card-meta"><%= illustration.edition.display_title %></p>
-          <p class="illustration-card-meta"><%= illustration.novel.name %></p>
+          <p class="illustration-card-meta"><%= work_title(illustration.novel.name) %></p>
           <% if illustration.page_number.present? %>
             <p class="illustration-card-meta">Page <%= illustration.page_number %></p>
           <% end %>

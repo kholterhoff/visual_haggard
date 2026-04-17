@@ -315,8 +315,6 @@
 .edition-link:hover,
 .illustration-tile-link:hover {
   color: inherit;
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
 }
 
 .edition-thumbnail,
@@ -429,8 +427,6 @@
 
 .novel-illustrator-link:hover {
   color: inherit;
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
 }
 
 .novel-illustrator-thumbnail {

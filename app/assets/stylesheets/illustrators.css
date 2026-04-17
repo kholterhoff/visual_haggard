@@ -153,8 +153,6 @@
 .illustrator-grid-image-link:hover,
 .illustrator-work-link:hover {
   color: inherit;
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
 }
 
 .illustrator-grid-image-frame,
