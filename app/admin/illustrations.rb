@@ -126,7 +126,7 @@ ActiveAdmin.register Illustration do
     end
 
     panel "Original artwork" do
-      novel_originals = resource.novel.original_illustrations.includes(image_attachment: :blob).to_a.sort_by(&:display_title)
+      novel_originals = resource.novel.original_illustrations.to_a.sort_by(&:display_title)
       current_original = resource.original_illustration
 
       if novel_originals.any?
