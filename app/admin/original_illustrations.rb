@@ -6,9 +6,9 @@ ActiveAdmin.register OriginalIllustration do
                 :medium,
                 :source,
                 :year,
-                :image
+                :image_url
 
-  includes :novel, :illustrator, image_attachment: :blob
+  includes :novel, :illustrator
   config.filters = false
 
   index do
@@ -31,6 +31,7 @@ ActiveAdmin.register OriginalIllustration do
       row :medium
       row :dimensions
       row :source
+      row :image_url
       row :created_at
       row :updated_at
     end
@@ -61,7 +62,7 @@ ActiveAdmin.register OriginalIllustration do
     end
   end
 
-  form html: { multipart: true } do |f|
+  form do |f|
     f.semantic_errors
 
     f.inputs "Original artwork details" do
@@ -81,15 +82,7 @@ ActiveAdmin.register OriginalIllustration do
     end
 
     f.inputs "Image" do
-      f.input :image,
-              as: :file,
-              hint: (
-                if f.object.display_image_source.present?
-                  image_tag(f.object.display_image_source, style: "max-width: 220px; height: auto;")
-                else
-                  "Upload a scan or photograph of the original artwork."
-                end
-              )
+      f.input :image_url, label: "Image URL", hint: "Paste the URL of the image."
     end
 
     f.actions

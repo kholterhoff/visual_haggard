@@ -5,10 +5,8 @@ class OriginalIllustration < ApplicationRecord
   belongs_to :illustrator
   has_many :illustrations, dependent: :nullify
 
-  has_one_attached :image, dependent: :purge_later
-
   validates :novel, :illustrator, presence: true
-  validates :title, :dimensions, :medium, :source, :year,
+  validates :title, :dimensions, :medium, :source, :year, :image_url,
             length: { maximum: STRING_MAXIMUM }, allow_blank: true
 
   def display_title
@@ -16,11 +14,11 @@ class OriginalIllustration < ApplicationRecord
   end
 
   def display_image_source
-    image.attached? ? image : nil
+    image_url.presence
   end
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[created_at dimensions id illustrator_id medium novel_id source title updated_at year]
+    %w[created_at dimensions id illustrator_id image_url medium novel_id source title updated_at year]
   end
 
   def self.ransackable_associations(_auth_object = nil)
