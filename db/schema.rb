@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_09_000000) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_09_010000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -153,7 +153,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_09_000000) do
 
   create_table "original_illustrations", force: :cascade do |t|
     t.bigint "novel_id", null: false
-    t.string "artist", null: false
     t.string "title"
     t.string "dimensions"
     t.string "medium"
@@ -161,6 +160,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_09_000000) do
     t.string "year"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "illustrator_id"
+    t.index ["illustrator_id"], name: "index_original_illustrations_on_illustrator_id"
     t.index ["novel_id"], name: "index_original_illustrations_on_novel_id"
   end
 
@@ -210,5 +211,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_09_000000) do
   add_foreign_key "illustrations", "editions", on_delete: :cascade
   add_foreign_key "illustrations", "illustrators", on_delete: :nullify
   add_foreign_key "illustrations", "original_illustrations"
+  add_foreign_key "original_illustrations", "illustrators"
   add_foreign_key "original_illustrations", "novels"
 end

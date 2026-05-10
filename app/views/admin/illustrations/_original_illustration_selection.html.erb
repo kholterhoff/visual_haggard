@@ -23,9 +23,7 @@
 
           <div class="admin-original-illustration-card-body">
             <p class="admin-original-illustration-card-title"><%= original.display_title %></p>
-            <% if original.artist.present? %>
-              <p class="admin-illustration-sibling-meta"><%= original.artist %></p>
-            <% end %>
+            <p class="admin-illustration-sibling-meta"><%= original.illustrator.name %></p>
             <% if original.year.present? %>
               <p class="admin-illustration-sibling-meta"><%= original.year %></p>
             <% end %>

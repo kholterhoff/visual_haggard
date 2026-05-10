@@ -28,9 +28,7 @@
       <div class="illustration-card-body">
         <p class="illustration-card-kicker">Original artwork</p>
         <h2 class="illustration-card-title-link"><%= original_illustration.display_title %></h2>
-        <% if original_illustration.artist.present? %>
-          <p class="illustration-card-meta"><%= original_illustration.artist %></p>
-        <% end %>
+        <p class="illustration-card-meta"><%= original_illustration.illustrator.name %></p>
         <% if original_illustration.year.present? %>
           <p class="illustration-card-meta"><%= original_illustration.year %></p>
         <% end %>

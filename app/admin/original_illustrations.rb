@@ -1,6 +1,6 @@
 ActiveAdmin.register OriginalIllustration do
   permit_params :novel_id,
-                :artist,
+                :illustrator_id,
                 :title,
                 :dimensions,
                 :medium,
@@ -8,14 +8,14 @@ ActiveAdmin.register OriginalIllustration do
                 :year,
                 :image
 
-  includes :novel, image_attachment: :blob
+  includes :novel, :illustrator, image_attachment: :blob
   config.filters = false
 
   index do
     selectable_column
     id_column
     column :novel
-    column :artist
+    column :illustrator
     column :title
     column("Image") { |orig| status_tag(orig.display_image_source.present? ? "yes" : "no") }
     actions
@@ -25,7 +25,7 @@ ActiveAdmin.register OriginalIllustration do
     attributes_table do
       row :id
       row :novel
-      row :artist
+      row :illustrator
       row :title
       row :year
       row :medium
@@ -72,7 +72,7 @@ ActiveAdmin.register OriginalIllustration do
               collection: grouped_novel_options,
               include_blank: false,
               label: "Novel"
-      f.input :artist, hint: "Required. The name of the artist who created the original artwork."
+      f.input :illustrator, collection: Illustrator.order(:name)
       f.input :title, hint: "Optional title of the artwork."
       f.input :year, hint: "Optional year the artwork was created."
       f.input :medium, hint: "E.g. Oil on canvas, watercolor, pencil."
