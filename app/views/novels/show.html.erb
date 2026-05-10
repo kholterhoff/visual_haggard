@@ -184,7 +184,6 @@
 
     <%
       original_illustrations_for_archive = @novel.original_illustrations
-                                                  .includes(image_attachment: :blob)
                                                   .select { |o| o.display_image_source.present? }
                                                   .sort_by(&:display_title)
     %>
