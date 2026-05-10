@@ -11,6 +11,7 @@ class Illustration < ApplicationRecord
 
   belongs_to :edition
   belongs_to :illustrator, optional: true
+  belongs_to :original_illustration, optional: true
   has_many :blog_posts, dependent: :destroy
 
   has_one_attached :image, dependent: :purge_later

@@ -20,6 +20,13 @@ ActiveAdmin.register Illustration do
   includes :illustrator, { edition: :novel }, image_attachment: :blob
   config.filters = false
 
+  member_action :update_original_illustration, method: :patch do
+    selected_id = params[:original_illustration_id].presence
+    new_original = selected_id == "none" || selected_id.blank? ? nil : OriginalIllustration.find_by(id: selected_id)
+    resource.update!(original_illustration: new_original)
+    redirect_to resource_path, notice: "Original artwork connection saved."
+  end
+
   member_action :update_sibling_groupings, method: :patch do
     unless Illustration.identical_image_group_supported? || Illustration.text_moment_group_supported?
       redirect_to resource_path, alert: "Illustration grouping is unavailable until the latest database migration is applied."
@@ -115,6 +122,22 @@ ActiveAdmin.register Illustration do
     if resource.display_image_source(style: :original).present?
       panel "Image preview" do
         image_tag resource.display_image_source(style: :original), style: "max-width: 320px; max-height: 300px; width: auto; height: auto;"
+      end
+    end
+
+    panel "Original artwork" do
+      novel_originals = resource.novel.original_illustrations.includes(image_attachment: :blob).to_a.sort_by(&:display_title)
+      current_original = resource.original_illustration
+
+      if novel_originals.any?
+        render partial: "admin/illustrations/original_illustration_selection",
+               locals: {
+                 current_illustration: resource,
+                 current_original: current_original,
+                 original_illustrations: novel_originals
+               }
+      else
+        para "No original artworks have been added for #{resource.novel.name} yet. Add them via the Original Illustrations admin section."
       end
     end
 

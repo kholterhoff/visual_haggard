@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   end
   
   resources :illustrations, only: [:index, :show]
+  resources :original_illustrations, only: [:show]
   resources :illustrators, only: [:index, :show]
   resources :blog_posts, only: [:index, :show], path: 'blog'
   

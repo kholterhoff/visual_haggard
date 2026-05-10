@@ -1,0 +1,43 @@
+<%
+  image_source = original_illustration.display_image_source
+%>
+
+<section
+  class="surface-panel illustrations-grid-panel illustration-group-section illustration-original-artwork-section"
+  aria-labelledby="original-artwork-heading"
+>
+  <div class="section-heading illustration-group-section-heading">
+    <div class="illustration-group-section-header">
+      <p class="page-eyebrow">Original artwork</p>
+      <h2 id="original-artwork-heading">Original artwork in the archive</h2>
+    </div>
+  </div>
+
+  <div class="illustrations-grid-page">
+    <%= link_to original_illustration_path(original_illustration), class: "illustration-card illustration-card--linked" do %>
+      <% if image_source.present? %>
+        <div class="illustration-card-image-frame">
+          <%= image_tag image_source, alt: original_illustration.display_title, loading: "lazy", decoding: "async" %>
+        </div>
+      <% else %>
+        <div class="illustration-card-image-frame">
+          <div class="illustration-card-placeholder">No image</div>
+        </div>
+      <% end %>
+
+      <div class="illustration-card-body">
+        <p class="illustration-card-kicker">Original artwork</p>
+        <h2 class="illustration-card-title-link"><%= original_illustration.display_title %></h2>
+        <% if original_illustration.artist.present? %>
+          <p class="illustration-card-meta"><%= original_illustration.artist %></p>
+        <% end %>
+        <% if original_illustration.year.present? %>
+          <p class="illustration-card-meta"><%= original_illustration.year %></p>
+        <% end %>
+        <% if original_illustration.medium.present? %>
+          <p class="illustration-card-meta"><%= original_illustration.medium %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>

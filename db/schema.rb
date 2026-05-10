@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_04_17_213000) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_09_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -128,9 +128,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_17_213000) do
     t.string "identical_image_group"
     t.string "text_moment_group"
     t.text "editor_notes"
+    t.bigint "original_illustration_id"
     t.index ["edition_id"], name: "index_illustrations_on_edition_id"
     t.index ["identical_image_group"], name: "index_illustrations_on_identical_image_group"
     t.index ["illustrator_id"], name: "index_illustrations_on_illustrator_id"
+    t.index ["original_illustration_id"], name: "index_illustrations_on_original_illustration_id"
     t.index ["text_moment_group"], name: "index_illustrations_on_text_moment_group"
   end
 
@@ -147,6 +149,19 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_17_213000) do
     t.datetime "updated_at", precision: nil, null: false
     t.text "description"
     t.string "work_type", default: "novel", null: false
+  end
+
+  create_table "original_illustrations", force: :cascade do |t|
+    t.bigint "novel_id", null: false
+    t.string "artist", null: false
+    t.string "title"
+    t.string "dimensions"
+    t.string "medium"
+    t.string "source"
+    t.string "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["novel_id"], name: "index_original_illustrations_on_novel_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -194,4 +209,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_04_17_213000) do
   add_foreign_key "editions", "novels", on_delete: :cascade
   add_foreign_key "illustrations", "editions", on_delete: :cascade
   add_foreign_key "illustrations", "illustrators", on_delete: :nullify
+  add_foreign_key "illustrations", "original_illustrations"
+  add_foreign_key "original_illustrations", "novels"
 end

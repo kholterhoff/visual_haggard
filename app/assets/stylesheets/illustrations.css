@@ -304,6 +304,20 @@
   color: hsl(var(--muted-foreground));
 }
 
+.illustration-original-artwork-section {
+  margin-top: 2rem;
+}
+
+.original-illustration-printed-section {
+  margin-top: 2rem;
+}
+
+.original-illustration-printed-section h2 {
+  margin: 0.3rem 0 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.03em;
+}
+
 @media (max-width: 780px) {
   .illustrations-grid-panel {
     padding: 1rem;
