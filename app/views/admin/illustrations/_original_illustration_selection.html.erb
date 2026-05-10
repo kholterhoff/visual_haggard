@@ -1,0 +1,42 @@
+<%= form_with url: update_original_illustration_admin_illustration_path(current_illustration), method: :patch, local: true, class: "admin-original-illustration-form" do %>
+  <p class="admin-illustration-sibling-instructions">
+    Select the original artwork that this printed illustration was made from, or select <strong>None</strong> to remove any existing connection.
+  </p>
+
+  <div class="admin-original-illustration-options">
+    <label class="admin-original-illustration-option">
+      <%= radio_button_tag "original_illustration_id", "none", current_original.nil? %>
+      <span class="admin-original-illustration-option-label">None</span>
+    </label>
+
+    <% original_illustrations.each do |original| %>
+      <% image_source = original.display_image_source %>
+      <article class="admin-original-illustration-card">
+        <label class="admin-original-illustration-card-label">
+          <%= radio_button_tag "original_illustration_id", original.id, current_original&.id == original.id %>
+
+          <% if image_source.present? %>
+            <%= image_tag image_source, alt: original.display_title, loading: "lazy", decoding: "async", class: "admin-original-illustration-thumb" %>
+          <% else %>
+            <span class="admin-illustration-sibling-placeholder">No image</span>
+          <% end %>
+
+          <div class="admin-original-illustration-card-body">
+            <p class="admin-original-illustration-card-title"><%= original.display_title %></p>
+            <% if original.artist.present? %>
+              <p class="admin-illustration-sibling-meta"><%= original.artist %></p>
+            <% end %>
+            <% if original.year.present? %>
+              <p class="admin-illustration-sibling-meta"><%= original.year %></p>
+            <% end %>
+            <%= link_to "View in admin", admin_original_illustration_path(original), target: "_blank", rel: "noopener" %>
+          </div>
+        </label>
+      </article>
+    <% end %>
+  </div>
+
+  <div class="admin-illustration-sibling-actions">
+    <%= submit_tag "Save original artwork connection", class: "button" %>
+  </div>
+<% end %>

@@ -182,7 +182,13 @@
       </section>
     <% end %>
 
-    <% if all_illustrations.any? %>
+    <%
+      original_illustrations_for_archive = @novel.original_illustrations
+                                                  .includes(image_attachment: :blob)
+                                                  .select { |o| o.display_image_source.present? }
+                                                  .sort_by(&:display_title)
+    %>
+    <% if all_illustrations.any? || original_illustrations_for_archive.any? %>
       <section class="surface-panel novel-section" id="illustration-archive">
         <div class="section-heading">
           <div>
@@ -192,6 +198,23 @@
         </div>
 
         <div class="illustrations-grid">
+          <% original_illustrations_for_archive.each do |original| %>
+            <article class="illustration-tile illustration-tile--original" data-back-to-top-target="item">
+              <%= link_to original_illustration_path(original), class: "illustration-tile-link" do %>
+                <div class="illustration-thumbnail">
+                  <%= image_tag original.display_image_source,
+                    alt: original.display_title,
+                    loading: "lazy",
+                    decoding: "async" %>
+                </div>
+                <div class="illustration-tile-copy">
+                  <p class="illustration-tile-label illustration-tile-label--original">Original artwork</p>
+                  <h3><span class="illustration-tile-title"><%= original.display_title %></span></h3>
+                </div>
+              <% end %>
+            </article>
+          <% end %>
+
           <% all_illustrations.each do |illustration| %>
             <article class="illustration-tile" data-back-to-top-target="item">
               <%= link_to illustration_path(illustration), class: "illustration-tile-link" do %>

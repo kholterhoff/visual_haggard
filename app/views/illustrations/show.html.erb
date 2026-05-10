@@ -135,6 +135,10 @@
       </aside>
     </section>
 
+    <% if @original_illustration.present? %>
+      <%= render "original_illustration_section", original_illustration: @original_illustration %>
+    <% end %>
+
     <% if @identical_illustrations.any? %>
       <%= render "grouped_illustrations_section",
         current_illustration: @illustration,

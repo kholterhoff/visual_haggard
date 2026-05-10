@@ -11,8 +11,9 @@ class IllustrationsController < ApplicationController
     grouped_scope = Illustration.browseable
                                 .includes(:illustrator, { edition: :novel }, { image_attachment: :blob })
     @illustration = Illustration.browseable
-                                .includes(:illustrator, { edition: :novel }, { image_attachment: :blob })
+                                .includes(:illustrator, :original_illustration, { edition: :novel }, { image_attachment: :blob })
                                 .find(params[:id])
+    @original_illustration = @illustration.original_illustration
     @identical_illustrations = if Illustration.identical_image_group_supported?
       sort_related_illustrations(@illustration.other_identical_illustrations(grouped_scope))
     else

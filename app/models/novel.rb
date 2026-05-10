@@ -21,6 +21,7 @@ class Novel < ApplicationRecord
   has_many :editions, dependent: :destroy
   has_many :illustrations, through: :editions
   has_many :blog_posts, dependent: :destroy
+  has_many :original_illustrations, dependent: :destroy
 
   acts_as_taggable_on :tags
 

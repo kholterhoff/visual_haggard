@@ -1,0 +1,118 @@
+<% content_for :title, @original_illustration.display_title %>
+
+<div class="original-illustration-page" data-pagefind-body>
+  <div class="page-shell">
+    <section class="record-header record-header--breadcrumbs-only">
+      <p class="record-breadcrumbs">
+        <%= link_to "Novels", novels_path %>
+        /
+        <%= linked_novel_title(@original_illustration.novel) %>
+        /
+        Original artwork
+      </p>
+    </section>
+
+    <section class="record-layout">
+      <div class="record-figure">
+        <% image_source = @original_illustration.display_image_source %>
+        <% if image_source.present? %>
+          <% original_url = public_asset_url(image_source) %>
+          <figure class="illustration-lightbox" data-controller="photoswipe">
+            <%= zoomable_image_link image_source,
+              alt: @original_illustration.display_title,
+              link_options: { class: "illustration-lightbox-link" } %>
+
+            <figcaption class="illustration-original-link">
+              <%= link_to "Open original", original_url, target: "_blank", rel: "noopener noreferrer", class: "section-link" %>
+            </figcaption>
+          </figure>
+        <% else %>
+          <div class="record-placeholder">No image available</div>
+        <% end %>
+      </div>
+
+      <aside class="record-meta">
+        <h1 class="sr-only"><%= @original_illustration.display_title %></h1>
+
+        <dl>
+          <dt>Artist</dt>
+          <dd><%= @original_illustration.artist %></dd>
+
+          <dt>Title</dt>
+          <dd><%= @original_illustration.display_title %></dd>
+
+          <dt><%= @original_illustration.novel.record_label %></dt>
+          <dd><%= linked_novel_reference_title(@original_illustration.novel) %></dd>
+
+          <% if @original_illustration.year.present? %>
+            <dt>Year</dt>
+            <dd><%= @original_illustration.year %></dd>
+          <% end %>
+
+          <% if @original_illustration.medium.present? %>
+            <dt>Medium</dt>
+            <dd><%= @original_illustration.medium %></dd>
+          <% end %>
+
+          <% if @original_illustration.dimensions.present? %>
+            <dt>Dimensions</dt>
+            <dd><%= @original_illustration.dimensions %></dd>
+          <% end %>
+
+          <% if @original_illustration.source.present? %>
+            <dt>Source</dt>
+            <dd><%= @original_illustration.source %></dd>
+          <% end %>
+        </dl>
+      </aside>
+    </section>
+
+    <% if @printed_illustrations.any? %>
+      <section
+        class="surface-panel illustrations-grid-panel original-illustration-printed-section"
+        aria-labelledby="printed-illustrations-heading"
+      >
+        <div class="section-heading">
+          <div>
+            <p class="page-eyebrow">Printed illustrations</p>
+            <h2 id="printed-illustrations-heading">Printed illustrations made from this artwork</h2>
+          </div>
+        </div>
+
+        <div class="illustrations-grid-page">
+          <% @printed_illustrations.each do |illustration| %>
+            <% image_source = illustration.display_image_source(style: :original) %>
+            <%= link_to illustration_path(illustration), class: "illustration-card illustration-card--linked" do %>
+              <% if image_source.present? %>
+                <div class="illustration-card-image-frame">
+                  <%= image_tag image_source, alt: illustration.name, loading: "lazy", decoding: "async" %>
+                </div>
+              <% else %>
+                <div class="illustration-card-image-frame">
+                  <div class="illustration-card-placeholder">No image</div>
+                </div>
+              <% end %>
+
+              <div class="illustration-card-body">
+                <p class="illustration-card-kicker">Illustration</p>
+                <h2><%= display_illustration_title(illustration, class_name: "illustration-card-title-link") %></h2>
+                <p class="illustration-card-meta"><%= formatted_edition_title(illustration.edition) %></p>
+                <p class="illustration-card-meta"><%= novel_work_title(illustration.novel) %></p>
+                <% if illustration.edition.publication_citation.present? %>
+                  <p class="illustration-card-citation"><%= illustration.edition.publication_citation %></p>
+                <% end %>
+                <% if illustration.page_number.present? %>
+                  <p class="illustration-card-meta">Page <%= illustration.page_number %></p>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <div class="record-back-link">
+      <%= link_to safe_join([content_tag(:span, "Back to", class: "record-back-label"), novel_work_title(@original_illustration.novel)]), novel_path(@original_illustration.novel, anchor: "illustration-archive"), class: "ui-button ui-button--secondary" %>
+    </div>
+  </div>
+</div>

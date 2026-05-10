@@ -368,6 +368,15 @@
   margin-top: 0.55rem;
 }
 
+.illustration-tile-label--original {
+  color: hsl(var(--foreground));
+}
+
+.illustration-tile--original .illustration-tile-link {
+  border-color: hsl(var(--border));
+  box-shadow: inset 0 0 0 1px hsl(var(--border));
+}
+
 @media (max-width: 1080px) {
   .novel-directory-groups,
   .novel-grid {
