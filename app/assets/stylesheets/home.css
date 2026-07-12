@@ -163,7 +163,10 @@
   animation-delay: var(--reel-delay, 0s);
 }
 
-.home-cover-reel:hover .home-cover-reel-track {
+/* Hover pausing is class-driven (see reels_controller.js) rather than pure
+   :hover: browsers restore back/forward navigations with the hover state
+   stuck on the reel that was under the cursor, which froze that column. */
+.home-cover-reel.is-hover-paused .home-cover-reel-track {
   animation-play-state: paused;
 }
 

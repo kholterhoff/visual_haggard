@@ -7,7 +7,13 @@ export default class extends Controller {
     this.measure = this.measure.bind(this)
     this.handleResize = this.handleResize.bind(this)
     this.revealIfReady = this.revealIfReady.bind(this)
+    this.clearHoverPauses = this.clearHoverPauses.bind(this)
     this.ready = false
+
+    // Reels can come back from a Turbo snapshot or the back/forward cache
+    // with a stale hover pause; a restored page should always be animating.
+    this.clearHoverPauses()
+    window.addEventListener("pageshow", this.clearHoverPauses)
 
     this.resizeObserver = new ResizeObserver(() => this.measure())
     this.sequenceTargets.forEach((sequence) => this.resizeObserver.observe(sequence))
@@ -20,7 +26,20 @@ export default class extends Controller {
   disconnect() {
     this.resizeObserver?.disconnect()
     window.removeEventListener("resize", this.handleResize)
+    window.removeEventListener("pageshow", this.clearHoverPauses)
     window.clearTimeout(this.fallbackTimer)
+  }
+
+  pauseReel(event) {
+    event.currentTarget.classList.add("is-hover-paused")
+  }
+
+  resumeReel(event) {
+    event.currentTarget.classList.remove("is-hover-paused")
+  }
+
+  clearHoverPauses() {
+    this.reelTargets.forEach((reel) => reel.classList.remove("is-hover-paused"))
   }
 
   handleResize() {

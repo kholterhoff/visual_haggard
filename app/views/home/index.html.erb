@@ -21,6 +21,7 @@
         <div
           class="home-cover-reel <%= direction_class %>"
           data-reels-target="reel"
+          data-action="mouseenter->reels#pauseReel mouseleave->reels#resumeReel"
           style="--reel-duration: <%= 24 + (reel_index * 4) %>s; --reel-delay: -<%= (reel_index * 2.6).round(1) %>s;"
         >
           <div class="home-cover-reel-track">
