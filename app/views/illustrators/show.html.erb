@@ -113,11 +113,16 @@
       </div>
     </section>
 
-    <% if @illustrations.any? %>
+    <% if @illustration_groups.any? %>
+      <%
+        total_printed = @illustration_groups.sum { |g| g[:illustrations].size }
+        total_originals = @illustration_groups.sum { |g| g[:original_illustrations].size }
+        total_count = total_printed + total_originals
+      %>
       <section class="surface-panel illustrator-work-section" id="illustrator-work-archive">
         <div class="section-heading">
           <div>
-            <h2><%= @illustrations.size %> <%= "Illustration".pluralize(@illustrations.size) %> by <%= @illustrator.name %></h2>
+            <h2><%= total_count %> <%= "Illustration".pluralize(total_count) %> by <%= @illustrator.name %></h2>
           </div>
         </div>
 
@@ -140,6 +145,32 @@
               </div>
 
               <div class="illustrator-work-grid" data-controller="photoswipe">
+                <% group[:original_illustrations].each do |original| %>
+                  <article class="illustrator-work-card" data-back-to-top-target="item">
+                    <%= link_to original_illustration_path(original), class: "illustrator-work-link" do %>
+                      <div class="illustrator-work-image-frame">
+                        <% if (image_source = original.display_image_source).present? %>
+                          <%= image_tag image_source,
+                            alt: original.display_title,
+                            class: "illustrator-work-image",
+                            loading: "lazy",
+                            decoding: "async" %>
+                        <% else %>
+                          <div class="illustrator-grid-placeholder">No image available</div>
+                        <% end %>
+                      </div>
+                      <div class="illustrator-work-copy">
+                        <p class="illustrator-card-kicker">Original artwork</p>
+                        <h4><span class="illustrator-work-title"><%= original.display_title %></span></h4>
+                        <p><strong><%= novel_work_title(group[:novel]) %></strong></p>
+                        <% if original.year.present? %>
+                          <p><%= original.year %></p>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </article>
+                <% end %>
+
                 <% group[:illustrations].each do |illustration| %>
                   <% edition = illustration.edition %>
                   <% novel = group[:novel] %>

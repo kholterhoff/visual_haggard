@@ -9,6 +9,7 @@ class Illustrator < ApplicationRecord
   BIO_MAXIMUM = 100_000
 
   has_many :illustrations, dependent: :destroy
+  has_many :original_illustrations, dependent: :nullify
 
   validates :name, presence: true, length: { maximum: STRING_MAXIMUM }
   validates :bio, length: { maximum: BIO_MAXIMUM }, allow_blank: true
