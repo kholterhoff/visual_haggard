@@ -16,10 +16,15 @@ class Illustration < ApplicationRecord
 
   has_one_attached :image, dependent: :purge_later
 
+  # Admin file uploads are pushed straight to the legacy S3 bucket rather than
+  # Active Storage so the resulting URLs survive static publishes.
+  attr_accessor :image_upload
+
   acts_as_taggable_on :tags
 
   before_validation :normalize_identical_image_group
   before_validation :normalize_text_moment_group
+  after_save :store_image_upload_in_legacy_s3
 
   validates :edition, presence: true
   validates :name, presence: true, length: { maximum: STRING_MAXIMUM }
@@ -31,6 +36,7 @@ class Illustration < ApplicationRecord
   validates :description, :editor_notes, length: { maximum: DESCRIPTION_MAXIMUM }, allow_blank: true
   validates_http_url_or_legacy_reference :image_url, :image_thumbnail_url
   validates_http_url :google_book_link, :gutenberg_link, :internet_archive_link
+  validate :validate_image_upload
 
   delegate :novel, to: :edition
 
@@ -214,6 +220,52 @@ class Illustration < ApplicationRecord
   end
 
   private
+
+  def validate_image_upload
+    return if image_upload.blank?
+
+    unless image_upload.respond_to?(:original_filename) && image_upload.respond_to?(:read)
+      errors.add(:image_upload, "must be an uploaded file")
+      return
+    end
+
+    unless image_upload.content_type.to_s.start_with?("image/")
+      errors.add(:image_upload, "must be an image file")
+    end
+
+    unless LegacyS3ImageUploader.configured?
+      errors.add(:image_upload, "cannot be stored because AWS S3 credentials are missing. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY (or add them to Rails credentials under aws:).")
+    end
+  end
+
+  def store_image_upload_in_legacy_s3
+    file = image_upload
+    return if file.blank?
+
+    filename = sanitized_upload_filename(file)
+    file.rewind
+    LegacyS3ImageUploader.upload(
+      key: "illustrations/images/#{legacy_id_partition}/original/#{filename}",
+      io: file,
+      content_type: file.content_type
+    )
+
+    timestamp = Time.current
+    update_columns(
+      image_file_name: filename,
+      image_content_type: file.content_type,
+      image_file_size: file.size,
+      image_updated_at: timestamp,
+      updated_at: timestamp
+    )
+    image.purge_later if image.attached?
+    self.image_upload = nil
+  end
+
+  def sanitized_upload_filename(file)
+    basename = File.basename(file.original_filename.to_s).gsub(/[^a-zA-Z0-9_.\-]/, "_")
+    basename.match?(/[a-zA-Z0-9]/) ? basename : "illustration-#{id}"
+  end
 
   # Archive metadata uses freeform labels such as "Frontispiece" and "Dust Jacket",
   # so page_number intentionally remains a flexible string field.

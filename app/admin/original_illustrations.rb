@@ -6,7 +6,8 @@ ActiveAdmin.register OriginalIllustration do
                 :medium,
                 :source,
                 :year,
-                :image_url
+                :image_url,
+                :image_upload
 
   includes :novel, :illustrator
   config.filters = false
@@ -62,7 +63,7 @@ ActiveAdmin.register OriginalIllustration do
     end
   end
 
-  form do |f|
+  form html: { multipart: true } do |f|
     f.semantic_errors
 
     f.inputs "Original artwork details" do
@@ -82,7 +83,17 @@ ActiveAdmin.register OriginalIllustration do
     end
 
     f.inputs "Image" do
-      f.input :image_url, label: "Image URL", hint: "Paste the URL of the image."
+      f.input :image_upload,
+              as: :file,
+              label: "Image",
+              hint: (
+                if f.object.display_image_source.present?
+                  image_tag(f.object.display_image_source, style: "max-width: 220px; height: auto;")
+                else
+                  "Upload an image of the original artwork. It is stored directly in the legacy S3 illustrations bucket and fills in the image URL below."
+                end
+              )
+      f.input :image_url, label: "Image URL", hint: "Paste the URL of the image, or leave blank when uploading a file above."
     end
 
     f.actions

@@ -1,4 +1,5 @@
 require "test_helper"
+require "minitest/mock"
 
 class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
   setup do
@@ -14,17 +15,26 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     novel = Novel.create!(name: "Admin Test Novel")
     uploaded_cover = uploaded_gif("cover")
 
-    assert_difference("Edition.count", 1) do
-      post "/admin/editions", params: {
-        edition: {
-          novel_id: novel.id,
-          name: "Admin Test Edition",
-          publisher: "Archive Press",
-          publication_date: "1925",
-          publication_city: "London",
-          cover_image: uploaded_cover
-        }
-      }
+    uploaded_keys = []
+    upload_stub = lambda do |key:, io:, content_type:|
+      uploaded_keys << key
+    end
+
+    LegacyS3ImageUploader.stub :configured?, true do
+      LegacyS3ImageUploader.stub :upload, upload_stub do
+        assert_difference("Edition.count", 1) do
+          post "/admin/editions", params: {
+            edition: {
+              novel_id: novel.id,
+              name: "Admin Test Edition",
+              publisher: "Archive Press",
+              publication_date: "1925",
+              publication_city: "London",
+              cover_image_upload: uploaded_cover
+            }
+          }
+        end
+      end
     end
 
     edition = Edition.order(:id).last
@@ -32,7 +42,9 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     assert_response :redirect
     assert_equal novel, edition.novel
     assert_equal "Admin Test Edition", edition.name
-    assert edition.cover_image.attached?
+    assert_equal "one_pixel.gif", edition.image_file_name
+    assert_equal ["editions/images/000/000/#{edition.id}/original/one_pixel.gif"], uploaded_keys
+    assert_includes edition.resolved_cover_url(style: :original), "https://s3-us-west-2.amazonaws.com/haggard/editions/images/000/000/#{edition.id}/original/one_pixel.gif"
   end
 
   test "admin can create an illustration with an uploaded image and tags" do
@@ -41,19 +53,28 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     illustrator = Illustrator.create!(name: "Archive Artist")
     uploaded_image = uploaded_gif("illustration")
 
-    assert_difference("Illustration.count", 1) do
-      post "/admin/illustrations", params: {
-        illustration: {
-          edition_id: edition.id,
-          illustrator_id: illustrator.id,
-          name: "Frontispiece",
-          page_number: "Frontispiece",
-          description: "An uploaded test illustration.",
-          editor_notes: "A curator's note for the illustration record.",
-          tag_list: "elephant, woman",
-          image: uploaded_image
-        }
-      }
+    uploaded_keys = []
+    upload_stub = lambda do |key:, io:, content_type:|
+      uploaded_keys << key
+    end
+
+    LegacyS3ImageUploader.stub :configured?, true do
+      LegacyS3ImageUploader.stub :upload, upload_stub do
+        assert_difference("Illustration.count", 1) do
+          post "/admin/illustrations", params: {
+            illustration: {
+              edition_id: edition.id,
+              illustrator_id: illustrator.id,
+              name: "Frontispiece",
+              page_number: "Frontispiece",
+              description: "An uploaded test illustration.",
+              editor_notes: "A curator's note for the illustration record.",
+              tag_list: "elephant, woman",
+              image_upload: uploaded_image
+            }
+          }
+        end
+      end
     end
 
     illustration = Illustration.order(:id).last
@@ -63,7 +84,9 @@ class AdminArchiveEntryTest < ActionDispatch::IntegrationTest
     assert_equal illustrator, illustration.illustrator
     assert_equal ["elephant", "woman"], illustration.tag_list.sort
     assert_equal "A curator's note for the illustration record.", illustration.editor_notes
-    assert illustration.image.attached?
+    assert_equal "one_pixel.gif", illustration.image_file_name
+    assert_equal ["illustrations/images/000/000/#{illustration.id}/original/one_pixel.gif"], uploaded_keys
+    assert_includes illustration.resolved_image_url(style: :original), "https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/#{illustration.id}/original/one_pixel.gif"
   end
 
   test "admin illustration form groups editions by alphabetized novel" do

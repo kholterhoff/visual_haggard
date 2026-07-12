@@ -2,6 +2,29 @@
 
 This guide explains how to configure AWS S3 for image storage in production while keeping local storage for development.
 
+## Admin Image Uploads (Legacy `haggard` Bucket)
+
+Images uploaded through the admin panel (`/admin/illustrations`, `/admin/editions`, `/admin/original_illustrations`) do **not** use Active Storage. They are uploaded directly to the legacy public S3 bucket (`haggard`, region `us-west-2`) using the same key layout as the original Paperclip attachments:
+
+```
+illustrations/images/000/000/<id>/original/<filename>
+editions/images/000/000/<id>/original/<filename>
+original_illustrations/images/000/000/<id>/original/<filename>
+```
+
+Illustrations and editions record the file in their legacy Paperclip columns (`image_file_name` etc.); original illustrations have no such columns, so the uploaded file's public URL is written to `image_url` instead.
+
+This keeps uploaded images on durable public URLs (for example `https://s3-us-west-2.amazonaws.com/haggard/illustrations/images/000/000/271/original/heKnelt164.jpg`) that survive the static GitHub Pages publish.
+
+To enable uploads, set credentials for an IAM user with write access to the bucket:
+
+```bash
+AWS_ACCESS_KEY_ID=your_access_key_id
+AWS_SECRET_ACCESS_KEY=your_secret_access_key
+```
+
+(or store them in Rails credentials under `aws.access_key_id` / `aws.secret_access_key`). The bucket and region can be overridden with `ILLUSTRATIONS_S3_BUCKET` and `ILLUSTRATIONS_S3_REGION`. Without credentials, the admin form rejects the upload with a validation message instead of storing the file locally. See `app/services/legacy_s3_image_uploader.rb`.
+
 ## Overview
 
 - **Development (localhost)**: Images stored locally in `storage/` directory

@@ -18,6 +18,12 @@ class Edition < ApplicationRecord
 
   has_one_attached :cover_image, dependent: :purge_later
 
+  # Admin file uploads are pushed straight to the legacy S3 bucket rather than
+  # Active Storage so the resulting URLs survive static publishes.
+  attr_accessor :cover_image_upload
+
+  after_save :store_cover_image_upload_in_legacy_s3
+
   validates :novel, presence: true
   validates :name, presence: true, length: { maximum: STRING_MAXIMUM }
   validates :publisher, :publication_date, :publication_city, :source, :long_name,
@@ -27,6 +33,7 @@ class Edition < ApplicationRecord
             length: { maximum: STRING_MAXIMUM }, allow_blank: true
   validates :container_type, inclusion: { in: CONTAINER_TYPES.keys }, allow_blank: true
   validates_http_url_or_legacy_reference :cover_url, :cover_thumbnail_url
+  validate :validate_cover_image_upload
 
   include PgSearch::Model
   pg_search_scope :search_by_name_and_publisher,
@@ -221,6 +228,52 @@ class Edition < ApplicationRecord
   end
 
   private
+
+  def validate_cover_image_upload
+    return if cover_image_upload.blank?
+
+    unless cover_image_upload.respond_to?(:original_filename) && cover_image_upload.respond_to?(:read)
+      errors.add(:cover_image_upload, "must be an uploaded file")
+      return
+    end
+
+    unless cover_image_upload.content_type.to_s.start_with?("image/")
+      errors.add(:cover_image_upload, "must be an image file")
+    end
+
+    unless LegacyS3ImageUploader.configured?
+      errors.add(:cover_image_upload, "cannot be stored because AWS S3 credentials are missing. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY (or add them to Rails credentials under aws:).")
+    end
+  end
+
+  def store_cover_image_upload_in_legacy_s3
+    file = cover_image_upload
+    return if file.blank?
+
+    filename = sanitized_upload_filename(file)
+    file.rewind
+    LegacyS3ImageUploader.upload(
+      key: "editions/images/#{legacy_id_partition}/original/#{filename}",
+      io: file,
+      content_type: file.content_type
+    )
+
+    timestamp = Time.current
+    update_columns(
+      image_file_name: filename,
+      image_content_type: file.content_type,
+      image_file_size: file.size,
+      image_updated_at: timestamp,
+      updated_at: timestamp
+    )
+    cover_image.purge_later if cover_image.attached?
+    self.cover_image_upload = nil
+  end
+
+  def sanitized_upload_filename(file)
+    basename = File.basename(file.original_filename.to_s).gsub(/[^a-zA-Z0-9_.\-]/, "_")
+    basename.match?(/[a-zA-Z0-9]/) ? basename : "edition-#{id}"
+  end
 
   def illustrations_for_cover_selection
     if association(:illustrations).loaded?

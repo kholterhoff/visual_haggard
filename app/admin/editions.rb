@@ -10,7 +10,7 @@ ActiveAdmin.register Edition do
                 :cover_url,
                 :cover_thumbnail_url,
                 :long_name,
-                :cover_image
+                :cover_image_upload
 
   includes :novel, :illustrations, cover_image_attachment: :blob
   config.filters = false
@@ -73,13 +73,14 @@ ActiveAdmin.register Edition do
     end
 
     f.inputs "Cover image" do
-      f.input :cover_image,
+      f.input :cover_image_upload,
               as: :file,
+              label: "Cover image",
               hint: (
                 if f.object.display_cover_source(style: :original).present?
                   image_tag(f.object.display_cover_source(style: :original), style: "max-width: 220px; height: auto;")
                 else
-                  "Upload a new cover image. Uploaded files override legacy cover URLs on the public site."
+                  "Upload a new cover image. It is stored directly in the legacy S3 illustrations bucket and overrides legacy cover URLs on the public site."
                 end
               )
       f.input :cover_url, hint: "Optional external or legacy image URL."

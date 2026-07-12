@@ -15,7 +15,7 @@ ActiveAdmin.register Illustration do
                 :is_same_gutenberg_edition,
                 :is_same_internet_archive_edition,
                 :tag_list,
-                :image
+                :image_upload
 
   includes :illustrator, { edition: :novel }, image_attachment: :blob
   config.filters = false
@@ -213,13 +213,14 @@ ActiveAdmin.register Illustration do
     end
 
     f.inputs "Image" do
-      f.input :image,
+      f.input :image_upload,
               as: :file,
+              label: "Image",
               hint: (
                 if f.object.display_image_source(style: :original).present?
                   image_tag(f.object.display_image_source(style: :original), style: "max-width: 220px; height: auto;")
                 else
-                  "Upload a new illustration image. Uploaded files override legacy image URLs on the public site."
+                  "Upload a new illustration image. It is stored directly in the legacy S3 illustrations bucket and overrides legacy image URLs on the public site."
                 end
               )
       f.input :image_url, hint: "Optional external or legacy original image URL."
