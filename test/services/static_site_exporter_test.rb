@@ -119,6 +119,29 @@ class StaticSiteExporterTest < ActiveSupport::TestCase
     end
   end
 
+  test "copies the hero cover variants directory into dist" do
+    hero_covers_root = Rails.root.join("public", "hero-covers")
+    created_directory = !hero_covers_root.exist?
+    FileUtils.mkdir_p(hero_covers_root)
+    marker = hero_covers_root.join("static-export-test-marker.jpg")
+    File.write(marker, "jpeg-bytes")
+
+    Dir.mktmpdir do |dir|
+      exporter = StaticSiteExporter.new(
+        output_root: Pathname(dir),
+        precompile_assets: false,
+        run_pagefind: false
+      )
+
+      exporter.send(:copy_public_files!)
+
+      assert_path_exists Pathname(dir).join("hero-covers", "static-export-test-marker.jpg")
+    end
+  ensure
+    FileUtils.rm_f(marker) if marker
+    FileUtils.rm_rf(hero_covers_root) if created_directory
+  end
+
   private
 
   def assert_path_exists(pathname)

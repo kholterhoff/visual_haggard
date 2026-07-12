@@ -27,7 +27,7 @@
             <% 2.times do |sequence_index| %>
               <div class="home-cover-reel-sequence" data-reels-target="sequence" <%= %(aria-hidden="true") if sequence_index.positive? %>>
                 <% reel.each do |edition| %>
-                  <% cover_source = edition.display_cover_source(style: :original) %>
+                  <% cover_source = hero_cover_source(edition) %>
                   <% link_options = { class: "home-cover-tile" } %>
                   <% if sequence_index.positive? %>
                     <% link_options[:tabindex] = "-1" %>

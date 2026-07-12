@@ -1,4 +1,11 @@
 module HomeHelper
+  # Hero reels use pre-sized variants so the cover wall doesn't have to
+  # download full archival scans; fall back to the original source for any
+  # edition whose variant hasn't been generated yet.
+  def hero_cover_source(edition)
+    HeroCoverVariant.url_for(edition) || edition.display_cover_source(style: :original)
+  end
+
   def linked_biography_novel_title(novel, fallback:, short: false, **options)
     return work_title(fallback) if novel.blank?
 

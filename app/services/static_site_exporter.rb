@@ -20,6 +20,9 @@ class StaticSiteExporter
     apple-touch-icon-precomposed.png
     robots.txt
   ].freeze
+  PUBLIC_ROOT_DIRECTORIES = %w[
+    hero-covers
+  ].freeze
 
   attr_reader :output_root, :host, :request_host, :warnings, :custom_domain
 
@@ -185,6 +188,13 @@ class StaticSiteExporter
       destination = output_root.join(filename)
       FileUtils.mkdir_p(destination.dirname)
       FileUtils.cp(source, destination)
+    end
+
+    PUBLIC_ROOT_DIRECTORIES.each do |directory|
+      source = Rails.root.join("public", directory)
+      next unless source.exist?
+
+      FileUtils.cp_r(source, output_root.join(directory))
     end
 
     assets_source = Rails.root.join("public", "assets")
